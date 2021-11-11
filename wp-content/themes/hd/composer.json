@@ -1,0 +1,17 @@
+{
+	"name": "webhd/hd",
+	"description": "WEBHD Wordpress Theme",
+	"authors": [
+		{
+			"name": "NTH",
+			"email": "info@webhd.vn"
+		}
+	],
+	"autoload": {
+		"psr-4": {},
+		"files": []
+	},
+	"require": {
+		"symfony/var-dumper": "^v5.3.8"
+	}
+}

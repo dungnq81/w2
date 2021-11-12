@@ -3,9 +3,9 @@
 /**
  * Back compat functionality
  *
- * Prevents the theme from running on WordPress versions prior to 5.6,
+ * Prevents the theme from running on WordPress versions prior to 5.3,
  * since this theme is not meant to be backward compatible beyond that and
- * relies on many newer functions and markup changes introduced in 5.6.
+ * relies on many newer functions and markup changes introduced in 5.3.
  *
  * @package WordPress
  * @subpackage Twenty_Twenty_One
@@ -29,7 +29,7 @@ add_action('after_switch_theme', 'twenty_twenty_one_switch_theme');
  * Adds a message for unsuccessful theme switch.
  *
  * Prints an update nag after an unsuccessful attempt to switch to
- * the theme on WordPress versions prior to 5.6.
+ * the theme on WordPress versions prior to 5.3.
  *
  * @since Twenty Twenty-One 1.0
  *
@@ -42,14 +42,14 @@ function twenty_twenty_one_upgrade_notice()
 	echo '<div class="error"><p>';
 	printf(
 		/* translators: %s: WordPress Version. */
-		esc_html__('This theme requires WordPress 5.6 or newer. You are running version %s. Please upgrade.', W_TEXTDOMAIN),
+		esc_html__('This theme requires WordPress 5.3 or newer. You are running version %s. Please upgrade.', W_TEXTDOMAIN),
 		esc_html($GLOBALS['wp_version'])
 	);
 	echo '</p></div>';
 }
 
 /**
- * Prevents the Customizer from being loaded on WordPress versions prior to 5.6.
+ * Prevents the Customizer from being loaded on WordPress versions prior to 5.3.
  *
  * @since Twenty Twenty-One 1.0
  *
@@ -62,7 +62,7 @@ function twenty_twenty_one_customize()
 	wp_die(
 		sprintf(
 			/* translators: %s: WordPress Version. */
-			esc_html__('This theme requires WordPress 5.6 or newer. You are running version %s. Please upgrade.', W_TEXTDOMAIN),
+			esc_html__('This theme requires WordPress 5.3 or newer. You are running version %s. Please upgrade.', W_TEXTDOMAIN),
 			esc_html($GLOBALS['wp_version'])
 		),
 		'',
@@ -74,7 +74,7 @@ function twenty_twenty_one_customize()
 add_action('load-customize.php', 'twenty_twenty_one_customize');
 
 /**
- * Prevents the Theme Preview from being loaded on WordPress versions prior to 5.6.
+ * Prevents the Theme Preview from being loaded on WordPress versions prior to 5.3.
  *
  * @since Twenty Twenty-One 1.0
  *
@@ -88,7 +88,7 @@ function twenty_twenty_one_preview()
 		wp_die(
 			sprintf(
 				/* translators: %s: WordPress Version. */
-				esc_html__('This theme requires WordPress 5.6 or newer. You are running version %s. Please upgrade.', W_TEXTDOMAIN),
+				esc_html__('This theme requires WordPress 5.3 or newer. You are running version %s. Please upgrade.', W_TEXTDOMAIN),
 				esc_html($GLOBALS['wp_version'])
 			)
 		);

@@ -6,9 +6,14 @@
  * @package hd
  */
 
-require "vendor/autoload.php";
-
 define('INC', __DIR__ . '/inc');
+
+// This theme requires WordPress 5.3 or later.
+if (version_compare($GLOBALS['wp_version'], '5.3', '<')) {
+    require INC . '/back-compat.php';
+}
+
+require "vendor/autoload.php";
 $theme = wp_get_theme();
 
 defined('W_THEME_VERSION') || define('W_THEME_VERSION', $theme->get('Version'));
@@ -17,3 +22,9 @@ defined('W_AUTHOR') || define('W_AUTHOR', $theme->get('Author'));
 
 defined('W_THEME_DIR') || define('W_THEME_DIR', trailingslashit(get_template_directory()));
 defined('W_THEME_URI') || define('W_THEME_URI', trailingslashit(esc_url(get_template_directory_uri())));
+
+if (is_admin()) {
+    (new \Webhd\Themes\Admin);
+} else {
+    (new \Webhd\Themes\Defer);
+}

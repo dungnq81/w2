@@ -14,8 +14,7 @@ if (!function_exists('__register_widgets')) {
      */
     function __register_widgets()
     {
-        //register_widget(new \Webhd\Widgets\ImagesCarousel);
-
+        register_widget(new \Webhd\Widgets\CF7Widget);
     }
 
     /** */

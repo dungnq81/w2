@@ -8,8 +8,26 @@
 		}
 	],
 	"autoload": {
-		"psr-4": {},
-		"files": []
+		"psr-4": {
+			"Webhd\\Blocks\\": "inc/Blocks",
+			"Webhd\\Helpers\\": "inc/Helpers",
+			"Webhd\\Integrations\\": "inc/Integrations",
+			"Webhd\\Themes\\": "inc/Themes",
+			"Webhd\\Walkers\\": "inc/Walkers",
+			"Webhd\\Widgets\\": "inc/Widgets"
+		},
+		"files": [
+			"inc/ajax.php",
+			"inc/helpers.php",
+			"inc/image-sizes.php",
+			"inc/menus.php",
+			"inc/plugins.php",
+			"inc/shortcodes.php",
+			"inc/sidebars.php",
+			"inc/template-functions.php",
+			"inc/template-hooks.php",
+			"inc/widgets.php"
+		]
 	},
 	"require": {
 		"symfony/var-dumper": "^v5.3.8"

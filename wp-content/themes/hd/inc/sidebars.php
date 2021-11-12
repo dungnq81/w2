@@ -12,7 +12,6 @@ if (!function_exists('__register_sidebars')) {
      */
     function __register_sidebars()
     {
-        //...
         // homepage
         register_sidebar(
             [
@@ -21,20 +20,6 @@ if (!function_exists('__register_sidebars')) {
                 'name'          => __('W - Homepage', W_TEXTDOMAIN),
                 'description'   => __('Widgets added here will appear in homepage.', W_TEXTDOMAIN),
                 'before_widget' => '<div class="%2$s">',
-                'after_widget'  => '</div>',
-                'before_title'  => '<h4 class="heading-title">',
-                'after_title'   => '</h4>',
-            ]
-        );
-
-        // top homeheader
-        register_sidebar(
-            [
-                'container'     => false,
-                'id'            => 'w-homeheader-sidebar',
-                'name'          => __('Top Home Header', W_TEXTDOMAIN),
-                'description'   => __('Widgets added here will appear in top home header.', W_TEXTDOMAIN),
-                'before_widget' => '<div class="header-widgets %2$s">',
                 'after_widget'  => '</div>',
                 'before_title'  => '<span>',
                 'after_title'   => '</span>',

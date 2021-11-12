@@ -33,12 +33,12 @@ mix.copyDirectory('resources/img', 'assets/img')
 mix.setPublicPath('assets')
     .sourceMaps()
 
-    .js('resources/js/login.js', 'js')
-    .js('resources/js/admin.js', 'js')
-    .js('resources/js/app.js', 'js')
+    //.js('resources/js/login.js', 'js')
+    //.js('resources/js/admin.js', 'js')
+    //.js('resources/js/app.js', 'js')
 
     .sass('resources/sass/awe.scss', 'css')
     .sass('resources/sass/admin.scss', 'css')
-    .sass('resources/sass/editor-style.scss', 'css')
-    .sass('resources/sass/plugins.scss', 'css')
-    .sass('resources/sass/app.scss', 'css');
+    .sass('resources/sass/editor-style.scss', 'css');
+    //.sass('resources/sass/plugins.scss', 'css')
+    //.sass('resources/sass/app.scss', 'css');

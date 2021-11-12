@@ -1,3 +1,5 @@
 {
-    "/css/editor-style.css": "/css/editor-style.css"
+    "/css/editor-style.css": "/css/editor-style.css",
+    "/css/admin.css": "/css/admin.css",
+    "/css/awe.css": "/css/awe.css"
 }

@@ -4,5 +4,14 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly.
 }
 
-class_exists('\ACF') && (new \Webhd\Compatibility\ACF_Compatibility);
-class_exists('\WPCF7') && (new \Webhd\Compatibility\CF7_Compatibility);
+use Webhd\Integrations\ACF_Integration;
+use Webhd\Integrations\CF7_Integration;
+use Webhd\Integrations\Jetpack_Integration;
+use Webhd\Integrations\Wpdiscuz_Integration;
+use Webhd\Integrations\RankMath_Integration;
+
+class_exists('\ACF') && (new ACF_Integration);
+class_exists('\WPCF7') && (new CF7_Integration);
+class_exists('\Jetpack') && (new Jetpack_Integration);
+class_exists('\WpdiscuzCore') && (new Wpdiscuz_Integration);
+class_exists('\RankMath') && (new RankMath_Integration);

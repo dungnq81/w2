@@ -68,6 +68,15 @@ if (!class_exists('Theme')) {
             // This theme styles the visual editor to resemble the theme style.
             add_editor_style(get_template_directory_uri() . "/assets/css/editor-style.css");
 
+            // Remove Template Editor support until WP 5.9 since more Theme Blocks are going to be introduced.
+            remove_theme_support('block-templates');
+
+            if (apply_filters('fullwidth_oembed', true)) {
+
+                // Filters the oEmbed process to run the responsive_oembed_wrapper() function.
+                add_filter('embed_oembed_html', [&$this, 'responsive_oembed_wrapper'], 10, 3);
+            }
+
             // Set default values for the upload media box
             update_option('image_default_align', 'center');
             update_option('image_default_size', 'large');
@@ -332,6 +341,40 @@ if (!class_exists('Theme')) {
         public function block_editor_assets()
         {
             wp_enqueue_style('w-editor-style', get_template_directory_uri() . "/assets/css/editor-style.css");
+        }
+
+        /** ---------------------------------------- */
+
+        /**
+         * Adds a responsive embed wrapper around oEmbed content
+         *
+         * @param  string $html The oEmbed markup.
+         * @param  string $url The URL being embedded.
+         * @param  array  $attr An array of attributes.
+         *
+         * @return string       Updated embed markup.
+         */
+        public function responsive_oembed_wrapper($html, $url, $attr)
+        {
+            $add_oembed_wrapper = apply_filters('responsive_oembed_wrapper_enable', true);
+            $allowed_providers = apply_filters(
+                'allowed_fullwidth_oembed_providers',
+                [
+                    'vimeo.com',
+                    'youtube.com',
+                    'youtu.be',
+                    'wistia.com',
+                    'wistia.net',
+                ]
+            );
+
+            if (strposa($url, $allowed_providers)) {
+                if ($add_oembed_wrapper) {
+                    $html = ('' !== $html) ? '<div class="oembed-container">' . $html . '</div>' : '';
+                }
+            }
+
+            return $html;
         }
 
         /** ---------------------------------------- */

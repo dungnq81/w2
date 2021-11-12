@@ -4,6 +4,8 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly.
 }
 
+use Webhd\Widgets\CF7_Widget;
+
 if (!function_exists('__register_widgets')) {
     /**
      * Register a widget
@@ -14,7 +16,7 @@ if (!function_exists('__register_widgets')) {
      */
     function __register_widgets()
     {
-        register_widget(new \Webhd\Widgets\CF7Widget);
+        register_widget(new CF7_Widget);
     }
 
     /** */

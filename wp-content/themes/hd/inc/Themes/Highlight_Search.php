@@ -13,7 +13,7 @@ namespace Webhd\Themes;
 
 if (!defined('WPINC')) die;
 
-class Highlight_Search_Terms
+class Highlight_Search
 {
 	/**
 	 * Plugin variables

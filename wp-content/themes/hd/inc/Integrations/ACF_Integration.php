@@ -139,6 +139,7 @@ if (!class_exists('ACF_Integration')) {
                         'key' => 'field_618e616c351a7',
                         'label' => __('Label Background', W_TEXTDOMAIN),
                         'name' => 'label_background',
+						'type' => 'color_picker',
                         'required' => 0,
                         'conditional_logic' => array(
                             array(

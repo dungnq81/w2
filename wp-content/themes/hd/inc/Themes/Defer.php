@@ -68,7 +68,7 @@ if (!class_exists('Defer')) {
 			if ($fb_appid && !is_customize_preview()) {
 				echo "\n";
 				echo "<script>";
-				echo "window.fbAsyncInit = function() {FB.init({appId:'" . $fb_appid . "',status:true,xfbml:true,autoLogAppEvents:true,version:'v11.0'});};";
+				echo "window.fbAsyncInit = function() {FB.init({appId:'" . $fb_appid . "',status:true,xfbml:true,autoLogAppEvents:true,version:'v12.0'});};";
 				echo "</script>";
 				echo "<script async defer crossorigin=\"anonymous\" data-type='lazy' data-src=\"https://connect.facebook.net/" . $fb_locale . "/sdk.js\"></script>";
 				if ($fb_pageid) {
@@ -89,6 +89,7 @@ if (!class_exists('Defer')) {
 			$timeout = 5000;
 			$inline_js = 'const loadScriptsTimer=setTimeout(loadScripts,' . $timeout . ');const userInteractionEvents=["mouseover","keydown","touchstart","touchmove","wheel"];userInteractionEvents.forEach(function(event){window.addEventListener(event,triggerScriptLoader,{passive:!0})});function triggerScriptLoader(){loadScripts();clearTimeout(loadScriptsTimer);userInteractionEvents.forEach(function(event){window.removeEventListener(event,triggerScriptLoader,{passive:!0})})}';
 			$inline_js .= "function loadScripts(){document.querySelectorAll(\"script[data-type='lazy']\").forEach(function(elem){elem.setAttribute(\"src\",elem.getAttribute(\"data-src\"));elem.removeAttribute(\"data-src\");})}";
+			echo "\n";
 			echo '<script src="data:text/javascript;base64,' . base64_encode($inline_js) . '"></script>';
 			echo "\n";
 		}

@@ -2,6 +2,8 @@
 
 namespace Webhd\Themes;
 
+use Webhd\Helpers\Str;
+
 /**
  * Global Theme Class
  * @author   WEBHD
@@ -30,6 +32,28 @@ if (!class_exists('Theme')) {
 
             add_action('login_enqueue_scripts', [&$this, 'login_enqueue_script'], 30);
             add_action('enqueue_block_editor_assets', [&$this, 'block_editor_assets']);
+        }
+
+        /** ---------------------------------------- */
+
+        /**
+         * Init function
+         *
+         * @return void
+         */
+        public function init()
+        {
+            (new \Webhd\Themes\Customizer); // Customizer additions.
+
+            if (is_admin()) {
+                (new \Webhd\Themes\Admin);
+            } else {
+                (new \Webhd\Themes\Defer);
+            }
+
+            if (is_search()) {
+                (new \Webhd\Themes\Highlight_Search)::init();
+            }
         }
 
         /** ---------------------------------------- */
@@ -312,9 +336,9 @@ if (!class_exists('Theme')) {
 
             // inline js
             $l10n = [
-                'ajax_url' => esc_url(admin_url('admin-ajax.php')),
-                'base_url'  => trailingslashit(site_url()),
-                'theme_url' => trailingslashit(get_template_directory_uri()),
+                'ajaxUrl' => esc_url(admin_url('admin-ajax.php')),
+                'baseUrl'  => trailingslashit(site_url()),
+                'themeUrl' => trailingslashit(get_template_directory_uri()),
                 'locale'    => get_f_locale(),
                 'lang'      => get_lang(),
                 //'domain'    => DOMAIN_CURRENT_SITE,
@@ -368,7 +392,7 @@ if (!class_exists('Theme')) {
                 ]
             );
 
-            if (strposa($url, $allowed_providers)) {
+            if (Str::strposOffset($url, $allowed_providers)) {
                 if ($add_oembed_wrapper) {
                     $html = ('' !== $html) ? '<div class="oembed-container">' . $html . '</div>' : '';
                 }
@@ -528,7 +552,6 @@ if (!class_exists('Theme')) {
 
             // Return the specified styles.
             $css = new \Webhd\Helpers\Css;
-
             $css->set_selector(implode(',', $elements[$type]));
             $css->add_property('font-family', implode(',', $font_family[$locale]));
 

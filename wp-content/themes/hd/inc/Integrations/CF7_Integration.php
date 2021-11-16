@@ -89,7 +89,7 @@ if (!class_exists('CF7_Integration')) {
                 'hide_empty'   => false,
                 'hierarchical' => 1,
             ));
-            $terms     = get_terms($term_args);
+            $terms = get_terms($term_args);
 
             // Add terms to values
             if (!empty($terms) && !is_wp_error($term_args)) {

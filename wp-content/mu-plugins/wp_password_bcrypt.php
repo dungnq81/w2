@@ -2,100 +2,135 @@
 
 /**
  * Plugin Name: WP Password bcrypt
- * Version: 1.0
- * Description: Replaces wp_hash_password and wp_check_password with PHP 5.5's password_hash and password_verify.
+ * Version: v1.1.0
+ * Plugin URI: https://github.com/roots/wp-password-bcrypt
+ * Description: Replaces wp_hash_password and wp_check_password with password_hash and password_verify.
+ * Author:      Roots
+ * Author URI:  https://roots.io
  */
-
-const WP_OLD_HASH_PREFIX = '$P$';
-const W_HASH_PREFIX = '$W$';
 
 /**
- * Check if user has entered correct password, supports bcrypt and pHash.
+ * Determine if the plaintext password matches the encrypted password hash.
  *
- * @param string $password Plaintext password
- * @param string $hash Hash of password
- * @param int|string $userId ID of user to whom password belongs
+ * If the password hash is not encrypted using the PASSWORD_DEFAULT (bcrypt)
+ * algorithm, the password will be rehashed and updated once verified.
  *
- * @return mixed|void
+ * @link https://www.php.net/manual/en/function.password-verify.php
+ * @link https://www.php.net/manual/en/function.password-needs-rehash.php
  *
- * @SuppressWarnings(PHPMD.CamelCaseVariableName) $wp_hasher is a global variable, we cannot change its name
+ * @param  string     $password The password in plaintext.
+ * @param  string     $hash     The hashed password to check against.
+ * @param  string|int $user_id  The optional user ID.
+ * @return bool
+ *
+ * @SuppressWarnings(PHPMD.CamelCaseVariableName) $wp_hasher
  */
-function wp_check_password($password, $hash, $userId = '')
+function wp_check_password($password, $hash, $user_id = '')
 {
-	if (strpos($hash, WP_OLD_HASH_PREFIX) === 0) {
-		global $wp_hasher;
-
-		if (empty($wp_hasher)) {
-			require_once(ABSPATH . WPINC . '/class-phpass.php');
-			$wp_hasher = new PasswordHash(8, true);
-		}
-
-		$check = $wp_hasher->CheckPassword($password, $hash);
-		if ($check && $userId) {
-			$hash = wp_set_password($password, $userId);
-		}
+	if (!password_needs_rehash($hash, PASSWORD_DEFAULT, apply_filters('wp_hash_password_options', []))) {
+		return apply_filters(
+			'check_password',
+			password_verify($password, $hash),
+			$password,
+			$hash,
+			$user_id
+		);
 	}
 
-	$check = password_verify($password, substr($hash, strlen(W_HASH_PREFIX)));
-	return apply_filters('check_password', $check, $password, $hash, $userId);
+	global $wp_hasher;
+
+	if (empty($wp_hasher)) {
+		require_once ABSPATH . WPINC . '/class-phpass.php';
+		$wp_hasher = new PasswordHash(8, true);
+	}
+
+	if (!empty($user_id) && $wp_hasher->CheckPassword($password, $hash)) {
+		$hash = wp_set_password($password, $user_id);
+	}
+
+	return apply_filters(
+		'check_password',
+		password_verify($password, $hash),
+		$password,
+		$hash,
+		$user_id
+	);
 }
 
 /**
- * PASSWORD_DEFAULT
- * Use the bcrypt algorithm (default as of PHP 5.5.0).
- * Note that this constant is designed to change over time as new and stronger algorithms are added to PHP.
- * For that reason, the length of the result from using this identifier can change over time.
+ * Hash the provided password using the PASSWORD_DEFAULT (bcrypt)
+ * algorithm.
  *
- * PASSWORD_BCRYPT
- * The salt option has been deprecated as of PHP 7.0.0.
+ * @link https://www.php.net/manual/en/function.password-hash.php
  *
- * PASSWORD_ARGON2I | PASSWORD_ARGON2ID
- * Argon2 passwords using PASSWORD_ARGON2I was added in PHP 7.2.0
- * Argon2 passwords using PASSWORD_ARGON2ID was added in PHP 7.3.0
- *
- * @param string $password Plaintext password
- * @return bool|string
+ * @param  string $password The password in plain text.
+ * @return string
  */
 function wp_hash_password($password)
 {
-	// PHP 5.5.0
-	$algo = PASSWORD_DEFAULT;
-	$options = [];
-
-	/*if ( is_php( '7.2' ) && defined( 'PASSWORD_ARGON2I' ) ) {
-		$algo = PASSWORD_ARGON2I;
-		$options = [
-			'memory_cost' => PASSWORD_ARGON2_DEFAULT_MEMORY_COST,
-			'time_cost'   => PASSWORD_ARGON2_DEFAULT_TIME_COST,
-			'threads'     => PASSWORD_ARGON2_DEFAULT_THREADS,
-		];
-	}
-
-	if ( is_php( '7.3' ) && defined( 'PASSWORD_ARGON2ID' ) ) {
-		$algo = PASSWORD_ARGON2ID;
-	}*/
-
-	$algo    = apply_filters('wp_hash_password_algorithm', $algo);
-	$options = apply_filters('wp_hash_password_options', $options);
-
-	return W_HASH_PREFIX . password_hash($password, $algo, $options);
+	return password_hash(
+		$password,
+		PASSWORD_DEFAULT,
+		apply_filters('wp_hash_password_options', [])
+	);
 }
 
 /**
- * @param string $password Plaintext password
- * @param int $userId ID of user to whom password belongs
+ * Hash and update the user's password.
  *
- * @return bool|string
+ * @param  string $password The new user password in plaintext.
+ * @param  int    $user_id  The user ID.
+ * @return string
  */
-function wp_set_password($password, $userId)
+function wp_set_password($password, $user_id)
 {
-	/** @var \wpdb $wpdb */
-	global $wpdb;
-
 	$hash = wp_hash_password($password);
+	$is_api_request = apply_filters(
+		'application_password_is_api_request',
+		(defined('XMLRPC_REQUEST') && XMLRPC_REQUEST) ||
+			(defined('REST_REQUEST') && REST_REQUEST)
+	);
 
-	$wpdb->update($wpdb->users, ['user_pass' => $hash, 'user_activation_key' => ''], ['ID' => $userId]);
-	wp_cache_delete($userId, 'users');
+	if (!$is_api_request) {
+		global $wpdb;
+
+		$wpdb->update($wpdb->users, [
+			'user_pass' => $hash,
+			'user_activation_key' => ''
+		], ['ID' => $user_id]);
+
+		clean_user_cache($user_id);
+
+		return $hash;
+	}
+
+	if (
+		!class_exists('WP_Application_Passwords') ||
+		empty($passwords = WP_Application_Passwords::get_user_application_passwords($user_id))
+	) {
+		return;
+	}
+
+	global $wp_hasher;
+
+	if (empty($wp_hasher)) {
+		require_once ABSPATH . WPINC . '/class-phpass.php';
+		$wp_hasher = new PasswordHash(8, true);
+	}
+
+	foreach ($passwords as $key => $value) {
+		if (!$wp_hasher->CheckPassword($password, $value['password'])) {
+			continue;
+		}
+
+		$passwords[$key]['password'] = $hash;
+	}
+
+	update_user_meta(
+		$user_id,
+		WP_Application_Passwords::USERMETA_KEY_APPLICATION_PASSWORDS,
+		$passwords
+	);
 
 	return $hash;
 }

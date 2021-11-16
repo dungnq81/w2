@@ -2,6 +2,8 @@
 
 namespace Webhd\Themes;
 
+use Webhd\Helpers\Arr;
+
 /**
  * Admin Class
  * @author   WEBHD
@@ -154,8 +156,7 @@ if (!class_exists('Admin')) {
                 "term_thumb" => sprintf('<span class="wc-image tips">%1$s</span>', __("Thumb", W_TEXTDOMAIN)),
             ];
 
-            $columns = array_push_after($columns, $in, 0);
-            return $columns;
+            return Arr::insertAfter(0, $columns, $in);
         }
 
         /** ---------------------------------------- */
@@ -201,8 +202,7 @@ if (!class_exists('Admin')) {
                 "post_thumb" => sprintf('<span class="wc-image tips">%1$s</span>', __("Thumb", W_TEXTDOMAIN)),
             ];
 
-            $columns = array_push_after($columns, $in, 0);
-            return $columns;
+            return Arr::insertAfter(0, $columns, $in);
         }
 
         /** ---------------------------------------- */
@@ -216,7 +216,7 @@ if (!class_exists('Admin')) {
         public function post_type_action_links($actions, $_object)
         {
             if (!in_array($_object->post_type, ['product', 'site-review'])) {
-                array_unshift_assoc($actions, 'action_id', 'Id:' . $_object->ID);
+                Arr::prepend($actions, 'Id:' . $_object->ID, 'action_id');
             }
 
             return $actions;
@@ -232,7 +232,7 @@ if (!class_exists('Admin')) {
          */
         public function term_action_links($actions, $_object)
         {
-            array_unshift_assoc($actions, 'action_id', 'Id: ' . $_object->term_id);
+            Arr::prepend($actions, 'Id: ' . $_object->term_id, 'action_id');
             return $actions;
         }
 

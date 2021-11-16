@@ -4,6 +4,8 @@ if (!defined('ABSPATH')) {
 	exit; // Exit if accessed directly.
 }
 
+use Webhd\Helpers\Str;
+
 // ------------------------------------------------------
 
 if (!function_exists('is_elementor_activated')) {
@@ -85,35 +87,6 @@ if (!function_exists('lazy_style_tag')) {
 
 // ------------------------------------------------------
 
-if (!function_exists('url_to_path')) {
-	/**
-	 * Convert an assets URL to a path.
-	 *
-	 * Makes a best guess as to the path of an asset.
-	 *
-	 * @param string $url The URL to the asset.
-	 *
-	 * @return string|boolean The path to the asset. False of failure.
-	 */
-	function url_to_path($url)
-	{
-		$url  = remove_query_arg('ver', $url);
-		$path = str_replace(
-			array(trailingslashit(content_url()), trailingslashit(includes_url())),
-			array(trailingslashit(WP_CONTENT_DIR), trailingslashit(ABSPATH . WPINC)),
-			$url
-		);
-
-		if (!file_exists($path)) {
-			return false;
-		}
-
-		return $path;
-	}
-}
-
-// ------------------------------------------------------
-
 if (!function_exists('get_theme_mod_ssl')) {
 	/**
 	 * @param $mod_name
@@ -132,7 +105,6 @@ if (!function_exists('get_theme_mod_ssl')) {
 
 		if ($mod_name) {
 			if (!isset($_is_loaded[0][strtolower($mod_name)])) {
-				//$_mod = preg_replace('/\s+/', '', get_theme_mod( $mod_name, $default ) );
 				$_mod = get_theme_mod($mod_name, $default);
 				if (is_ssl()) {
 					$_is_loaded[0][strtolower($mod_name)] = str_replace(['http://'], 'https://', $_mod);
@@ -152,21 +124,21 @@ if (!function_exists('get_theme_mod_ssl')) {
 
 if (!function_exists('get_banner_query')) {
 	/**
-	 * @param $term
+	 * @param object $term
 	 * @param int $posts_per_page
 	 * @param int $paged
 	 *
 	 * @return bool|WP_Query
 	 */
-	function get_banner_query($term, $posts_per_page = 0, $paged = 0)
+	function query_by_term($term, $post_type = 'post', $posts_per_page = 0, $paged = 0)
 	{
-		if (!$term) {
+		if (!$term || !$post_type) {
 			return false;
 		}
 		$_args = [
 			'ignore_sticky_posts' => true,
 			'no_found_rows'       => true,
-			'post_type'           => 'banner',
+			'post_type'           => $post_type,
 			'post_status'         => 'publish',
 			'orderby'             => [
 				'menu_order' => 'DESC',
@@ -371,7 +343,7 @@ if (!function_exists('loop_excerpt')) {
 	function loop_excerpt($post = null, $class = 'excerpt')
 	{
 		$excerpt = get_the_excerpt($post);
-		if (!strip_whitespace($excerpt)) {
+		if (!Str::stripSpace($excerpt)) {
 			return null;
 		}
 
@@ -394,7 +366,7 @@ if (!function_exists('post_excerpt')) {
 	 */
 	function post_excerpt($post = null, $class = 'excerpt')
 	{
-		if (!strip_whitespace($post->post_excerpt)) {
+		if (!Str::stripSpace($post->post_excerpt)) {
 			return null;
 		}
 
@@ -421,7 +393,7 @@ if (!function_exists('term_excerpt')) {
 	function term_excerpt($term = 0, $class = 'excerpt')
 	{
 		$description = term_description($term);
-		if (!strip_whitespace($description)) {
+		if (!Str::stripSpace($description)) {
 			return null;
 		}
 

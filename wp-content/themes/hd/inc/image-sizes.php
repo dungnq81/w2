@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) {
 
 // custom thumb
 add_image_size('widescreen', 1920, 9999, false);
-add_image_size('post-thumbnail', 1200, 9999, $crop);
+add_image_size('post-thumbnail', 1200, 9999, false);
 
 // -----------------------------------------------------------------------
 

@@ -1,5 +1,9 @@
 <?php
 
+use Webhd\Helpers\Url;
+use Webhd\Helpers\Cast;
+use Webhd\Helpers\Str;
+
 /**
  * Helpers functions
  * @author   WEBHD
@@ -7,6 +11,21 @@
 
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly.
+}
+
+
+// -------------------------------------------------------------
+
+if (!function_exists('json_encode_prettify')) {
+    /**
+     * @param $data
+     *
+     * @return false|string
+     */
+    function json_encode_prettify($data)
+    {
+        return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+    }
 }
 
 // ------------------------------------------------------
@@ -137,6 +156,35 @@ if (!function_exists('is_php')) {
 
 // -------------------------------------------------------------
 
+if (!function_exists('is_empty')) {
+    /**
+     * @param mixed $value
+     * @return bool
+     */
+    function is_empty($value)
+    {
+        if (is_string($value)) {
+            return trim($value) === '';
+        }
+        return !is_numeric($value) && !is_bool($value) && empty($value);
+    }
+}
+
+// -------------------------------------------------------------
+
+if (!function_exists('is_not_empty')) {
+    /**
+     * @param mixed $value
+     * @return boolean
+     */
+    function is_not_empty($value)
+    {
+        return !is_empty($value);
+    }
+}
+
+// -------------------------------------------------------------
+
 if (!function_exists('millitime')) {
     /**
      * @return string
@@ -154,60 +202,13 @@ if (!function_exists('millitime')) {
 
 // -------------------------------------------------------------
 
-if (!function_exists('normalize_path')) {
-    /**
-     * Normalize the given path. On Windows servers backslash will be replaced
-     * with slash. Removes unnecessary double slashes and double dots. Removes
-     * last slash if it exists.
-     *
-     * Examples:
-     * path::normalize("C:\\any\\path\\") returns "C:/any/path"
-     * path::normalize("/your/path/..//home/") returns "/your/home"
-     *
-     * @param string $path
-     *
-     * @return string
-     */
-    function normalize_path($path)
-    {
-        // Backslash to slash convert
-        if (strtoupper(substr(PHP_OS, 0, 3)) == "WIN") {
-            $path = preg_replace('/([^\\\])\\\+([^\\\])/s', "$1/$2", $path);
-            if (substr($path, -1) == "\\") {
-                $path = substr($path, 0, -1);
-            }
-            if (substr($path, 0, 1) == "\\") {
-                $path = "/" . substr($path, 1);
-            }
-        }
-
-        $path = preg_replace('/\/+/s', "/", $path);
-        $path = "/$path";
-        if (substr($path, -1) != "/") {
-            $path .= "/";
-        }
-
-        $expr = '/\/([^\/]{1}|[^\.\/]{2}|[^\/]{3,})\/\.\.\//s';
-        while (preg_match($expr, $path)) {
-            $path = preg_replace($expr, "/", $path);
-        }
-
-        $path = substr($path, 0, -1);
-        $path = substr($path, 1);
-
-        return $path;
-    }
-}
-
-// -------------------------------------------------------------
-
 if (!function_exists('ip_address')) {
     /**
      * @return string
      */
     function ip_address()
     {
-        $ip = '127.0.0.1';
+        $local = '127.0.0.1';
 
         // Get user IP address
         foreach ([
@@ -222,7 +223,7 @@ if (!function_exists('ip_address')) {
             if (array_key_exists($key, $_SERVER) === true) {
                 foreach (explode(',', $_SERVER[$key]) as $ip) {
                     $ip = trim($ip); // just to be safe
-                    $ip = (validate_ip($ip) === false) ? '127.0.0.1' : $ip;
+                    $ip = (validate_ip($ip) === false) ? $local : $ip;
                 }
             }
         }
@@ -312,13 +313,13 @@ if (!function_exists('youtube_image')) {
             ];
         }
 
-        $url_img = pixel_img();
+        $url_img = Url::pixelImg();
         parse_str(parse_url($url, PHP_URL_QUERY), $vars);
         if (isset($vars['v'])) {
             $id = $vars['v'];
             for ($x = 0; $x < sizeof($resolution); $x++) {
                 $url_img = 'https://img.youtube.com/vi/' . $id . '/' . $resolution[$x] . '.jpg';
-                if (check_url_exists($url_img)) {
+                if (Url::urlExists($url_img)) {
                     break;
                 }
             }
@@ -330,264 +331,20 @@ if (!function_exists('youtube_image')) {
 
 // -------------------------------------------------------------
 
-if (!function_exists('check_url_exists')) {
+if (!function_exists('sanitize_url')) {
     /**
-     * @param $url
-     *
-     * @return bool
-     */
-    function check_url_exists($url)
-    {
-        $url = preg_replace('/\s+/', '', $url);
-        $headers = @get_headers($url);
-
-        return (bool)stripos($headers[0], "200 OK");
-    }
-}
-
-// -------------------------------------------------------------
-
-if (!function_exists('pixel_img')) {
-    /**
-     * @param string $img_url
-     *
+     * @param mixed $value
      * @return string
      */
-    function pixel_img(string $img_url = '')
+    function sanitize_url($value)
     {
-        if (file_exists($img_url)) {
-            return $img_url;
+        $url = trim(Cast::toString($value));
+        if (!Str::startsWith('http://, https://', $url)) {
+            $url = Str::prefix($url, 'https://');
         }
+        $url = wp_http_validate_url($url);
 
-        return "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
-    }
-}
-
-// -------------------------------------------------------------
-
-if (!function_exists('keywords')) {
-    /**
-     * Keywords
-     * Takes multiple words separated by spaces and changes them to keywords
-     * Makes sure the keywords are separated by a comma followed by a space.
-     *
-     * @param string $str The keywords as a string, separated by whitespace.
-     *
-     * @return string The list of keywords in a comma separated string form.
-     */
-    function keywords(string $str)
-    {
-        return preg_replace('/[\s]+/', ', ', trim($str));
-    }
-}
-
-// -------------------------------------------------------------
-
-if (!function_exists('array_unshift_assoc')) {
-    /**
-     * @param $arr
-     * @param $key
-     * @param $val
-     *
-     * @return array
-     */
-    function array_unshift_assoc(array &$arr, $key, $val)
-    {
-        $arr = array_reverse($arr, true);
-        $arr[$key] = $val;
-
-        return $arr = array_reverse($arr, true);
-    }
-}
-
-// -------------------------------------------------------------
-
-if (!function_exists('get_file_extension')) {
-    /**
-     * @param $filename
-     * @param bool $include_dot
-     *
-     * @return string
-     */
-    function get_file_extension($filename, $include_dot = false)
-    {
-
-        $dot = '';
-        if ($include_dot == true) {
-            $dot = '.';
-        }
-
-        return $dot . strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-    }
-}
-
-// -------------------------------------------------------------
-
-if (!function_exists('get_file_name')) {
-    /**
-     * @param $filename
-     * @param bool $include_ext
-     *
-     * @return string
-     */
-    function get_file_name($filename, $include_ext = false)
-    {
-        return $include_ext ? pathinfo(
-            $filename,
-            PATHINFO_FILENAME
-        ) . get_file_extension($filename) : pathinfo($filename, PATHINFO_FILENAME);
-    }
-}
-
-// -------------------------------------------------------------
-
-if (!function_exists('is_image')) {
-    /**
-     * Check for the valid image
-     *
-     * @param string $link  The Image link.
-     */
-    function is_image($link)
-    {
-        return preg_match('/^((https?:\/\/)|(www\.))([a-z0-9-].?)+(:[0-9]+)?\/[\w\-]+\.(jpg|png|gif|jpeg|svg)\/?$/i', $link);
-    }
-}
-
-// -------------------------------------------------------------
-
-if (!function_exists('array_push_after')) {
-    /**
-     * Insert an element at the begining of the array
-     *
-     * @param $src
-     * @param $in
-     * @param $pos
-     *
-     * @return array
-     */
-    function array_push_after($src, $in, $pos)
-    {
-        if (is_int($pos)) {
-            $R = array_merge(array_slice($src, 0, $pos + 1), $in, array_slice($src, $pos + 1));
-        } else {
-            foreach ($src as $k => $v) {
-                $R[$k] = $v;
-                if ($k == $pos) {
-                    $R = array_merge($R, $in);
-                }
-            }
-        }
-
-        return $R;
-    }
-}
-
-// -------------------------------------------------------------
-
-if (!function_exists('strposa')) {
-    /**
-     * Strpos over an array.
-     *
-     * @param $haystack
-     * @param $needles
-     * @param int $offset
-     *
-     * @return bool
-     */
-    function strposa($haystack, $needles, $offset = 0)
-    {
-        if (!is_array($needles)) {
-            $needles = array($needles);
-        }
-
-        foreach ($needles as $query) {
-            if (strpos($haystack, $query, $offset) !== false) {
-                // stop on first true result.
-                return true;
-            }
-        }
-
-        return false;
-    }
-}
-
-// -------------------------------------------------------------
-
-if (!function_exists('get_file_data')) {
-    /**
-     * @param $file
-     * @param bool $convert_to_array
-     *
-     * @return false|mixed|string
-     */
-    function get_file_data($file, $convert_to_array = true)
-    {
-        $file = @file_get_contents($file);
-        if (!empty($file)) {
-            if ($convert_to_array) {
-                return json_decode($file, true);
-            }
-
-            return $file;
-        }
-
-        return false;
-    }
-}
-
-// -------------------------------------------------------------
-
-if (!function_exists('json_encode_prettify')) {
-    /**
-     * @param $data
-     *
-     * @return false|string
-     */
-    function json_encode_prettify($data)
-    {
-        return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-    }
-}
-
-// -------------------------------------------------------------
-
-if (!function_exists('save_file_data')) {
-    /**
-     * @param $path
-     * @param $data
-     * @param bool $json
-     *
-     * @return bool
-     */
-    function save_file_data($path, $data, $json = true)
-    {
-        try {
-            if ($json) {
-                $data = json_encode_prettify($data);
-            }
-            @file_put_contents($path, $data);
-
-            return true;
-        } catch (Exception $ex) {
-            return false;
-        }
-    }
-}
-
-// -------------------------------------------------------------
-
-if (!function_exists('strip_whitespace')) {
-    /**
-     * @param $string
-     *
-     * @return array|string|string[]|null
-     */
-    function strip_whitespace($string)
-    {
-        $string = preg_replace('/\s+/', '', $string);
-        $string = preg_replace('~\x{00a0}~', '', $string);
-
-        return $string;
+        return esc_url_raw(Cast::toString($url));
     }
 }
 
@@ -601,112 +358,65 @@ if (!function_exists('sanitize_input')) {
      *
      * @return array
      */
-    function sanitize_input($input)
+    function sanitize_input($key, array $request = [])
     {
-        if (is_array($input)) {
-            foreach ($input as $var => $val) {
-                $output[$var] = sanitize_input($val);
-            }
-        } else {
-            $search = array(
-                '@<script[^>]*?>.*?</script>@si',   // Strip out javascript
-                '@<[\/\!]*?[^<>]*?>@si',            // Strip out HTML tags
-                '@<style[^>]*?>.*?</style>@siU',    // Strip style tags properly
-                '@<![\s\S]*?--[ \t\n\r]*>@'         // Strip multi-line comments
-            );
-
-            $output = preg_replace($search, '', stripslashes($input));
+        if (isset($request[$key])) {
+            return $request[$key];
         }
-
-        return $output;
+        $variable = filter_input(INPUT_POST, $key);
+        if (is_null($variable) && isset($_POST[$key])) {
+            $variable = $_POST[$key];
+        }
+        return $variable;
     }
 }
 
 // ------------------------------------------------------
 
-if (!function_exists('sanitize_integer')) {
+if (!function_exists('sanitize_int')) {
     /**
      * Sanitize integers.
      *
      * @since 1.0.8
      * @param string $input The value to check.
      */
-    function sanitize_integer($input)
+    function sanitize_int($input)
     {
-        return absint($input);
+        return Cast::toInt($input);
     }
 }
 
-// ------------------------------------------------------
+// -------------------------------------------------------------
 
-if (!function_exists('sanitize_decimal_integer')) {
+if (!function_exists('sanitize_date')) {
     /**
-     * Sanitize integers that can use decimals.
+     * If date is invalid then return an empty string.
      *
-     * @since 1.3.41
-     * @param string $input The value to check.
+     * @param mixed $value
+     * @param string $fallback
+     * @return string
      */
-    function sanitize_decimal_integer($input)
+    function sanitize_date($value, $fallback = '')
     {
-        return abs(floatval($input));
-    }
-}
-
-// ------------------------------------------------------
-
-if (!function_exists('sanitize_empty_decimal_integer')) {
-    /**
-     * Sanitize integers that can use decimals.
-     *
-     * @since 3.1.0
-     * @param string $input The value to check.
-     */
-    function sanitize_empty_decimal_integer($input)
-    {
-        if ('' === $input) {
-            return '';
+        $date = strtotime(trim(Cast::toString($value)));
+        if (false !== $date) {
+            return wp_date('Y-m-d H:i:s', $date);
         }
 
-        return abs(floatval($input));
+        return $fallback;
     }
 }
 
-// ------------------------------------------------------
+// -------------------------------------------------------------
 
-if (!function_exists('sanitize_empty_negative_decimal_integer')) {
+if (!function_exists('sanitize_bool')) {
     /**
-     * Sanitize integers that can use negative decimals.
-     *
-     * @since 3.1.0
-     * @param string $input The value to check.
+     * @param mixed $value
+     * @return bool
      */
-    function sanitize_empty_negative_decimal_integer($input)
+    function sanitize_bool($value)
     {
-        if ('' === $input) {
-            return '';
-        }
-
-        return floatval($input);
-    }
-}
-
-// ------------------------------------------------------
-
-if (!function_exists('sanitize_empty_absint')) {
-    /**
-     * Sanitize a positive number, but allow an empty value.
-     *
-     * @since 2.2
-     * @param string $input The value to check.
-     */
-    function sanitize_empty_absint($input)
-    {
-        // phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison -- Intentially loose.
-        if ('' == $input) {
-            return '';
-        }
-
-        return absint($input);
+        return Cast::toBool($value);
     }
 }
 

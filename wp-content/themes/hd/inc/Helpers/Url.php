@@ -14,6 +14,20 @@ class Url
     }
 
     /**
+     * @param boolean $query_vars
+     * @return string
+     */
+    public static function current($query_vars = false)
+    {
+        global $wp;
+        if (true === $query_vars) {
+            return add_query_arg($wp->query_vars, network_home_url($wp->request));
+        }
+
+        return static::home($wp->request);
+    }
+
+    /**
      * Convert an assets URL to a path.
      *
      * Makes a best guess as to the path of an asset.

@@ -53,7 +53,7 @@ if (!class_exists('Admin')) {
                 'post_tag',
                 //'video_cat',
                 //'video_tag',
-                //'banner_cat',
+                'banner_cat',
                 //'project_cat',
                 //'project_tag',
             ];
@@ -66,8 +66,6 @@ if (!class_exists('Admin')) {
                 'user',
                 'post',
                 'page',
-                //'project',
-                //'video',
             ];
             foreach ($post_type_arr as $post_type) {
                 add_filter("{$post_type}_row_actions", [&$this, 'post_type_action_links'], 10, 2);
@@ -83,7 +81,7 @@ if (!class_exists('Admin')) {
             $thumb_term = [
                 'category',
                 //'video_cat',
-                //'banner_cat',
+                'banner_cat',
                 //'project_cat',
             ];
             foreach ($thumb_term as $term) {
@@ -174,7 +172,6 @@ if (!class_exists('Admin')) {
                         if (!$thumbnail = get_the_post_thumbnail($post_id, 'thumbnail')) {
                             $thumbnail = placeholder_src();
                         }
-
                         echo $thumbnail;
                     } else if ('video' == $post_type) {
                         if (has_post_thumbnail($post_id)) {

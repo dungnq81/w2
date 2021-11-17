@@ -31,6 +31,7 @@ class Cast
         if (is_scalar($value) && $explode) {
             return Arr::convertFromString($value);
         }
+
         return (array) $value;
     }
 

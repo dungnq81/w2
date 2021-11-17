@@ -43,6 +43,7 @@ if (!class_exists('Theme')) {
          */
         public function init()
         {
+            (new \Webhd\Themes\Hook);
             (new \Webhd\Themes\Customizer); // Customizer additions.
 
             if (is_admin()) {

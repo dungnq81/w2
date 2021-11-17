@@ -14,23 +14,31 @@ if (!class_exists('ACF_Integration')) {
     {
         public function __construct()
         {
-            $this->_local_fields_group();
+            $this->_localFieldsGroup();
+            $this->_optionsPage();
 
             add_filter('acf/fields/wysiwyg/toolbars', [&$this, 'wysiwyg_toolbars']);
         }
 
         /**
-         * local_fields_group
+         * @return void
+         */
+        private function _optionsPage()
+        {
+        }
+
+        /**
+         * _localFieldsGroup
          *
          * @return void
          */
-        private function _local_fields_group()
+        private function _localFieldsGroup()
         {
             if (!function_exists('acf_add_local_field_group'))
                 return false;
 
             //--------------------------------------
-            // Thêm ảnh thumbnail cho chuyên mục
+            // Thêm ảnh thumbnail cho chuyên mục, taxonomy
             //--------------------------------------
             acf_add_local_field_group([
                 'key' => 'group_5fdc116006846',
@@ -56,13 +64,13 @@ if (!class_exists('ACF_Integration')) {
                             'value' => 'category',
                         ],
                     ],
-                    // [
-                    //     [
-                    //         'param' => 'taxonomy',
-                    //         'operator' => '==',
-                    //         'value' => 'banner_cat',
-                    //     ],
-                    // ],
+                    [
+                        [
+                            'param' => 'taxonomy',
+                            'operator' => '==',
+                            'value' => 'banner_cat',
+                        ],
+                    ],
                 ],
                 'active' => true,
                 'show_in_rest' => 1,
@@ -139,7 +147,7 @@ if (!class_exists('ACF_Integration')) {
                         'key' => 'field_618e616c351a7',
                         'label' => __('Label Background', W_TEXTDOMAIN),
                         'name' => 'label_background',
-						'type' => 'color_picker',
+                        'type' => 'color_picker',
                         'required' => 0,
                         'conditional_logic' => array(
                             array(

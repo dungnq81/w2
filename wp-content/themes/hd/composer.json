@@ -8,16 +8,9 @@
 		}
 	],
 	"autoload": {
-		"psr-4": {
-			"Webhd\\Blocks\\": "inc/Blocks",
-			"Webhd\\Helpers\\": "inc/Helpers",
-			"Webhd\\Integrations\\": "inc/Integrations",
-			"Webhd\\Themes\\": "inc/Themes",
-			"Webhd\\Walkers\\": "inc/Walkers",
-			"Webhd\\Widgets\\": "inc/Widgets"
-		},
 		"files": [
 			"inc/ajax.php",
+			"inc/custom_post_types.php",
 			"inc/helpers.php",
 			"inc/image-sizes.php",
 			"inc/menus.php",
@@ -27,7 +20,17 @@
 			"inc/template-functions.php",
 			"inc/template-hooks.php",
 			"inc/widgets.php"
-		]
+		],
+		"psr-4": {
+			"Webhd\\Blocks\\": "inc/Blocks",
+			"Webhd\\Helpers\\": "inc/Helpers",
+			"Webhd\\Integrations\\": "inc/Integrations",
+			"Webhd\\Registers\\": "inc/Registers",
+			"Webhd\\Shortcodes\\": "inc/Shortcodes",
+			"Webhd\\Themes\\": "inc/Themes",
+			"Webhd\\Walkers\\": "inc/Walkers",
+			"Webhd\\Widgets\\": "inc/Widgets"
+		}
 	},
 	"require": {
 		"symfony/var-dumper": "^v5.3.8"

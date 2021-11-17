@@ -1,0 +1,306 @@
+<?php
+
+namespace Webhd\Themes;
+
+if (!defined('ABSPATH')) {
+    exit; // Exit if accessed directly.
+}
+
+use Webhd\Helpers\Cast;
+use Webhd\Helpers\Str;
+
+if (!class_exists('Hook')) {
+    class Hook
+    {
+        public function __construct()
+        {
+            $this->doActions();
+            $this->doFilters();
+        }
+
+        // ------------------------------------------------------
+        // Actions hook
+        // ------------------------------------------------------
+
+        public function doActions()
+        {
+            // before_header actions
+            add_action('before_header', [&$this, 'before_header_extra'], 14);
+
+            // wp_footer actions
+            add_action('wp_footer', [&$this, 'bubble_hotline'], 97);
+            add_action('wp_footer', [&$this, 'back_to_top'], 98);
+            add_action('wp_footer', [&$this, 'footer_extra_script'], 99);
+
+            // wp_print_footer_scripts
+            add_action('wp_print_footer_scripts', [&$this, 'skip_link_focus_fix']);
+
+            // hide admin bar
+            add_action("user_register", [&$this, 'user_register'], 10, 1);
+        }
+
+        // ------------------------------------------------------
+
+        /**
+         * @param $user_id
+         * @return void
+         */
+        public function __user_register($user_id)
+        {
+            update_user_meta($user_id, 'show_admin_bar_front', false);
+            update_user_meta($user_id, 'show_admin_bar_admin', false);
+        }
+
+        // ------------------------------------------------------
+
+        /**
+         * Fix skip link focus.
+         *
+         * This does not enqueue the script because it is tiny and because it is only for IE11,
+         * thus it does not warrant having an entire dedicated blocking script being loaded.
+         *
+         * @link https://git.io/vWdr2
+         */
+        public function skip_link_focus_fix()
+        {
+            echo '<script>';
+            include get_template_directory() . '/assets/js/plugins/skip-link-focus-fix.js';
+            echo '</script>';
+
+            // The following is minified via `npx terser --compress --mangle -- assets/js/skip-link-focus-fix.js`.
+        }
+
+        // ------------------------------------------------------
+
+        public function footer_extra_script()
+        { ?>
+            <script>
+                document.documentElement.classList.remove("no-js");
+            </script>
+            <script>
+                if (-1 !== navigator.userAgent.indexOf('MSIE') || -1 !== navigator.appVersion.indexOf('Trident/')) {
+                    document.documentElement.classList.add('is-IE');
+                }
+            </script>
+        <?php
+        }
+
+        // ------------------------------------------------------
+
+        /**
+         * Build the back to top button
+         *
+         * - GeneratePress
+         * - @since 1.3.24
+         */
+        public function back_to_top()
+        {
+            $back_to_top = apply_filters('w_back_to_top', true);
+            if (!$back_to_top) return;
+
+            echo apply_filters( // phpcs:ignore
+                'back_to_top_output',
+                sprintf(
+                    '<a title="%1$s" aria-label="%1$s" rel="nofollow" href="#" class="w-back-to-top toTop" style="opacity:0;visibility:hidden;" data-scroll-speed="%2$s" data-start-scroll="%3$s">%4$s</a>',
+                    esc_attr__('Scroll back to top', W_TEXTDOMAIN),
+                    absint(apply_filters('back_to_top_scroll_speed', 400)),
+                    absint(apply_filters('back_to_top_start_scroll', 300)),
+                    \Webhd\Themes\SVG_Icons::get_svg('ui', 'arrow_right', 24)
+                )
+            );
+        }
+
+        // ------------------------------------------------------
+
+        public function bubble_hotline()
+        {
+            // hotline
+            $_hotline = get_theme_mod_ssl('hotline_setting');
+            $_tel     = Str::stripSpace($_hotline);
+
+            if ($_tel) {
+                echo '<div class="hotline-mobile draggable">';
+                echo '<a title="' . esc_attr($_hotline) . '" href="tel:' . $_tel . '">';
+                echo '<div class="hl-circle"></div><div class="hl-circle-fill"></div><div class="hl-circle-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M497.39 361.8l-112-48a24 24 0 0 0-28 6.9l-49.6 60.6A370.66 370.66 0 0 1 130.6 204.11l60.6-49.6a23.94 23.94 0 0 0 6.9-28l-48-112A24.16 24.16 0 0 0 122.6.61l-104 24A24 24 0 0 0 0 48c0 256.5 207.9 464 464 464a24 24 0 0 0 23.4-18.6l24-104a24.29 24.29 0 0 0-14.01-27.6z"/></svg></div>';
+                echo '</a>';
+                echo '</div>';
+            }
+        }
+
+        // ------------------------------------------------------
+
+        /**
+         * @return void
+         */
+        public function before_header_extra()
+        {
+            if (function_exists('wp_body_open')) {
+                wp_body_open();
+            } else {
+                do_action('wp_body_open');
+            }
+
+        ?>
+            <a class="skip-link screen-reader-text" href="#site-navigation"><?php echo __('Skip to navigation', W_TEXTDOMAIN); ?></a>
+            <a class="skip-link screen-reader-text" href="#main-content"><?php echo __('Skip to main content', W_TEXTDOMAIN); ?></a>
+<?php
+        }
+
+        // ------------------------------------------------------
+        // Filters hook
+        // ------------------------------------------------------
+
+        public function doFilters()
+        {
+            // Adding Shortcode in WordPress Using Custom HTML Widget
+            add_filter('widget_text', 'do_shortcode');
+            add_filter('widget_text', 'shortcode_unautop');
+
+            if (!WP_DEBUG) {
+
+                // Remove WP version from RSS.
+                add_filter('the_generator', '__return_empty_string');
+
+                add_filter('style_loader_src', [&$this, 'remove_version_scripts_styles'], 11, 1);
+                add_filter('script_loader_src', [&$this, 'remove_version_scripts_styles'], 11, 1);
+            }
+
+            // Changing the alt text on the logo to show your site name
+            add_filter('login_headertext', function () {
+                return get_option('blogname');
+            });
+
+            // Changing the logo link from wordpress.org to your site
+            add_filter('login_headerurl', function () {
+                return esc_url(site_url('/'));
+            });
+
+            // comment off default
+            add_filter('wp_insert_post_data', function ($data) {
+                if ($data['post_status'] == 'auto-draft') {
+                    $data['comment_status'] = 0;
+                    $data['ping_status']    = 0;
+                }
+                return $data;
+            }, 11, 1);
+
+            /**
+             * Add support for buttons in the top-bar menu:
+             * 1) In WordPress admin, go to Apperance -> Menus.
+             * 2) Click 'Screen Options' from the top panel and enable 'CSS CLasses' and 'Link Relationship (XFN)'
+             * 3) On your menu item, type 'has-form' in the CSS-classes field. Type 'button' in the XFN field
+             * 4) Save Menu. Your menu item will now appear as a button in your top-menu
+             */
+            add_filter('wp_nav_menu', function ($ulclass) {
+                $find    = ['/<a rel="button"/', '/<a title=".*?" rel="button"/'];
+                $replace = ['<a rel="button" class="button"', '<a rel="button" class="button"'];
+
+                return preg_replace($find, $replace, $ulclass, 1);
+            });
+
+            // normalize upload filename
+            add_filter('sanitize_file_name', function (string $filename) {
+                $filename = remove_accents($filename);
+                return $filename;
+            }, 10, 1);
+
+            // filter post search only by title
+            add_filter("posts_search", [&$this, 'post_search_by_title'], 500, 2);
+
+            //...
+            add_filter('excerpt_more', function () {
+                return '...';
+            });
+
+            // Remove id li navigation
+            add_filter('nav_menu_item_id', '__return_null', 10, 3);
+
+            // add multiple for category dropdown
+            add_filter('wp_dropdown_cats', [&$this, 'dropdown_cats_multiple'], 10, 2);
+
+            /**
+             * Use the is-active class of ZURB Foundation on wp_list_pages output.
+             * From required+ Foundation http://themes.required.ch.
+             */
+            add_filter('wp_list_pages', function ($input) {
+                $pattern = '/current_page_item/';
+                $replace = 'current_page_item is-active';
+                $output  = preg_replace($pattern, $replace, $input);
+
+                return $output;
+            }, 10, 2);
+        }
+
+        // ------------------------------------------------------
+
+        /**
+         * @param $output
+         * @param $r
+         *
+         * @return mixed|string|string[]
+         */
+        public function dropdown_cats_multiple($output, $r)
+        {
+            if (isset($r['multiple']) && $r['multiple']) {
+                $output = preg_replace('/^<select/i', '<select multiple', $output);
+                $output = str_replace("name='{$r['name']}'", "name='{$r['name']}[]'", $output);
+                foreach (array_map('trim', explode(",", $r['selected'])) as $value) {
+                    $output = str_replace("value=\"{$value}\"", "value=\"{$value}\" selected", $output);
+                }
+            }
+
+            return $output;
+        }
+
+        // ------------------------------------------------------
+
+        /**
+         * @param $search
+         * @param $wp_query
+         * @return string
+         */
+        public function post_search_by_title($search, $wp_query)
+        {
+            global $wpdb;
+            if (empty($search)) {
+                return $search; // skip processing – no search term in query
+            }
+
+            $q      = $wp_query->query_vars;
+            $n      = !empty($q['exact']) ? '' : '%';
+            $search = $searchand = '';
+            foreach (Cast::toArray($q['search_terms']) as $term) {
+                $term      = esc_sql($wpdb->esc_like($term));
+                $search    .= "{$searchand}($wpdb->posts.post_title LIKE '{$n}{$term}{$n}')";
+                $searchand = " AND ";
+            }
+
+            if (!empty($search)) {
+                $search = " AND ({$search}) ";
+                if (!is_user_logged_in()) {
+                    $search .= " AND ($wpdb->posts.post_password = '') ";
+                }
+            }
+
+            return $search;
+        }
+
+        // ------------------------------------------------------
+
+        /**
+         * Remove version from scripts and styles
+         *
+         * @param $src
+         *
+         * @return bool|string
+         */
+        public function remove_version_scripts_styles($src)
+        {
+            if ($src && str_contains($src, 'ver=')) {
+                $src = remove_query_arg('ver', $src);
+            }
+
+            return $src;
+        }
+    }
+}

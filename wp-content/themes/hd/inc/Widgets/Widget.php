@@ -14,8 +14,16 @@ abstract class Widget extends WP_Widget
     /**
      * @var array
      */
-    protected $prefix = 'w_';
+    protected $prefix = 'w-';
 
+    /**
+     * @var array
+     */
+    protected $widgetArgs;
+
+    /**
+     * __construct function
+     */
     public function __construct()
     {
         $className = (new \ReflectionClass($this))->getShortName();

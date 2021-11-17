@@ -8,20 +8,6 @@ use Webhd\Helpers\Str;
 
 // ------------------------------------------------------
 
-if (!function_exists('is_elementor_activated')) {
-	/**
-	 * Query Elementor Pro activation
-	 *
-	 * @return bool
-	 */
-	function is_elementor_activated()
-	{
-		return !((!class_exists('\Elementor\Plugin') || !class_exists('ElementorPro\Modules\ThemeBuilder\Module')));
-	}
-}
-
-// ------------------------------------------------------
-
 if (!function_exists('is_posts_page')) {
 	/**
 	 * Check to see if we're on a posts page
@@ -160,7 +146,7 @@ if (!function_exists('get_banner_query')) {
 			$_args['nopaging'] = false;
 		}
 
-		$_query = new WP_Query($_args);
+		$_query = new \WP_Query($_args);
 		if (!$_query->have_posts()) {
 			return false;
 		}
@@ -178,7 +164,7 @@ if (!function_exists('horizontal_nav')) {
 	 * @param array $args
 	 * @return bool|false|string|void
 	 */
-	function horizontal_nav(array $args)
+	function horizontal_nav(array $args = [])
 	{
 		$args = wp_parse_args(
 			(array) $args,
@@ -206,7 +192,7 @@ if (!function_exists('vertical_nav')) {
 	 * @param array $args
 	 * @return bool|false|string|void
 	 */
-	function vertical_nav(array $args)
+	function vertical_nav(array $args = [])
 	{
 		$args = wp_parse_args(
 			(array) $args,
@@ -445,10 +431,10 @@ if (!function_exists('primary_term')) {
 
 		// Yoast SEO
 		// https://vi.wordpress.org/plugins/wordpress-seo/
-		if (class_exists('WPSEO_Primary_Term')) {
+		if (class_exists('\WPSEO_Primary_Term')) {
 
 			// Show the post's 'Primary' category, if this Yoast feature is available, & one is set
-			$wpseo_primary_term = new WPSEO_Primary_Term($taxonomy, $ID);
+			$wpseo_primary_term = new \WPSEO_Primary_Term($taxonomy, $ID);
 			$wpseo_primary_term = $wpseo_primary_term->get_primary_term();
 			$term               = get_term($wpseo_primary_term, $taxonomy);
 			if ($term) {
@@ -474,6 +460,7 @@ if (!function_exists('get_primary_term')) {
 	 * @param string $taxonomy
 	 * @param string $wrapper_open
 	 * @param string $wrapper_close
+	 * @return string
 	 */
 	function get_primary_term($post, $taxonomy = '', $wrapper_open = '<div class="terms">', $wrapper_close = '</div>')
 	{
@@ -541,6 +528,7 @@ if (!function_exists('hashtags')) {
 	/**
 	 * @param string $taxonomy
 	 * @param int $id
+	 * @return void
 	 */
 	function hashtags($taxonomy = 'post_tag', $id = 0, $sep = '')
 	{
@@ -689,7 +677,7 @@ if (!function_exists('placeholder_src')) {
 	 *
 	 * @param boolean $img_wrap
 	 * @param boolean $thumb
-	 * @return void
+	 * @return string
 	 */
 	function placeholder_src($img_wrap = true, $thumb = true)
 	{
@@ -709,11 +697,13 @@ if (!function_exists('placeholder_src')) {
 
 if (!function_exists('acf_term_thumb')) {
 	/**
-	 * @param int $term_id
-	 * @param string|null $acf_field_name
+	 * Undocumented function
+	 *
+	 * @param id|object $term_id
+	 * @param string $acf_field_name
 	 * @param string $size
 	 * @param boolean $img_wrap
-	 * @return void
+	 * @return null|string
 	 */
 	function acf_term_thumb($term_id, $acf_field_name = null, $size = "thumbnail", $img_wrap = false)
 	{
@@ -735,6 +725,8 @@ if (!function_exists('acf_term_thumb')) {
 if (!function_exists('menu_fallback')) {
 	/**
 	 * A fallback when no navigation is selected by default.
+	 *
+	 * @return void
 	 */
 	function menu_fallback($container = 'grid-container')
 	{

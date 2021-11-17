@@ -2,18 +2,26 @@
 
 namespace Webhd\Widgets;
 
-if (!class_exists('CF7_Widget')) {
-	class CF7_Widget extends Widget
-	{
-		public function __construct()
-		{
-			$widget_ops = array(
-				'classname'                   => 'cf7_widget',
-				'description'                 => __('Contact Form 7', W_TEXTDOMAIN),
-				'customize_selective_refresh' => true,
-			);
+use Webhd\Helpers\Cast;
+use Webhd\Helpers\Str;
 
-			parent::__construct('cf7-widget', __('W - CF7 Form', W_TEXTDOMAIN), $widget_ops);
+if (!class_exists('Cf7_Widget')) {
+	class Cf7_Widget extends Widget
+	{
+		/**
+		 * {@inheritdoc}
+		 */
+		protected function widgetName()
+		{
+			return __('W - CF7 Form', W_TEXTDOMAIN);
+		}
+
+		/**
+		 * {@inheritdoc}
+		 */
+		protected function widgetDescription()
+		{
+			return __('Contact Form 7 + Custom Fields', W_TEXTDOMAIN);
 		}
 
 		/**
@@ -21,11 +29,12 @@ if (!class_exists('CF7_Widget')) {
 		 */
 		private function _acf_fields($id)
 		{
+			$_acf = function_exists('get_field') ? true : false;
 			return (object) [
-				'html_title' => get_field('html_title', $id),
-				'html_desc' => get_field('html_desc', $id),
-				'css_class' => get_field('css_class', $id),
-				'form' => get_field('form', $id),
+				'html_title' => $_acf ? get_field('html_title', $id) : '',
+				'html_desc' => $_acf ? get_field('html_desc', $id) : '',
+				'css_class' => $_acf ? get_field('css_class', $id) : '',
+				'form' => $_acf ? get_field('form', $id) : '',
 			];
 		}
 
@@ -54,10 +63,10 @@ if (!class_exists('CF7_Widget')) {
 					if ($title) : ?>
 						<h2 class="heading-title"><?php echo $title; ?></h2>
 					<?php endif;
-					if (strip_whitespace($ACF->html_title)) : ?>
+					if (Str::stripSpace($ACF->html_title)) : ?>
 						<?php echo $ACF->html_title; ?>
 					<?php endif;
-					if (strip_whitespace($ACF->html_desc)) : ?>
+					if (Str::stripSpace($ACF->html_desc)) : ?>
 						<?php echo $ACF->html_desc; ?>
 					<?php endif; ?>
 					<?php
@@ -72,33 +81,36 @@ if (!class_exists('CF7_Widget')) {
 		}
 
 		/**
-		 * @param array $new_instance
-		 * @param array $old_instance
-		 *
-		 * @return array
-		 */
-		public function update($new_instance, $old_instance)
-		{
-			$instance              = $old_instance;
-			$instance['title']     = sanitize_text_field($new_instance['title']);
-			return $instance;
-		}
-
-		/**
 		 * @param array $instance
 		 *
 		 * @return string|void
 		 */
 		public function form($instance)
 		{
-			$instance = wp_parse_args((array) $instance, array('title' => ''));
-			$title    = $instance['title'];
+			$instance = wp_parse_args(
+				Cast::toArray($instance),
+				[
+					'title' => '',
+				]
+			);
+			$this->widgetArgs = $instance;
 		?>
 			<p>
 				<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title', W_TEXTDOMAIN); ?></label>
-				<input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo esc_attr($title); ?>" />
+				<input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo esc_attr($instance['title']); ?>" />
 			</p>
 <?php
+		}
+
+		/**
+		 * @param array $newInstance
+		 * @param array $oldInstance
+		 * @return array
+		 */
+		public function update($newInstance, $oldInstance)
+		{
+			$newInstance['title'] = sanitize_text_field($newInstance['title']);
+			return parent::update($newInstance, $oldInstance);
 		}
 	}
 }

@@ -1,9 +1,5 @@
 <?php
 
-use Webhd\Helpers\Url;
-use Webhd\Helpers\Cast;
-use Webhd\Helpers\Str;
-
 /**
  * Helpers functions
  * @author   WEBHD
@@ -13,6 +9,9 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly.
 }
 
+use Webhd\Helpers\Url;
+use Webhd\Helpers\Cast;
+use Webhd\Helpers\Str;
 
 // -------------------------------------------------------------
 

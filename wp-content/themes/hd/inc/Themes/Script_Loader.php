@@ -22,12 +22,14 @@ if (!class_exists('Script_Loader')) {
 		 *
 		 * @param string $tag The script tag.
 		 * @param string $handle The script handle.
+		 * @param string $src
 		 *
 		 * @return string Script HTML string.
 		 */
-		public function filter_script_loader_tag($tag, $handle)
+		public function filter_script_loader_tag($tag, $handle, $src)
 		{
-			foreach (array('async', 'defer') as $attr) {
+			// async/defer
+			foreach (['async', 'defer'] as $attr) {
 				if (!wp_scripts()->get_data($handle, $attr)) {
 					continue;
 				}
@@ -41,6 +43,12 @@ if (!class_exists('Script_Loader')) {
 				break;
 			}
 
+			// custom filter which adds proper attributes
+			if (('fontawesome-kit' == $handle) && !preg_match(":\scrossorigin(=|>|\s):", $tag)) {
+				$tag = preg_replace(':(?=></script>):', " crossorigin='anonymous'", $tag, 1);
+			}
+
+			//return $tag
 			return $tag;
 		}
 	}

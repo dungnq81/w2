@@ -1,20 +1,13 @@
 <?php
 
 if (!defined('ABSPATH')) {
-    exit; // Exit if accessed directly.
+	exit; // Exit if accessed directly.
 }
 
-use Webhd\Integrations\ACF_Integration;
-use Webhd\Integrations\CF7_Integration;
-use Webhd\Integrations\Wpdiscuz_Integration;
-use Webhd\Integrations\RankMath_Integration;
-use Webhd\Integrations\Elementor_Integration;
-use Webhd\Integrations\Woocommerce_Integration;
+class_exists('\ACF') && (new \Webhd\Integrations\Acf_Integration);
+class_exists('\WPCF7') && (new \Webhd\Integrations\Cf7_Integration);
+class_exists('\WpdiscuzCore') && (new \Webhd\Integrations\Wpdiscuz_Integration);
+class_exists('\RankMath') && (new \Webhd\Integrations\RankMath_Integration);
 
-class_exists('\ACF') && (new ACF_Integration);
-class_exists('\WPCF7') && (new CF7_Integration);
-class_exists('\WpdiscuzCore') && (new Wpdiscuz_Integration);
-class_exists('\RankMath') && (new RankMath_Integration);
-
-class_exists('\Elementor\Plugin') && (new Elementor_Integration);
-class_exists('\WooCommerce') && (new Woocommerce_Integration);
+class_exists('\Elementor\Plugin') && (new \Webhd\Integrations\Elementor_Integration);
+class_exists('\WooCommerce') && (new \Webhd\Integrations\Woocommerce_Integration);

@@ -21,8 +21,8 @@ if (!class_exists('Defer')) {
 		{
 			add_action('wp_footer', [&$this, 'deferred_scripts'], 1000);
 
-			add_filter('script_loader_tag', [&$this, 'script_loader_tag'], 10, 3);
-			add_filter('style_loader_tag', [&$this, 'style_loader_tag'], 10, 2);
+			add_filter('script_loader_tag', [&$this, 'script_loader_tag'], 11, 3);
+			add_filter('style_loader_tag', [&$this, 'style_loader_tag'], 11, 2);
 		}
 
 		/**
@@ -62,26 +62,31 @@ if (!class_exists('Defer')) {
 		{
 			// Facebook
 			$fb_appid  = get_theme_mod_ssl('fb_menu_setting');
-			$fb_pageid = get_theme_mod_ssl('fbpage_menu_setting');
 			$fb_locale = get_f_locale();
-
-			if ($fb_appid && !is_customize_preview()) {
-				echo "\n";
+			if ($fb_appid) {
 				echo "<script>";
 				echo "window.fbAsyncInit = function() {FB.init({appId:'" . $fb_appid . "',status:true,xfbml:true,autoLogAppEvents:true,version:'v12.0'});};";
 				echo "</script>";
 				echo "<script async defer crossorigin=\"anonymous\" data-type='lazy' data-src=\"https://connect.facebook.net/" . $fb_locale . "/sdk.js\"></script>";
+			}
+
+			$fb_pageid = get_theme_mod_ssl('fbpage_menu_setting');
+			$fb_livechat = get_theme_mod_ssl('fb_chat_setting');
+			if ($fb_appid && $fb_pageid && $fb_livechat && !is_customize_preview()) {
 				if ($fb_pageid) {
 					echo '<script async defer data-type="lazy" data-src="https://connect.facebook.net/' . $fb_locale . '/sdk/xfbml.customerchat.js"></script>';
-					$_fb_message = __('If you need assistance, please leave a message here. Thanks', W_TEXTDOMAIN);
+					$_fb_message = __('If you need assistance, please leave a message here. Thanks', 'hd');
 					echo '<div class="fb-customerchat" attribution="setup_tool" page_id="' . $fb_pageid . '" theme_color="#CC3366" logged_in_greeting="' . esc_attr($_fb_message) . '" logged_out_greeting="' . esc_attr($_fb_message) . '"></div>';
 				}
 			}
 
 			// Zalo
 			$zalo_oaid    = get_theme_mod_ssl('zalo_oa_menu_setting');
+			$zalo_livechat = get_theme_mod_ssl('zalo_chat_setting');
 			if ($zalo_oaid) {
-				echo '<div class="zalo-chat-widget" data-oaid="' . $zalo_oaid . '" data-welcome-message="' . __('Rất vui khi được hỗ trợ bạn.', W_TEXTDOMAIN) . '" data-autopopup="0" data-width="350" data-height="420"></div>';
+				if ($zalo_livechat)
+					echo '<div class="zalo-chat-widget" data-oaid="' . $zalo_oaid . '" data-welcome-message="' . __('Rất vui khi được hỗ trợ bạn.', 'hd') . '" data-autopopup="0" data-width="350" data-height="420"></div>';
+
 				echo "<script defer data-type='lazy' data-src=\"https://sp.zalo.me/plugins/sdk.js\"></script>";
 			}
 

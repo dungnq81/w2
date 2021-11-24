@@ -5,6 +5,10 @@ if (!defined('ABSPATH')) {
 }
 
 use Webhd\Helpers\Str;
+use Webhd\Helpers\Url;
+
+use Webhd\Ext\Horizontal_Menu_Walker;
+use Webhd\Ext\Vertical_Menu_Walker;
 
 // ------------------------------------------------------
 
@@ -37,10 +41,10 @@ if (!function_exists('lazy_script_tag')) {
 			if (str_contains($handle, $str)) {
 				if ('defer' === $value) {
 					$tag = preg_replace('/\s+defer\s+/', ' ', $tag);
-					$tag = preg_replace('/\s+src=/', ' defer src=', $tag);
+					return preg_replace('/\s+src=/', ' defer src=', $tag);
 				} elseif ('delay' === $value) {
 					$tag = preg_replace('/\s+defer\s+/', ' ', $tag);
-					$tag = preg_replace('/\s+src=/', ' defer data-type=\'lazy\' data-src=', $tag);
+					return preg_replace('/\s+src=/', ' defer data-type=\'lazy\' data-src=', $tag);
 				}
 			}
 		}
@@ -108,7 +112,7 @@ if (!function_exists('get_theme_mod_ssl')) {
 
 // -------------------------------------------------------------
 
-if (!function_exists('get_banner_query')) {
+if (!function_exists('query_by_term')) {
 	/**
 	 * @param object $term
 	 * @param int $posts_per_page
@@ -171,17 +175,20 @@ if (!function_exists('horizontal_nav')) {
 			[
 				'container' => false,
 				'menu_id' => '',
-				'menu_class' => 'desktop-menu dropdown menu horizontal horizontal-menu',
-				'theme_location' => 'main-nav',
-				'depth' => 3,
+				'menu_class' => 'dropdown menu horizontal horizontal-menu',
+				'theme_location' => '',
+				'depth' => 4,
 				'fallback_cb' => false,
-				'walker' => new \Webhd\Walkers\Horizontal_Menu_Walker,
+				'walker' => new Horizontal_Menu_Walker,
 				'items_wrap' => '<ul role="menubar" id="%1$s" class="%2$s" data-dropdown-menu>%3$s</ul>',
-				'echo' => true,
+				'echo' => false,
 			]
 		);
 
-		wp_nav_menu($args);
+		if (true === $args['echo'])
+			echo wp_nav_menu($args);
+		else
+			return wp_nav_menu($args);
 	}
 }
 
@@ -199,17 +206,113 @@ if (!function_exists('vertical_nav')) {
 			[
 				'container' => false, // Remove nav container
 				'menu_id' => '',
-				'menu_class' => 'mobile-menu vertical menu',
-				'theme_location' => 'mobile-nav',
-				'depth' => 3,
+				'menu_class' => 'vertical menu',
+				'theme_location' => '',
+				'depth' => 4,
 				'fallback_cb' => false,
-				'walker' => new \Webhd\Walkers\Vertical_Menu_Walker,
+				'walker' => new Vertical_Menu_Walker,
 				'items_wrap' => '<ul role="menubar" id="%1$s" class="%2$s" data-accordion-menu data-submenu-toggle="true">%3$s</ul>',
-				'echo' => true,
+				'echo' => false,
 			]
 		);
 
-		wp_nav_menu($args);
+		if (true === $args['echo'])
+			echo wp_nav_menu($args);
+		else
+			return wp_nav_menu($args);
+	}
+}
+
+// -------------------------------------------------------------
+
+if (!function_exists('main_nav')) {
+	/**
+	 * @link http://codex.wordpress.org/Function_Reference/wp_nav_menu
+	 *
+	 * @param string $location
+	 * @param string $menu_class
+	 * @param string $menu_id
+	 *
+	 * @return bool|false|string|void
+	 */
+	function main_nav($location = 'main-nav', $menu_class = 'desktop-menu', $menu_id = 'main-menu')
+	{
+		return horizontal_nav([
+			'menu_id'        => $menu_id,
+			'menu_class'     => $menu_class . ' dropdown menu horizontal horizontal-menu',
+			'theme_location' => $location,
+			'echo'           => false,
+		]);
+	}
+}
+
+// -------------------------------------------------------------
+
+if (!function_exists('mobile_nav')) {
+
+	/**
+	 * @param string $location
+	 * @param string $menu_class
+	 * @param string $menu_id
+	 *
+	 * @return bool|false|string|void
+	 */
+	function mobile_nav($location = 'mobile-nav', $menu_class = 'mobile-menu', $menu_id = 'mobile-menu')
+	{
+		return vertical_nav([
+			'menu_id' => $menu_id,
+			'menu_class'     => $menu_class . ' vertical menu',
+			'theme_location' => $location,
+			'echo'           => false,
+		]);
+	}
+}
+
+// ------------------------------------------------------
+
+if (!function_exists('term_nav')) {
+
+	/**
+	 * @param string $location
+	 * @param string $menu_class
+	 *
+	 * @return bool|false|string|void
+	 */
+	function term_nav($location = 'policy-nav', $menu_class = 'terms-menu')
+	{
+		return wp_nav_menu([
+			'container'      => false,
+			'menu_class'     => $menu_class . ' menu horizontal horizontal-menu',
+			'theme_location' => $location,
+			'items_wrap'     => '<ul role="menubar" class="%2$s">%3$s</ul>',
+			'depth'          => 1,
+			'fallback_cb'    => false,
+			'echo'           => false,
+		]);
+	}
+}
+
+// -------------------------------------------------------------
+
+if (!function_exists('social_nav')) {
+
+	/**
+	 * @param string $location
+	 * @param string $menu_class
+	 *
+	 * @return bool|false|string|void
+	 */
+	function social_nav($location = 'social-nav', $menu_class = 'social-menu conn-lnk')
+	{
+		return wp_nav_menu([
+			'container'      => false,
+			'theme_location' => $location,
+			'menu_class'     => $menu_class,
+			'depth'          => 1,
+			'link_before'    => '<span class="text">',
+			'link_after'     => '</span>',
+			'echo'           => false,
+		]);
 	}
 }
 
@@ -285,7 +388,7 @@ if (!function_exists('site_title_or_logo')) {
 			$html = (is_home() || is_front_page()) ? '<h1 class="logo">' . $logo . '</h1>' : $logo;
 		} else {
 			$tag  = is_home() ? 'h1' : 'div';
-			$html = '<' . esc_attr($tag) . ' class="site-title"><a href="' . esc_url(home_url('/')) . '" rel="home">' . esc_html(get_bloginfo('name')) . '</a></' . esc_attr($tag) . '>';
+			$html = '<' . esc_attr($tag) . ' class="site-title"><a title href="' . Url::home() . '" rel="home">' . esc_html(get_bloginfo('name')) . '</a></' . esc_attr($tag) . '>';
 			if ('' !== get_bloginfo('description')) {
 				$html .= '<p class="site-description">' . esc_html(get_bloginfo('description', 'display')) . '</p>';
 			}
@@ -303,14 +406,26 @@ if (!function_exists('site_title_or_logo')) {
 
 if (!function_exists('site_logo')) {
 	/**
-	 * @return string
+	 * @param string $theme - default|light|dark
+	 * @return void|string
 	 */
-	function site_logo()
+	function site_logo($theme = 'default', $class = '')
 	{
 		$html = '';
-		if (function_exists('the_custom_logo') && has_custom_logo()) {
+		$class || $class = 'site-logo after-overlay';
+
+		$light_logo = get_theme_mod_ssl('light_logo');
+		if ('default' !== $theme) {
+
+			/*
+			* If the alt attribute is not empty, there's no need to explicitly pass it
+			* because wp_get_attachment_image() already adds the alt attribute.
+			*/
+			$logo = wp_get_attachment_image(attachment_url_to_postid($light_logo), 'full', false);
+			$html = '<div class="' . $class . '"><a class="after-overlay" title href="' . Url::home() . '" rel="home">' . $logo . '</a></div>';
+		} else if (function_exists('the_custom_logo') && has_custom_logo()) {
 			$logo = get_custom_logo();
-			$html = '<div class="site-logo">' . $logo . '</div>';
+			$html = '<div class="' . $class . '"><a class="after-overlay" title href="' . Url::home() . '" rel="home">' . $logo . '</a></div>';
 		}
 
 		return $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -326,7 +441,7 @@ if (!function_exists('loop_excerpt')) {
 	 *
 	 * @return string|null
 	 */
-	function loop_excerpt($post = null, $class = 'excerpt')
+	function loop_excerpt($post = null, string $class = 'excerpt')
 	{
 		$excerpt = get_the_excerpt($post);
 		if (!Str::stripSpace($excerpt)) {
@@ -400,7 +515,7 @@ if (!function_exists('primary_term')) {
 	 *
 	 * @return array|bool|int|mixed|object|WP_Error|WP_Term|null
 	 */
-	function primary_term($post = null, $taxonomy = '')
+	function primary_term($post = null, string $taxonomy = '')
 	{
 		$post = get_post($post);
 		$ID   = is_numeric($post) ? $post : $post->ID;
@@ -436,7 +551,7 @@ if (!function_exists('primary_term')) {
 			// Show the post's 'Primary' category, if this Yoast feature is available, & one is set
 			$wpseo_primary_term = new \WPSEO_Primary_Term($taxonomy, $ID);
 			$wpseo_primary_term = $wpseo_primary_term->get_primary_term();
-			$term               = get_term($wpseo_primary_term, $taxonomy);
+			$term = get_term($wpseo_primary_term, $taxonomy);
 			if ($term) {
 				return $term;
 			}
@@ -489,29 +604,22 @@ if (!function_exists('post_terms')) {
 	 *
 	 * @return string|null
 	 */
-	function post_terms($id, $taxonomy = 'category', $wrapper_open = '<div class="terms">', $wrapper_close = '</div>')
+	function post_terms($id, string $taxonomy = 'category', string $wrapper_open = '<div class="terms">', string $wrapper_close = '</div>')
 	{
 		if (!$taxonomy) {
 			$taxonomy = 'category';
 		}
 
-		$link       = '';
+		$link = '';
 		$post_terms = get_the_terms($id, $taxonomy);
-		if (is_wp_error($post_terms)) {
-			return $post_terms;
-		}
-
 		if (empty($post_terms)) {
 			return false;
 		}
 
 		foreach ($post_terms as $term) {
-			$link = get_term_link($term, $taxonomy);
-			if (is_wp_error($link)) {
-				return $link;
+			if ($term->slug) {
+				$link .= '<a href="' . esc_url($link) . '" title="' . esc_attr($term->name) . '">' . $term->name . '</a>';
 			}
-
-			$link .= '<a href="' . esc_url($link) . '" title="' . esc_attr($term->name) . '">' . $term->name . '</a>';
 		}
 
 		if ($wrapper_open && $wrapper_close) {
@@ -524,13 +632,13 @@ if (!function_exists('post_terms')) {
 
 // -------------------------------------------------------------
 
-if (!function_exists('hashtags')) {
+if (!function_exists('the_hashtags')) {
 	/**
 	 * @param string $taxonomy
 	 * @param int $id
 	 * @return void
 	 */
-	function hashtags($taxonomy = 'post_tag', $id = 0, $sep = '')
+	function the_hashtags($taxonomy = 'post_tag', $id = 0, $sep = '')
 	{
 		if (!$taxonomy) {
 			$taxonomy = 'post_tag';
@@ -543,10 +651,10 @@ if (!function_exists('hashtags')) {
 		if ($hashtag_list) {
 			echo '<div class="hashtags">';
 			printf(
-				/* translators: 1: SVG icon. 2: posted in label, only visible to screen readers. 3: list of tags. */
+			/* translators: 1: SVG icon. 2: posted in label, only visible to screen readers. 3: list of tags. */
 				'<div class="hashtag-links links">%1$s<span class="screen-reader-text">%2$s </span>%3$s</div>',
 				'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><path d="M446.381 182.109l1.429-8c1.313-7.355-4.342-14.109-11.813-14.109h-98.601l20.338-113.891C359.047 38.754 353.392 32 345.92 32h-8.127a12 12 0 0 0-11.813 9.891L304.89 160H177.396l20.338-113.891C199.047 38.754 193.392 32 185.92 32h-8.127a12 12 0 0 0-11.813 9.891L144.89 160H42.003a12 12 0 0 0-11.813 9.891l-1.429 8C27.448 185.246 33.103 192 40.575 192h98.6l-22.857 128H13.432a12 12 0 0 0-11.813 9.891l-1.429 8C-1.123 345.246 4.532 352 12.003 352h98.601L90.266 465.891C88.953 473.246 94.608 480 102.08 480h8.127a12 12 0 0 0 11.813-9.891L143.11 352h127.494l-20.338 113.891C248.953 473.246 254.608 480 262.08 480h8.127a12 12 0 0 0 11.813-9.891L303.11 352h102.886a12 12 0 0 0 11.813-9.891l1.429-8c1.313-7.355-4.342-14.109-11.813-14.109h-98.601l22.857-128h102.886a12 12 0 0 0 11.814-9.891zM276.318 320H148.825l22.857-128h127.494l-22.858 128z"/></svg>',
-				__('Tags', W_TEXTDOMAIN),
+				__('Tags', 'hd'),
 				$hashtag_list
 			); // WPCS: XSS OK.
 
@@ -681,9 +789,9 @@ if (!function_exists('placeholder_src')) {
 	 */
 	function placeholder_src($img_wrap = true, $thumb = true)
 	{
-		$src = WP_CONTENT_URL . '/uploads/placeholder.png';
+		$src = W_THEME_URL . '/assets/img/placeholder.png';
 		if ($thumb == true) {
-			$src = WP_CONTENT_URL . '/uploads/placeholder-320x320.png';
+			$src = W_THEME_URL . '/assets/img/placeholder-320x320.png';
 		}
 		if ($img_wrap == true) {
 			$src = "<img loading=\"lazy\" src=\"{$src}\" alt=\"placeholder\" class=\"wp-placeholder\">";
@@ -722,6 +830,273 @@ if (!function_exists('acf_term_thumb')) {
 
 // -------------------------------------------------------------
 
+if (!function_exists('humanize_time')) {
+	/**
+	 * Determines the difference between two timestamps.
+	 * The difference is returned in a human readable format such as "1 hour", "5 mins", "2 days".
+	 *
+	 * @param string|null $from Unix timestamp from which the difference begins.
+	 * @param string|null $to Optional. Unix timestamp to end the time difference.
+	 *
+	 * @param null|int|object $$post
+	 * @param null $_time
+	 *
+	 * @return string Human readable time difference.
+	 */
+	function humanize_time($from = null, $to = null, $post = null, $_time = null)
+	{
+		$flag = false;
+		$_ago = __('ago', 'hd');
+		if (empty($to)) {
+			$to = current_time('timestamp');
+		}
+		if (empty($from)) {
+			$from = get_the_time('U', $post);
+		}
+
+		$diff = (int) abs($to - $from);
+		if ($diff < HOUR_IN_SECONDS) {
+			$mins = round($diff / MINUTE_IN_SECONDS);
+			if ($mins <= 1) {
+				$mins = 1;
+			}
+			/* translators: Time difference between two dates, in minutes (min=minute). %s: Number of minutes */
+			$since = sprintf(_n('%s min', '%s mins', $mins), $mins);
+		} elseif ($diff < DAY_IN_SECONDS && $diff >= HOUR_IN_SECONDS) {
+			$hours = round($diff / HOUR_IN_SECONDS);
+			if ($hours <= 1) {
+				$hours = 1;
+			}
+			/* translators: Time difference between two dates, in hours. %s: Number of hours */
+			$since = sprintf(_n('%s hour', '%s hours', $hours), $hours);
+		} elseif ($diff < WEEK_IN_SECONDS && $diff >= DAY_IN_SECONDS) {
+			$days = round($diff / DAY_IN_SECONDS);
+			if ($days <= 1) {
+				$days = 1;
+			}
+			/* translators: Time difference between two dates, in days. %s: Number of days */
+			$since = sprintf(_n('%s day', '%s days', $days, 'hd'), $days);
+		} else {
+			$flag  = true;
+			$since = ($_time == null) ? get_the_date('', $post) : sprintf(__('%1$s at %2$s', 'hd'), date(get_option('date_format'), $from), $_time);
+		}
+		if ($flag == false) {
+			$since = $since . ' <span class="ago">' . $_ago . '</span>';
+		}
+
+		return apply_filters('humanize_time', $since, $diff, $from, $to);
+	}
+}
+
+// -------------------------------------------------------------
+
+if (!function_exists('the_page_title_theme')) {
+	function the_page_title_theme()
+	{
+		get_template_part('template-parts/parts/page-title');
+	}
+}
+
+// -------------------------------------------------------------
+
+if (!function_exists('the_breadcrumbs')) {
+	/**
+	 * Breadcrumbs
+	 * return void
+	 */
+	function the_breadcrumbs()
+	{
+		global $post;
+		global $wp_query;
+
+		$before = '<li class="current">';
+		$after  = '</li>';
+
+		if (!is_home() && !is_front_page() || is_paged() || $wp_query->is_posts_page) {
+			echo '<ol id="crumbs" class="breadcrumbs" aria-label="breadcrumbs">';
+			echo '<li><a class="home" href="' . Url::home() . '">' . __('Home', 'hd') . '</a></li>';
+
+			/**
+			 * @todo viết thêm cho trường hợp taxonomy
+			 */
+			if (is_category() || is_tax()) {
+
+				$cat_obj   = $wp_query->get_queried_object();
+				$thisCat   = get_category($cat_obj->term_id);
+
+				if (isset($thisCat->parent) && 0 != $thisCat->parent) {
+					$parentCat = get_category($thisCat->parent);
+
+					if ($cat_code = get_category_parents($parentCat->term_id, true, '')) {
+						$cat_code = str_replace('<a', '<li><a', $cat_code);
+						echo $cat_code = str_replace('</a>', '</a></li>', $cat_code);
+					}
+				}
+
+				echo $before . single_cat_title('', false) . $after;
+			} elseif (is_day()) {
+				echo '<li><a href="' . get_year_link(get_the_time('Y')) . '">' . get_the_time('Y') . '</a></li>';
+				echo '<li><a href="' . get_month_link(get_the_time('Y'), get_the_time('m')) . '">' . get_the_time('F') . '</a></li>';
+				echo $before . get_the_time('d') . $after;
+			} elseif (is_month()) {
+				echo '<li><a href="' . get_year_link(get_the_time('Y')) . '">' . get_the_time('Y') . '</a></li>';
+				echo $before . get_the_time('F') . $after;
+			} elseif (is_year()) {
+				echo $before . get_the_time('Y') . $after;
+			} elseif (is_single() && !is_attachment()) {
+				if ('post' != get_post_type()) {
+					$post_type = get_post_type_object(get_post_type());
+					$slug      = $post_type->rewrite;
+					if (!is_bool($slug)) {
+						echo '<li><a href="' . Url::home() . $slug['slug'] . '/">' . $post_type->labels->singular_name . '</a></span>';
+					}
+
+					//echo $before . get_the_title() . $after;
+				} else {
+					$cat = primary_term($post);
+					if (!empty($cat)) {
+						if (!is_wp_error($cat_code = get_category_parents($cat->term_id, true, ''))) {
+							$cat_code = str_replace('<a', '<li><a', $cat_code);
+							echo $cat_code = str_replace('</a>', '</a></li>', $cat_code);
+						}
+					}
+
+					//echo $before . get_the_title() . $after;
+				}
+			} elseif ((is_page() && !$post->post_parent) || (function_exists('bp_current_component') && bp_current_component())) {
+				echo $before . get_the_title() . $after;
+			} elseif (is_search()) {
+				echo $before;
+				printf(__('Search Results for: %s', 'hd'), get_search_query());
+				echo $after;
+			} elseif (!is_single() && !is_page() && 'post' != get_post_type()) {
+				$post_type = get_post_type_object(get_post_type());
+				echo $before . $post_type->labels->singular_name . $after;
+			} elseif (is_attachment()) {
+				$parent = get_post($post->post_parent);
+				echo '<li><a href="' . get_permalink($parent) . '">' . $parent->post_title . '</a></li>';
+				echo $before . get_the_title() . $after;
+			} elseif (is_page() && $post->post_parent) {
+				$parent_id   = $post->post_parent;
+				$breadcrumbs = [];
+
+				while ($parent_id) {
+					$page          = get_post($parent_id);
+					$breadcrumbs[] = '<li><a href="' . get_permalink($page->ID) . '">' . get_the_title($page->ID) . '</a></li>';
+					$parent_id     = $page->post_parent;
+				}
+
+				$breadcrumbs = array_reverse($breadcrumbs);
+				foreach ($breadcrumbs as $crumb) {
+					echo $crumb;
+				}
+
+				echo $before . get_the_title() . $after;
+			} elseif (is_tag()) {
+				echo $before;
+				printf(__('Tag Archives: %s', 'hd'), single_tag_title('', false));
+				echo $after;
+			} elseif (is_author()) {
+				global $author;
+
+				$userdata = get_userdata($author);
+				echo $before;
+				echo $userdata->display_name;
+				echo $after;
+			} elseif ($wp_query->is_posts_page) {
+				$posts_page_title = get_the_title(get_option('page_for_posts', true));
+				echo $before . $posts_page_title . $after;
+			} elseif (is_404()) {
+				echo $before;
+				__('Not Found', 'hd');
+				echo $after;
+			}
+			if (get_query_var('paged')) {
+				echo '<li class="paged">';
+				if (is_category() || is_tax() || is_day() || is_month() || is_year() || is_search() || is_tag() || is_author()) {
+					echo ' (';
+				}
+				echo __('page', 'hd') . ' ' . get_query_var('paged');
+				if (is_category() || is_tax() || is_day() || is_month() || is_year() || is_search() || is_tag() || is_author()) {
+					echo ')';
+				}
+				echo $after;
+			}
+
+			echo '</ol>';
+		}
+
+		// reset
+		wp_reset_query();
+	}
+}
+
+// -------------------------------------------------------------
+
+if (!function_exists('the_comment_html')) {
+	/**
+	 * @param mixed $id The ID, to load a single record; Provide array of $params to run 'find'
+	 */
+	function the_comment_html($id = null)
+	{
+		if (is_null($id)) {
+			$id = get_post()->ID;
+		}
+
+		/*
+		 * If the current post is protected by a password and
+		 * the visitor has not yet entered the password we will
+		 * return early without loading the comments.
+		*/
+		if (post_password_required($id)) {
+			return;
+		}
+
+		$wrapper_open  = "<div class=\"comments-wrapper\">";
+		$wrapper_close = "</div>";
+		$post_type     = get_post_type($id);
+
+		$facebook_comment = false;
+		$zalo_comment     = false;
+
+		if (class_exists('\ACF')) {
+			$facebook_comment = get_field('facebook_comment', $id);
+			$zalo_comment     = get_field('zalo_comment', $id);
+		}
+
+		if (comment_enable() or true === $facebook_comment or true === $zalo_comment) {
+			echo $wrapper_open;
+			if (comment_enable()) {
+				if ((class_exists('\WooCommerce') && 'product' != $post_type) || !class_exists('\WooCommerce')) {
+					comments_template();
+				}
+			}
+			if (true === $facebook_comment) {
+				get_template_part('template-parts/comment/facebook');
+			}
+			if (true === $zalo_comment) {
+				get_template_part('template-parts/comment/zalo');
+			}
+
+			echo $wrapper_close;
+		}
+	}
+}
+
+// -------------------------------------------------------------
+
+if (!function_exists('comment_enable')) {
+	/**
+	 * @return bool
+	 */
+	function comment_enable()
+	{
+		return (comments_open() or (bool) get_comments_number()) && !post_password_required();
+	}
+}
+
+// -------------------------------------------------------------
+
 if (!function_exists('menu_fallback')) {
 	/**
 	 * A fallback when no navigation is selected by default.
@@ -736,15 +1111,15 @@ if (!function_exists('menu_fallback')) {
 		}
 		/* translators: %1$s: link to menus, %2$s: link to customize. */
 		printf(
-			__('Please assign a menu to the primary menu location under %1$s or %2$s the design.', W_TEXTDOMAIN),
+			__('Please assign a menu to the primary menu location under %1$s or %2$s the design.', 'hd'),
 			/* translators: %s: menu url */
 			sprintf(
-				__('<a class="_blank" href="%s">Menus</a>', W_TEXTDOMAIN),
+				__('<a class="_blank" href="%s">Menus</a>', 'hd'),
 				get_admin_url(get_current_blog_id(), 'nav-menus.php')
 			),
 			/* translators: %s: customize url */
 			sprintf(
-				__('<a class="_blank" href="%s">Customize</a>', W_TEXTDOMAIN),
+				__('<a class="_blank" href="%s">Customize</a>', 'hd'),
 				get_admin_url(get_current_blog_id(), 'customize.php')
 			)
 		);

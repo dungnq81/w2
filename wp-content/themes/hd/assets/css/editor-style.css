@@ -26,7 +26,7 @@ code,
 kbd,
 pre,
 samp {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Ubuntu", "Helvetica Neue", Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Ubuntu", Arial, sans-serif;
   font-size: 1rem;
 }
 
@@ -35,12 +35,12 @@ blockquote {
 }
 
 .wp-editor-area {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Ubuntu", "Helvetica Neue", Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Ubuntu", Arial, sans-serif;
 }
 
 /*tinymce*/
 body#tinymce.wp-editor.content {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Ubuntu", "Helvetica Neue", Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Ubuntu", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-size: 15px;
@@ -58,7 +58,7 @@ body#tinymce.wp-editor.content dl,
 body#tinymce.wp-editor.content dt,
 body#tinymce.wp-editor.content .wp-caption-text,
 body#tinymce.wp-editor.content .wp-caption-dd {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Ubuntu", "Helvetica Neue", Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Ubuntu", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -104,7 +104,7 @@ body#tinymce.wp-editor.content h6 {
 .editor-styles-wrapper ul,
 .editor-styles-wrapper dl,
 .editor-styles-wrapper dt {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Ubuntu", "Helvetica Neue", Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Ubuntu", Arial, sans-serif;
   font-size: 15px;
 }
 .editor-styles-wrapper .wp-block h1,
@@ -117,10 +117,10 @@ body#tinymce.wp-editor.content h6 {
 .editor-styles-wrapper .wp-block cite,
 .editor-styles-wrapper .wp-block figcaption,
 .editor-styles-wrapper .wp-block .wp-caption-text {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Ubuntu", "Helvetica Neue", Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Ubuntu", Arial, sans-serif;
 }
 .editor-styles-wrapper .editor-post-title__block .editor-post-title__input {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Ubuntu", "Helvetica Neue", Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Ubuntu", Arial, sans-serif;
 }
 .editor-styles-wrapper p {
   line-height: 1.7;

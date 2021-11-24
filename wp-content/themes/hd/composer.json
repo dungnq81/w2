@@ -15,7 +15,6 @@
 			"inc/image-sizes.php",
 			"inc/menus.php",
 			"inc/plugins.php",
-			"inc/shortcodes.php",
 			"inc/sidebars.php",
 			"inc/template-functions.php",
 			"inc/template-hooks.php",
@@ -26,9 +25,8 @@
 			"Webhd\\Helpers\\": "inc/Helpers",
 			"Webhd\\Integrations\\": "inc/Integrations",
 			"Webhd\\Registers\\": "inc/Registers",
-			"Webhd\\Shortcodes\\": "inc/Shortcodes",
 			"Webhd\\Themes\\": "inc/Themes",
-			"Webhd\\Walkers\\": "inc/Walkers",
+			"Webhd\\Ext\\": "inc/Ext",
 			"Webhd\\Widgets\\": "inc/Widgets"
 		}
 	},

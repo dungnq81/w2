@@ -80,7 +80,7 @@ if (!class_exists('Date')) {
 
             $diff =   time() - strtotime($date) +  get_option('gmt_offset') * 3600;
             if ($diff < 0) {
-                return __('A moment ago', W_TEXTDOMAIN); // Display something vague if the date is in the future
+                return __('A moment ago', 'hd'); // Display something vague if the date is in the future
             }
             foreach (static::$TIME_PERIODS as $i => $timePeriod) {
                 if ($diff > $timePeriod[0]) {
@@ -88,13 +88,13 @@ if (!class_exists('Date')) {
                 }
                 $unit = intval(floor($diff / $timePeriod[1]));
                 $relativeDates = [
-                    _n('%s second ago', '%s seconds ago', $unit, W_TEXTDOMAIN),
-                    _n('%s minute ago', '%s minutes ago', $unit, W_TEXTDOMAIN),
-                    _n('an hour ago', '%s hours ago', $unit, W_TEXTDOMAIN),
-                    _n('yesterday', '%s days ago', $unit, W_TEXTDOMAIN),
-                    _n('a week ago', '%s weeks ago', $unit, W_TEXTDOMAIN),
-                    _n('%s month ago', '%s months ago', $unit, W_TEXTDOMAIN),
-                    _n('%s year ago', '%s years ago', $unit, W_TEXTDOMAIN),
+                    _n('%s second ago', '%s seconds ago', $unit, 'hd'),
+                    _n('%s minute ago', '%s minutes ago', $unit, 'hd'),
+                    _n('an hour ago', '%s hours ago', $unit, 'hd'),
+                    _n('yesterday', '%s days ago', $unit, 'hd'),
+                    _n('a week ago', '%s weeks ago', $unit, 'hd'),
+                    _n('%s month ago', '%s months ago', $unit, 'hd'),
+                    _n('%s year ago', '%s years ago', $unit, 'hd'),
                 ];
                 $relativeDate = $relativeDates[$i];
                 return str_contains($relativeDate, '%s')

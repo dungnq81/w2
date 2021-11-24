@@ -4,13 +4,15 @@ namespace Webhd\Helpers;
 
 class Text
 {
-    /**
-     * @param string $text
-     * @param int $limit
-     * @param bool $splitWords
-     * @return string
-     */
-    public static function excerpt($text, $limit = 55, $splitWords = true, $showMore = '...')
+	/**
+	 * @param string $text
+	 * @param int $limit
+	 * @param bool $splitWords
+	 * @param string $showMore
+	 *
+	 * @return string
+	 */
+    public static function excerpt($text, int $limit = 55, $splitWords = true, $showMore = '...')
     {
         $text = static::normalize($text);
         $splitLength = $limit;
@@ -33,8 +35,7 @@ class Text
      * @param string $text
      * @return string
      */
-    public static function normalize($text)
-    {
+    public static function normalize($text): string {
         $allowedHtml = wp_kses_allowed_html();
         $allowedHtml['mark'] = []; // allow using the <mark> tag to highlight text
         $text = wp_kses($text, $allowedHtml);
@@ -50,8 +51,7 @@ class Text
      * @param string $text
      * @return string
      */
-    public static function text($text)
-    {
+    public static function text(string $text): string {
         $text = static::normalize($text);
         $text = nl2br($text);
         $text = wptexturize($text);
@@ -64,8 +64,7 @@ class Text
      * @param int $limit
      * @return int
      */
-    protected static function excerptIntlSplit($text, $limit)
-    {
+    protected static function excerptIntlSplit(string $text, int $limit): int {
         $words = \IntlRuleBasedBreakIterator::createWordInstance('');
         $words->setText($text);
         $count = 0;
@@ -87,8 +86,7 @@ class Text
      * @param int $limit
      * @return int
      */
-    protected static function excerptSplit($text, $limit)
-    {
+    protected static function excerptSplit(string $text, int $limit): int {
         if (str_word_count($text, 0) > $limit) {
             $words = array_keys(str_word_count($text, 2));
             return $words[$limit];

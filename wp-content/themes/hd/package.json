@@ -1,31 +1,35 @@
 {
-  "name": "webhd",
-  "author": "The Webhd Teams",
-  "homepage": "https://webhd.vn/",
-  "dependencies": {
-    "@fancyapps/ui": "^4.0.9",
-    "@popperjs/core": "^2.10.2",
-    "@wordpress/browserslist-config": "^4.1.0",
-    "autoprefixer": "^10.4.0",
-    "axios": "^0.24.0",
-    "current-device": "^0.10.2",
-    "laravel-mix": "^6.0.39",
-    "lodash": "^4.17.21",
-    "postcss": "^8.3.11"
-  },
-  "devDependencies": {
-    "sass": "^1.43.4",
-    "sass-loader": "^12.3.0"
-  },
-  "browserslist": [
-    "extends @wordpress/browserslist-config"
-  ],
-  "scripts": {
-    "dev": "mix",
-    "watch": "mix watch",
-    "watch-poll": "mix watch -- --watch-options-poll=1000",
-    "hot": "mix watch --hot",
-    "prod": "mix --production"
-  },
-  "private": true
+    "name": "webhd",
+    "author": "The Webhd Teams",
+    "homepage": "https://webhd.vn/",
+    "dependencies": {
+        "@fancyapps/ui": "^4.0.9",
+        "@popperjs/core": "^2.10.2",
+        "@wordpress/browserslist-config": "^4.1.0",
+        "autoprefixer": "^10.4.0",
+        "axios": "^0.24.0",
+        "current-device": "^0.10.2",
+        "foundation-sites": "6.7.3",
+        "jquery": "^3.6.0",
+        "what-input": "^5.2.10",
+        "swiper": "^7.2.0",
+        "laravel-mix": "^6.0.39",
+        "lodash": "^4.17.21",
+        "postcss": "^8.3.11"
+    },
+    "devDependencies": {
+        "sass": "^1.43.4",
+        "sass-loader": "^12.3.0"
+    },
+    "browserslist": [
+        "extends @wordpress/browserslist-config"
+    ],
+    "scripts": {
+        "dev": "mix",
+        "watch": "mix watch",
+        "watch-poll": "mix watch -- --watch-options-poll=1000",
+        "hot": "mix watch --hot",
+        "prod": "mix --production"
+    },
+    "private": true
 }

@@ -6,11 +6,13 @@ use Webhd\Helpers\Cast;
 
 class Arr
 {
-    /**
-     * @return bool
-     */
-    public static function compare(array $arr1, array $arr2)
-    {
+	/**
+	 * @param array $arr1
+	 * @param array $arr2
+	 *
+	 * @return bool
+	 */
+    public static function compare(array $arr1, array $arr2): bool {
         sort($arr1);
         sort($arr2);
         return $arr1 == $arr2;
@@ -21,8 +23,7 @@ class Arr
      * @param mixed $callback
      * @return array
      */
-    public static function convertFromString($value, $callback = null)
-    {
+    public static function convertFromString($value, $callback = null): array {
         if (is_scalar($value)) {
             $value = array_map('trim', explode(',', Cast::toString($value)));
         }
@@ -34,8 +35,7 @@ class Arr
      * @param mixed $array
      * @return array
      */
-    public static function reindex($array)
-    {
+    public static function reindex($array): array {
         return static::isIndexedAndFlat($array) ? array_values($array) : $array;
     }
 
@@ -43,39 +43,44 @@ class Arr
      * @param mixed $array
      * @return bool
      */
-    public static function isIndexedAndFlat($array)
-    {
+    public static function isIndexedAndFlat($array): bool {
         if (!is_array($array) || array_filter($array, 'is_array')) {
             return false;
         }
         return wp_is_numeric_array($array);
     }
 
-    /**
-     * @param string|int $key
-     * @return array
-     */
-    public static function insertAfter($key, array $array, array $insert)
-    {
+	/**
+	 * @param string|int $key
+	 * @param array $array
+	 * @param array $insert
+	 *
+	 * @return array
+	 */
+    public static function insertAfter($key, array $array, array $insert): array {
         return static::insert($array, $insert, $key, 'after');
     }
 
-    /**
-     * @param string|int $key
-     * @return array
-     */
-    public static function insertBefore($key, array $array, array $insert)
-    {
+	/**
+	 * @param string|int $key
+	 * @param array $array
+	 * @param array $insert
+	 *
+	 * @return array
+	 */
+    public static function insertBefore($key, array $array, array $insert): array {
         return static::insert($array, $insert, $key, 'before');
     }
 
-    /**
-     * @param string|int $key
-     * @param string $position
-     * @return array
-     */
-    public static function insert(array $array, array $insert, $key, $position = 'before')
-    {
+	/**
+	 * @param array $array
+	 * @param array $insert
+	 * @param string|int $key
+	 * @param string $position
+	 *
+	 * @return array
+	 */
+    public static function insert(array $array, array $insert, $key, $position = 'before'): array {
         $keyPosition = array_search($key, array_keys($array));
         if (false !== $keyPosition) {
             $keyPosition = Cast::toInt($keyPosition);
@@ -94,10 +99,10 @@ class Arr
      * @param array $values
      * @param string $prefix
      * @param boolean $prefixed
-     * @return void
+     *
+     * @return array
      */
-    public static function prefixKeys(array $values, $prefix = '_', $prefixed = true)
-    {
+    public static function prefixKeys(array $values, string $prefix = '_', $prefixed = true): array {
         $trim = (true === $prefixed) ? $prefix : '';
         $prefixed = [];
         foreach ($values as $key => $value) {
@@ -111,11 +116,13 @@ class Arr
         return $prefixed;
     }
 
-    /**
-     * @return array
-     */
-    public static function unprefixKeys(array $values, $prefix = '_')
-    {
+	/**
+	 * @param array $values
+	 * @param string $prefix
+	 *
+	 * @return array
+	 */
+    public static function unprefixKeys(array $values, string $prefix = '_'): array {
         return static::prefixKeys($values, $prefix, false);
     }
 
@@ -125,8 +132,7 @@ class Arr
      * @param mixed $key
      * @return array
      */
-    public static function prepend(&$array, $value, $key = null)
-    {
+    public static function prepend(&$array, $value, $key = null): array {
         if (!is_null($key)) {
             return $array = [$key => $value] + $array;
         }
@@ -136,6 +142,7 @@ class Arr
 
     /**
      * Search a multidimensional array by key value
+     *
      * @param mixed $needle
      * @param array $haystack
      * @param int|string $key

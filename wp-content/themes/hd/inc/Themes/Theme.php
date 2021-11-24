@@ -45,6 +45,7 @@ if (!class_exists('Theme')) {
         {
             (new \Webhd\Themes\Hook);
             (new \Webhd\Themes\Customizer); // Customizer additions.
+            (new \Webhd\Themes\Shortcode);
 
             if (is_admin()) {
                 (new \Webhd\Themes\Admin);
@@ -73,9 +74,9 @@ if (!class_exists('Theme')) {
              * Translations can be filed at WordPress.org.
              * See: https://translate.wordpress.org/projects/wp-themes/hello-elementor
              */
-            load_theme_textdomain(W_TEXTDOMAIN, trailingslashit(WP_LANG_DIR) . 'themes/');
-            load_theme_textdomain(W_TEXTDOMAIN, get_stylesheet_directory() . '/languages');
-            load_theme_textdomain(W_TEXTDOMAIN, get_template_directory() . '/languages');
+            load_theme_textdomain('hd', trailingslashit(WP_LANG_DIR) . 'themes/');
+            load_theme_textdomain('hd', get_stylesheet_directory() . '/languages');
+            load_theme_textdomain('hd', get_template_directory() . '/languages');
 
             // Add theme support for various features.
             add_theme_support('automatic-feed-links');
@@ -130,10 +131,10 @@ if (!class_exists('Theme')) {
 
             if (class_exists('\Webhd\Themes\Script_Loader')) {
 
-                // Adds `async` and `defer` support for scripts registered
+                // Adds `async`, `defer` and attribute support for scripts registered
                 // or enqueued by the theme.
                 $loader = new \Webhd\Themes\Script_Loader;
-                add_filter('script_loader_tag', [&$loader, 'filter_script_loader_tag'], 10, 2);
+                add_filter('script_loader_tag', [&$loader, 'filter_script_loader_tag'], 10, 3);
             }
         }
 
@@ -290,15 +291,18 @@ if (!class_exists('Theme')) {
             $css = new \Webhd\Helpers\Css;
 
             // footer bg
-            $_footer_bg = get_theme_mod_ssl('footer_bg_setting');
-            if ($_footer_bg) {
+            $footer_bg = get_theme_mod_ssl('footer_bg_setting');
+            if ($footer_bg) {
                 $css->set_selector('footer#colophon::before');
-                $css->add_property('background-image', 'url(' . $_footer_bg . ')');
+                $css->add_property('background-image', 'url(' . $footer_bg . ')');
             }
 
             // breadcrumbs bg
             $breadcrumb_bg = get_theme_mod_ssl('breadcrumb_bg_setting');
-            //...
+            if ($breadcrumb_bg) {
+                $css->set_selector('section.section-title>.title-bg');
+                $css->add_property('background-image', 'url(' . $breadcrumb_bg . ')');
+            }
 
             if ($css->css_output()) {
                 wp_add_inline_style('app-style', $css->css_output());
@@ -350,6 +354,13 @@ if (!class_exists('Theme')) {
             /*extra scripts*/
             wp_enqueue_script("backtop", get_template_directory_uri() . "/assets/js/plugins/backtop.min.js", [], false, true);
             wp_enqueue_script("shares", get_template_directory_uri() . "/assets/js/plugins/shares.min.js", ["jquery"], false, true);
+
+	        //wp_enqueue_style("awe-font", get_template_directory_uri() . '/assets/css/awe.css', [], '6.0.0');
+
+            //wp_register_script("fontawesome-kit", "https://kit.fontawesome.com/870d5b0bdf.js", [], false, true);
+            //wp_script_add_data("fontawesome-kit", "defer", true);
+
+            //wp_enqueue_script('fontawesome-kit');
 
             /*comments*/
             if (is_singular() && comments_open() && get_option('thread_comments')) {
@@ -410,6 +421,7 @@ if (!class_exists('Theme')) {
             wp_enqueue_script("login", get_template_directory_uri() . "/assets/js/login.js", ["jquery"], W_THEME_VERSION, true);
 
             // custom script/style
+            //$logo    = null;
             $logo    = get_theme_file_uri("/assets/img/logo.png");
             $logo_bg = get_theme_file_uri("/assets/img/login-bg.jpg");
 
@@ -421,6 +433,9 @@ if (!class_exists('Theme')) {
             if ($logo) {
                 $css->set_selector('body.login #login h1 a');
                 $css->add_property('background-image', 'url(' . $logo . ')');
+            } else {
+                $css->set_selector('body.login #login h1 a');
+                $css->add_property('background-image', 'unset');
             }
 
             if ($css->css_output()) {

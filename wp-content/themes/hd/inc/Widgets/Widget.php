@@ -3,61 +3,73 @@
 namespace Webhd\Widgets;
 
 if (!defined('ABSPATH')) {
-    exit; // Exit if accessed directly.
+	exit; // Exit if accessed directly.
 }
 
+use Webhd\Helpers\Cast;
 use Webhd\Helpers\Str;
 use WP_Widget;
 
 abstract class Widget extends WP_Widget
 {
-    /**
-     * @var array
-     */
-    protected $prefix = 'w-';
+	/**
+	 * @var string
+	 */
+	protected $prefix = 'w-';
 
-    /**
-     * @var array
-     */
-    protected $widgetArgs;
+	/**
+	 * @var array
+	 */
+	protected $widgetArgs;
 
-    /**
-     * __construct function
-     */
-    public function __construct()
-    {
-        $className = (new \ReflectionClass($this))->getShortName();
-        $className = str_replace(['_Widget', 'Widget'], '', $className);
-        $baseId = $this->prefix . Str::dashCase($className);
-        parent::__construct($baseId, $this->widgetName(), $this->widgetOptions());
-    }
+	public function __construct()
+	{
+		$className = (new \ReflectionClass($this))->getShortName();
+		$className = str_replace(['_Widget', 'Widget'], '', $className);
+		$baseId = $this->prefix . Str::dashCase($className);
+		parent::__construct($baseId, $this->widgetName(), $this->widgetOptions());
+	}
 
-    /**
-     * @return string
-     */
-    protected function widgetDescription()
-    {
-        return '';
-    }
+	/**
+	 * @param $id
+	 *
+	 * @return object|null
+	 */
+	protected function acf_fields($id)
+	{
+		if (!class_exists('\ACF')) {
+			return null;
+		}
 
-    /**
-     * @return string
-     */
-    protected function widgetName()
-    {
-        return __('Unknown Widget', W_TEXTDOMAIN);
-    }
+		return Cast::toObject(get_fields($id));
+	}
 
-    /**
-     * @return array
-     */
-    protected function widgetOptions()
-    {
-        return [
-            'description' => $this->widgetDescription(),
-            'name' => $this->widgetName(),
-            'customize_selective_refresh' => true,
-            'show_instance_in_rest' => true,
-        ];
-    }
+	/**
+	 * @return string
+	 */
+	protected function widgetDescription()
+	{
+		return '';
+	}
+
+	/**
+	 * @return string|void
+	 */
+	protected function widgetName()
+	{
+		return __('Unknown Widget', 'hd');
+	}
+
+	/**
+	 * @return array
+	 */
+	protected function widgetOptions()
+	{
+		return [
+			'description' => $this->widgetDescription(),
+			'name' => $this->widgetName(),
+			'customize_selective_refresh' => true,
+			'show_instance_in_rest' => true,
+		];
+	}
 }

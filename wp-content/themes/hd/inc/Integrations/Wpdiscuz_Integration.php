@@ -36,7 +36,6 @@ if (!class_exists('Wpdiscuz_Integration')) {
         public function footer_styles()
         {
             if (wp_style_is("wpdiscuz-frontend-css", 'registered')) {
-                wp_enqueue_style("awe-font", get_template_directory_uri() . '/assets/css/awe.css', [], '6.0.0');
                 wp_enqueue_style("wpdiscuz-frontend-css");
             }
             if (wp_style_is("wpdiscuz-combo-css", 'registered')) {

@@ -26,19 +26,22 @@ mix.disableNotifications()
         ]
     });
 
-mix.copyDirectory('resources/img', 'assets/img')
+/*mix.copyDirectory('resources/img', 'assets/img')
     .copyDirectory('resources/fonts', 'assets/fonts')
-    .copyDirectory('resources/js/plugins', 'assets/js/plugins');
+    .copyDirectory('resources/js/plugins', 'assets/js/plugins');*/
 
 mix.setPublicPath('assets')
     .sourceMaps()
 
     .js('resources/js/login.js', 'js')
     .js('resources/js/admin.js', 'js')
-    .js('resources/js/app.js', 'js')
+    .js([
+        'resources/js/app.js',
+        'resources/js/plugins/parallax-scroll.js',
+    ], 'js')
 
     .sass('resources/sass/awe.scss', 'css')
     .sass('resources/sass/admin.scss', 'css')
-    .sass('resources/sass/editor-style.scss', 'css')
-    .sass('resources/sass/plugins.scss', 'css')
-    .sass('resources/sass/app.scss', 'css');
+    .sass('resources/sass/editor-style.scss', 'css');
+    //.sass('resources/sass/plugins.scss', 'css')
+    //.sass('resources/sass/app.scss', 'css');

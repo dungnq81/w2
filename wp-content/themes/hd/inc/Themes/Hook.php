@@ -24,9 +24,6 @@ if (!class_exists('Hook')) {
 
         public function doActions()
         {
-            // before_header actions
-            add_action('before_header', [&$this, 'before_header_extra'], 14);
-
             // wp_footer actions
             add_action('wp_footer', [&$this, 'bubble_hotline'], 97);
             add_action('wp_footer', [&$this, 'back_to_top'], 98);
@@ -63,9 +60,11 @@ if (!class_exists('Hook')) {
          */
         public function skip_link_focus_fix()
         {
-            echo '<script>';
-            include get_template_directory() . '/assets/js/plugins/skip-link-focus-fix.js';
-            echo '</script>';
+            if (file_exists($skip_link = get_template_directory() . '/assets/js/plugins/skip-link-focus-fix.js')) {
+                echo '<script>';
+                include $skip_link;
+                echo '</script>';
+            }
 
             // The following is minified via `npx terser --compress --mangle -- assets/js/skip-link-focus-fix.js`.
         }
@@ -82,7 +81,7 @@ if (!class_exists('Hook')) {
                     document.documentElement.classList.add('is-IE');
                 }
             </script>
-        <?php
+<?php
         }
 
         // ------------------------------------------------------
@@ -102,7 +101,7 @@ if (!class_exists('Hook')) {
                 'back_to_top_output',
                 sprintf(
                     '<a title="%1$s" aria-label="%1$s" rel="nofollow" href="#" class="w-back-to-top toTop" style="opacity:0;visibility:hidden;" data-scroll-speed="%2$s" data-start-scroll="%3$s">%4$s</a>',
-                    esc_attr__('Scroll back to top', W_TEXTDOMAIN),
+                    esc_attr__('Scroll back to top', 'hd'),
                     absint(apply_filters('back_to_top_scroll_speed', 400)),
                     absint(apply_filters('back_to_top_start_scroll', 300)),
                     \Webhd\Themes\SVG_Icons::get_svg('ui', 'arrow_right', 24)
@@ -125,25 +124,6 @@ if (!class_exists('Hook')) {
                 echo '</a>';
                 echo '</div>';
             }
-        }
-
-        // ------------------------------------------------------
-
-        /**
-         * @return void
-         */
-        public function before_header_extra()
-        {
-            if (function_exists('wp_body_open')) {
-                wp_body_open();
-            } else {
-                do_action('wp_body_open');
-            }
-
-        ?>
-            <a class="skip-link screen-reader-text" href="#site-navigation"><?php echo __('Skip to navigation', W_TEXTDOMAIN); ?></a>
-            <a class="skip-link screen-reader-text" href="#main-content"><?php echo __('Skip to main content', W_TEXTDOMAIN); ?></a>
-<?php
         }
 
         // ------------------------------------------------------

@@ -3,6 +3,7 @@
 namespace Webhd\Themes;
 
 use Webhd\Helpers\Arr;
+use Webhd\Helpers\Cast;
 
 /**
  * Admin Class
@@ -29,14 +30,27 @@ if (!class_exists('Admin')) {
             add_action('admin_menu', [&$this, 'dashboard_meta_box']);
             add_action('admin_enqueue_scripts', [&$this, 'admin_enqueue_scripts'], 31);
 
-            // Disables the block editor from managing widgets.
-            add_filter('use_widgets_block_editor', '__return_false');
+            $use_widgets_block_editor = get_theme_mod_ssl('use_widgets_block_editor_setting');
+            $gutenberg_use_widgets_block_editor = get_theme_mod_ssl('gutenberg_use_widgets_block_editor_setting');
+            $use_block_editor_for_post_type = get_theme_mod_ssl('use_block_editor_for_post_type_setting');
 
-            // Disables the block editor from managing widgets in the Gutenberg plugin.
-            //add_filter('gutenberg_use_widgets_block_editor', '__return_false');
+            if (true === Cast::toBool($use_widgets_block_editor)) {
 
-            // Use Classic Editor - Disable Gutenberg Editor
-            //add_filter('use_block_editor_for_post_type', '__return_false');
+                // Disables the block editor from managing widgets.
+                add_filter('use_widgets_block_editor', '__return_false');
+            }
+
+            if (true === Cast::toBool($gutenberg_use_widgets_block_editor)) {
+
+                // Disables the block editor from managing widgets in the Gutenberg plugin.
+                add_filter('gutenberg_use_widgets_block_editor', '__return_false');
+            }
+
+            if (true === Cast::toBool($use_block_editor_for_post_type)) {
+
+                // Use Classic Editor - Disable Gutenberg Editor
+                add_filter('use_block_editor_for_post_type', '__return_false');
+            }
         }
 
         /** ---------------------------------------- */
@@ -51,11 +65,9 @@ if (!class_exists('Admin')) {
             $taxonomy_arr = [
                 'category',
                 'post_tag',
-                //'video_cat',
-                //'video_tag',
                 'banner_cat',
-                //'project_cat',
-                //'project_tag',
+                'service_cat',
+                'service_tag',
             ];
             foreach ($taxonomy_arr as $term) {
                 add_filter("{$term}_row_actions", [&$this, 'term_action_links'], 10, 2);
@@ -80,9 +92,8 @@ if (!class_exists('Admin')) {
             // thumb term
             $thumb_term = [
                 'category',
-                //'video_cat',
                 'banner_cat',
-                //'project_cat',
+                'service_cat',
             ];
             foreach ($thumb_term as $term) {
                 add_filter("manage_edit-{$term}_columns", [&$this, 'term_header'], 11, 1);
@@ -151,7 +162,7 @@ if (!class_exists('Admin')) {
         public function term_header($columns)
         {
             $in = [
-                "term_thumb" => sprintf('<span class="wc-image tips">%1$s</span>', __("Thumb", W_TEXTDOMAIN)),
+                "term_thumb" => sprintf('<span class="wc-image tips">%1$s</span>', __("Thumb", 'hd')),
             ];
 
             return Arr::insertAfter(0, $columns, $in);
@@ -196,7 +207,7 @@ if (!class_exists('Admin')) {
         public function post_header($columns)
         {
             $in = [
-                "post_thumb" => sprintf('<span class="wc-image tips">%1$s</span>', __("Thumb", W_TEXTDOMAIN)),
+                "post_thumb" => sprintf('<span class="wc-image tips">%1$s</span>', __("Thumb", 'hd')),
             ];
 
             return Arr::insertAfter(0, $columns, $in);
@@ -264,7 +275,7 @@ if (!class_exists('Admin')) {
 
         public function admin_footer_text()
         {
-            printf('<span id="footer-thankyou">%1$s <a href="https://webhd.vn/" target="_blank">%2$s</a>.&nbsp;</span>', __('Powered by', W_TEXTDOMAIN), W_AUTHOR);
+            printf('<span id="footer-thankyou">%1$s <a href="https://webhd.vn/" target="_blank">%2$s</a>.&nbsp;</span>', __('Powered by', 'hd'), W_AUTHOR);
         }
     }
 }

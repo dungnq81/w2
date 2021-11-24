@@ -1,5 +1,26 @@
 {
+    "/js/login.js": "/js/login.js",
+    "/js/admin.js": "/js/admin.js",
+    "/js/app.js": "/js/app.js",
     "/css/editor-style.css": "/css/editor-style.css",
     "/css/admin.css": "/css/admin.css",
-    "/css/awe.css": "/css/awe.css"
+    "/css/awe.css": "/css/awe.css",
+    "/img/blank.gif": "/img/blank.gif",
+    "/img/dathongbao.png": "/img/dathongbao.png",
+    "/img/elementor-logo.png": "/img/elementor-logo.png",
+    "/img/en.png": "/img/en.png",
+    "/img/gmap_marker.png": "/img/gmap_marker.png",
+    "/img/gmap_marker_active.png": "/img/gmap_marker_active.png",
+    "/img/google_form.png": "/img/google_form.png",
+    "/img/login-bg.jpg": "/img/login-bg.jpg",
+    "/img/logo-bct.png": "/img/logo-bct.png",
+    "/img/logo.png": "/img/logo.png",
+    "/img/placeholder-320x320.png": "/img/placeholder-320x320.png",
+    "/img/placeholder.png": "/img/placeholder.png",
+    "/img/vi.png": "/img/vi.png",
+    "/js/plugins/backtop.min.js": "/js/plugins/backtop.min.js",
+    "/js/plugins/hlst-extend.min.js": "/js/plugins/hlst-extend.min.js",
+    "/js/plugins/parallax-scroll.js": "/js/plugins/parallax-scroll.js",
+    "/js/plugins/shares.min.js": "/js/plugins/shares.min.js",
+    "/js/plugins/skip-link-focus-fix.js": "/js/plugins/skip-link-focus-fix.js"
 }

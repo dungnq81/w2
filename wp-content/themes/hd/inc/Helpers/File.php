@@ -10,8 +10,7 @@ class File
      *
      * @return string
      */
-    public static function fileExtension($filename, $include_dot = false)
-    {
+    public static function fileExtension($filename, bool $include_dot = false): string {
         $dot = '';
         if ($include_dot == true) {
             $dot = '.';
@@ -26,8 +25,7 @@ class File
      *
      * @return string
      */
-    public static function fileName($filename, $include_ext = false)
-    {
+    public static function fileName($filename, bool $include_ext = false): string {
         return $include_ext ? pathinfo(
             $filename,
             PATHINFO_FILENAME
@@ -40,7 +38,7 @@ class File
      *
      * @return false|mixed|string
      */
-    public static function Read($file, $convert_to_array = true)
+    public static function Read($file, bool $convert_to_array = true)
     {
         $file = @file_get_contents($file);
         if (!empty($file)) {
@@ -61,7 +59,7 @@ class File
      *
      * @return bool
      */
-    public static function Save($path, $data, $json = true)
+    public static function Save($path, $data, bool $json = true)
     {
         try {
             if ($json) {

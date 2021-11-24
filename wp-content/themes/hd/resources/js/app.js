@@ -13,6 +13,8 @@ import device from "current-device";
 const is_mobile = () => device.mobile() || Foundation.MediaQuery.upTo('small');
 
 /** */
+/** */
+
 $(() => {
     // Remove empty P tags created by WP inside of Accordion and Orbit
     $('.accordion p:empty, .orbit p:empty').remove();
@@ -42,27 +44,6 @@ $(() => {
             $(this).addClass("current");
         });
     });
-
-    // filter-post-grid
-    // const filter_post_grid = $('.filter-post-grid');
-    // filter_post_grid.each((index, el) => {
-    //     const grid_item = $(el).find('.grid-item');
-    //     grid_item.on('click', function (e) {
-    //         if ($(this).hasClass('active')) {
-    //             $(this).removeClass("active");
-    //         } else {
-    //             grid_item.removeClass('active');
-    //             $(this).toggleClass("active");
-    //         }
-    //         $(this).slice(0, 1).removeAttr("style");
-    //     });
-    // });
-
-    // const details_info = $('.details-info');
-    // details_info.find('.close').on('click', function () {
-    //     $(this).closest('.grid-item-details').hide();
-    //     $('.grid-item').removeClass('active');
-    // });
 
     /**attribute target="_blank" is not W3C compliant*/
     const _blanks = [...document.querySelectorAll('a._blank, a.blank, a[target="_blank"]')];
@@ -121,10 +102,11 @@ const offsetTop = () => {
 /** */
 
 import { Fancybox } from "@fancyapps/ui";
-Fancybox.bind(".wp-block-gallery .blocks-gallery-item a", {
+Fancybox.bind(".wp-block-gallery .blocks-gallery-item a, .popup-box", {
     groupAll: true, // Group all items
 });
 
+/** */
 /** */
 
 // import Swiper bundle with all modules installed
@@ -308,7 +290,7 @@ _swiper_container.forEach((el, index) => {
             _controls.appendChild(_btn_prev);
             _controls.appendChild(_btn_next);
             _btn_prev.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M11.67 3.87L9.9 2.1 0 12l9.9 9.9 1.77-1.77L3.54 12z"/></svg>';
-            _btn_next.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor"><g><path d="M0,0h24v24H0V0z" fill="none"/></g><g><polygon points="6.23,20.23 8,22 18,12 8,2 6.23,3.77 14.46,12"/></g></svg>';
+            _btn_next.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor"><g><path d="M0,0h24v24H0V0z" fill="none"/></g><g><polygon points="6.23,20.23 8,22 18,12 8,2 6.23,3.77 14.46,12"/></g></svg>';
         }
 
         _options.navigation = {

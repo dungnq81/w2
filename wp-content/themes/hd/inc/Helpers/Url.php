@@ -8,8 +8,7 @@ class Url
      * @param string $path
      * @return string
      */
-    public static function home($path = '')
-    {
+    public static function home(string $path = ''): string {
         return trailingslashit(network_home_url($path));
     }
 
@@ -17,8 +16,7 @@ class Url
      * @param boolean $query_vars
      * @return string
      */
-    public static function current($query_vars = false)
-    {
+    public static function current(bool $query_vars = false): string {
         global $wp;
         if (true === $query_vars) {
             return add_query_arg($wp->query_vars, network_home_url($wp->request));
@@ -36,7 +34,7 @@ class Url
      *
      * @return string|boolean The path to the asset. False of failure.
      */
-    public static function path($url)
+    public static function path(string $url)
     {
         $url  = remove_query_arg('ver', $url);
         $path = str_replace(
@@ -65,8 +63,7 @@ class Url
      *
      * @return string
      */
-    public static function normalizePath($path)
-    {
+    public static function normalizePath(string $path): string {
         // Backslash to slash convert
         if (strtoupper(substr(PHP_OS, 0, 3)) == "WIN") {
             $path = preg_replace('/([^\\\])\\\+([^\\\])/s', "$1/$2", $path);
@@ -100,8 +97,7 @@ class Url
      *
      * @return bool
      */
-    public static function urlExists($url)
-    {
+    public static function urlExists(string $url): bool {
         $url = preg_replace('/\s+/', '', $url);
         $headers = @get_headers($url);
 
@@ -140,8 +136,7 @@ class Url
      * @param string $url
      * @return array
      */
-    public static function queries($url)
-    {
+    public static function queries(string $url): array {
         $queries = [];
         parse_str(parse_url($url, PHP_URL_QUERY), $queries);
         return $queries;
@@ -153,7 +148,7 @@ class Url
      * @param string|int $fallback
      * @return string
      */
-    public static function query($url, $param, $fallback = null)
+    public static function query(string $url, $param, $fallback = null)
     {
         $queries = static::queries($url);
         if (!isset($queries[$param])) {

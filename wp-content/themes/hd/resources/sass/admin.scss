@@ -218,3 +218,23 @@ table {
 div[data-notice_id="elementor_dev_promote"] {
     display: none !important;
 }
+.acf-field select, .acf-field input[type=number] {
+    width: auto;
+    max-width: 100%;
+}
+table.fixed {
+    th.column-term_order {
+        width: 74px;
+        hyphens: auto;
+        padding: 0;
+        a, span {
+            display: block;
+            overflow: hidden;
+            padding: 8px;
+        }
+    }
+    td.column-term_order {
+        width: 74px;
+        hyphens: auto;
+    }
+}

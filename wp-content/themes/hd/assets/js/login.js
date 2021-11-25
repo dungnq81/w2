@@ -21,19 +21,6 @@ $(function () {
 
 /***/ }),
 
-/***/ "./resources/sass/awe.scss":
-/*!*********************************!*\
-  !*** ./resources/sass/awe.scss ***!
-  \*********************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-// extracted by mini-css-extract-plugin
-
-
-/***/ }),
-
 /***/ "./resources/sass/admin.scss":
 /*!***********************************!*\
   !*** ./resources/sass/admin.scss ***!
@@ -150,8 +137,7 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 		var installedChunks = {
 /******/ 			"/js/login": 0,
 /******/ 			"css/editor-style": 0,
-/******/ 			"css/admin": 0,
-/******/ 			"css/awe": 0
+/******/ 			"css/admin": 0
 /******/ 		};
 /******/ 		
 /******/ 		// no chunk on demand loading
@@ -203,10 +189,9 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	__webpack_require__.O(undefined, ["css/editor-style","css/admin","css/awe"], function() { return __webpack_require__("./resources/js/login.js"); })
-/******/ 	__webpack_require__.O(undefined, ["css/editor-style","css/admin","css/awe"], function() { return __webpack_require__("./resources/sass/awe.scss"); })
-/******/ 	__webpack_require__.O(undefined, ["css/editor-style","css/admin","css/awe"], function() { return __webpack_require__("./resources/sass/admin.scss"); })
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["css/editor-style","css/admin","css/awe"], function() { return __webpack_require__("./resources/sass/editor-style.scss"); })
+/******/ 	__webpack_require__.O(undefined, ["css/editor-style","css/admin"], function() { return __webpack_require__("./resources/js/login.js"); })
+/******/ 	__webpack_require__.O(undefined, ["css/editor-style","css/admin"], function() { return __webpack_require__("./resources/sass/admin.scss"); })
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["css/editor-style","css/admin"], function() { return __webpack_require__("./resources/sass/editor-style.scss"); })
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()

@@ -1,7 +1,7 @@
 <?php
 
-if (!defined('ABSPATH')) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-(new \Webhd\Registers\Banner);
+( new \Webhd\Registers\Banner );

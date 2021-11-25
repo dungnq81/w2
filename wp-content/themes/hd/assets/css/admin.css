@@ -190,4 +190,26 @@ div[data-notice_id=elementor_dev_promote] {
   display: none !important;
 }
 
+.acf-field select, .acf-field input[type=number] {
+  width: auto;
+  max-width: 100%;
+}
+
+table.fixed th.column-term_order {
+  width: 74px;
+  -webkit-hyphens: auto;
+          hyphens: auto;
+  padding: 0;
+}
+table.fixed th.column-term_order a, table.fixed th.column-term_order span {
+  display: block;
+  overflow: hidden;
+  padding: 8px;
+}
+table.fixed td.column-term_order {
+  width: 74px;
+  -webkit-hyphens: auto;
+          hyphens: auto;
+}
+
 /*# sourceMappingURL=admin.css.map*/

@@ -1,36 +1,40 @@
 {
-	"name": "webhd/hd",
-	"description": "WEBHD Wordpress Theme",
-	"authors": [
-		{
-			"name": "NTH",
-			"email": "info@webhd.vn"
-		}
-	],
-	"autoload": {
-		"files": [
-			"inc/ajax.php",
-			"inc/custom_post_types.php",
-			"inc/helpers.php",
-			"inc/image-sizes.php",
-			"inc/menus.php",
-			"inc/plugins.php",
-			"inc/sidebars.php",
-			"inc/template-functions.php",
-			"inc/template-hooks.php",
-			"inc/widgets.php"
-		],
-		"psr-4": {
-			"Webhd\\Blocks\\": "inc/Blocks",
-			"Webhd\\Helpers\\": "inc/Helpers",
-			"Webhd\\Integrations\\": "inc/Integrations",
-			"Webhd\\Registers\\": "inc/Registers",
-			"Webhd\\Themes\\": "inc/Themes",
-			"Webhd\\Ext\\": "inc/Ext",
-			"Webhd\\Widgets\\": "inc/Widgets"
-		}
-	},
-	"require": {
-		"symfony/var-dumper": "^v5.3.8"
-	}
+    "name": "webhd/hd",
+    "description": "WEBHD Wordpress Theme",
+    "authors": [
+        {
+            "name": "NTH",
+            "email": "info@webhd.vn"
+        }
+    ],
+    "autoload": {
+        "files": [
+            "inc/ajax.php",
+            "inc/custom_post_types.php",
+            "inc/helpers.php",
+            "inc/image-sizes.php",
+            "inc/menus.php",
+            "inc/plugins.php",
+            "inc/sidebars.php",
+            "inc/template-functions.php",
+            "inc/template-hooks.php",
+            "inc/widgets.php"
+        ],
+        "psr-4": {
+            "Webhd\\Blocks\\": "inc/Blocks",
+            "Webhd\\Helpers\\": "inc/Helpers",
+            "Webhd\\Plugins\\": "inc/Plugins",
+            "Webhd\\Registers\\": "inc/Registers",
+            "Webhd\\Themes\\": "inc/Themes",
+            "Webhd\\Ext\\": "inc/Ext",
+            "Webhd\\Widgets\\": "inc/Widgets"
+        },
+        "exclude-from-classmap": [
+            "**/**/Elementor/**",
+            "**/**/Woocommerce/**"
+        ]
+    },
+    "require": {
+        "symfony/var-dumper": "^v5.3.8"
+    }
 }

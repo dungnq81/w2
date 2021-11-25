@@ -4,6 +4,7 @@
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/wp-content/themes/twentytwentyone" />
       <excludeFolder url="file://$MODULE_DIR$/wp-content/themes/hd/assets" />
+      <excludeFolder url="file://$MODULE_DIR$/.vscode" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

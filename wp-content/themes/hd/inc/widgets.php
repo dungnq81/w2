@@ -1,10 +1,12 @@
 <?php
 
-if (!defined('ABSPATH')) {
+use Webhd\Widgets\Cf7_Widget;
+
+if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-if (!function_exists('__register_widgets')) {
+if ( ! function_exists( '__register_widgets' ) ) {
 	/**
 	 * Register a widget
 	 *
@@ -12,11 +14,10 @@ if (!function_exists('__register_widgets')) {
 	 *
 	 * @return void
 	 */
-	function __register_widgets()
-	{
-		register_widget(new \Webhd\Widgets\Cf7_Widget);
+	function __register_widgets() {
+		register_widget( new Cf7_Widget );
 	}
 
 	/** */
-	add_action('widgets_init', '__register_widgets', 10);
+	add_action( 'widgets_init', '__register_widgets', 10 );
 }

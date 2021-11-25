@@ -7,17 +7,15 @@ namespace Webhd\Themes;
  * @author   WEBHD
  */
 
-if (!defined('ABSPATH')) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-if (!class_exists('Customizer')) {
-	class Customizer
-	{
-		public function __construct()
-		{
+if ( ! class_exists( 'Customizer' ) ) {
+	class Customizer {
+		public function __construct() {
 			// Setup the Theme Customizer settings and controls.
-			add_action('customize_register', [&$this, 'register'], 30);
+			add_action( 'customize_register', [ &$this, 'register' ], 30 );
 		}
 
 		/**
@@ -25,16 +23,15 @@ if (!class_exists('Customizer')) {
 		 *
 		 * @param WP_Customize_Manager $wp_customize Theme Customizer object.
 		 */
-		public function register($wp_customize)
-		{
+		public function register( $wp_customize ) {
 			// light logo
-			$wp_customize->add_setting('light_logo');
+			$wp_customize->add_setting( 'light_logo' );
 			$wp_customize->add_control(
 				new \WP_Customize_Image_Control(
 					$wp_customize,
 					'light_logo',
 					[
-						'label'    => __('Light logo', 'hd'),
+						'label'    => __( 'Light logo', 'hd' ),
 						'section'  => 'title_tagline',
 						'settings' => 'light_logo',
 						'priority' => 8,
@@ -43,13 +40,13 @@ if (!class_exists('Customizer')) {
 			);
 
 			// logo mobile
-			$wp_customize->add_setting('mobile_logo');
+			$wp_customize->add_setting( 'mobile_logo' );
 			$wp_customize->add_control(
 				new \WP_Customize_Image_Control(
 					$wp_customize,
 					'mobile_logo',
 					[
-						'label'    => __('Mobile Logo', 'hd'),
+						'label'    => __( 'Mobile Logo', 'hd' ),
 						'section'  => 'title_tagline',
 						'settings' => 'mobile_logo',
 						'priority' => 8,
@@ -66,8 +63,8 @@ if (!class_exists('Customizer')) {
 				[
 					'priority'       => 140,
 					'theme_supports' => '',
-					'title'          => __('HD', 'hd'),
-					'description'    => __('Controls the add-on menu', 'hd'),
+					'title'          => __( 'HD', 'hd' ),
+					'description'    => __( 'Controls the add-on menu', 'hd' ),
 				]
 			);
 
@@ -78,7 +75,7 @@ if (!class_exists('Customizer')) {
 			$wp_customize->add_section(
 				'offcanvas_menu_section',
 				[
-					'title'    => __('offCanvas Menu', 'hd'),
+					'title'    => __( 'offCanvas Menu', 'hd' ),
 					'panel'    => 'addon_menu_panel',
 					'priority' => 1000,
 				]
@@ -96,16 +93,16 @@ if (!class_exists('Customizer')) {
 			$wp_customize->add_control(
 				'offcanvas_menu_control',
 				[
-					'label'    => __('offCanvas position', 'hd'),
+					'label'    => __( 'offCanvas position', 'hd' ),
 					'type'     => 'radio',
 					'section'  => 'offcanvas_menu_section',
 					'settings' => 'offcanvas_menu_setting',
 					'choices'  => [
-						'left'    => __('Left', 'hd'),
-						'right'   => __('Right', 'hd'),
-						'top'     => __('Top', 'hd'),
-						'bottom'  => __('Bottom', 'hd'),
-						'default' => __('Default (Right)', 'hd'),
+						'left'    => __( 'Left', 'hd' ),
+						'right'   => __( 'Right', 'hd' ),
+						'top'     => __( 'Top', 'hd' ),
+						'bottom'  => __( 'Bottom', 'hd' ),
+						'default' => __( 'Default (Right)', 'hd' ),
 					],
 				]
 			);
@@ -116,7 +113,7 @@ if (!class_exists('Customizer')) {
 			$wp_customize->add_section(
 				'news_menu_section',
 				[
-					'title'    => __('News image', 'hd'),
+					'title'    => __( 'News image', 'hd' ),
 					'panel'    => 'addon_menu_panel',
 					'priority' => 1001,
 				]
@@ -134,16 +131,16 @@ if (!class_exists('Customizer')) {
 			$wp_customize->add_control(
 				'news_menu_control',
 				[
-					'label'    => __('Image ratio', 'hd'),
+					'label'    => __( 'Image ratio', 'hd' ),
 					'type'     => 'radio',
 					'section'  => 'news_menu_section',
 					'settings' => 'news_menu_setting',
 					'choices'  => [
-						'1v1'     => __('1:1', 'hd'),
-						'3v2'     => __('3:2', 'hd'),
-						'4v3'     => __('4:3', 'hd'),
-						'16v9'    => __('16:9', 'hd'),
-						'default' => __('Ratio default (16:9)', 'hd'),
+						'1v1'     => __( '1:1', 'hd' ),
+						'3v2'     => __( '3:2', 'hd' ),
+						'4v3'     => __( '4:3', 'hd' ),
+						'16v9'    => __( '16:9', 'hd' ),
+						'default' => __( 'Ratio default (16:9)', 'hd' ),
 					],
 				]
 			);
@@ -154,7 +151,7 @@ if (!class_exists('Customizer')) {
 			$wp_customize->add_section(
 				'service_menu_section',
 				[
-					'title'    => __('Service image', 'hd'),
+					'title'    => __( 'Service image', 'hd' ),
 					'panel'    => 'addon_menu_panel',
 					'priority' => 1001,
 				]
@@ -172,16 +169,16 @@ if (!class_exists('Customizer')) {
 			$wp_customize->add_control(
 				'service_menu_control',
 				[
-					'label'    => __('Image ratio', 'hd'),
+					'label'    => __( 'Image ratio', 'hd' ),
 					'type'     => 'radio',
 					'section'  => 'service_menu_section',
 					'settings' => 'service_menu_setting',
 					'choices'  => [
-						'1v1'     => __('1:1', 'hd'),
-						'3v2'     => __('3:2', 'hd'),
-						'4v3'     => __('4:3', 'hd'),
-						'16v9'    => __('16:9', 'hd'),
-						'default' => __('Ratio default (3:2)', 'hd'),
+						'1v1'     => __( '1:1', 'hd' ),
+						'3v2'     => __( '3:2', 'hd' ),
+						'4v3'     => __( '4:3', 'hd' ),
+						'16v9'    => __( '16:9', 'hd' ),
+						'default' => __( 'Ratio default (3:2)', 'hd' ),
 					],
 				]
 			);
@@ -230,35 +227,35 @@ if (!class_exists('Customizer')) {
 			$wp_customize->add_section(
 				'socials_menu_section',
 				[
-					'title'    => __('Social', 'hd'),
+					'title'    => __( 'Social', 'hd' ),
 					'panel'    => 'addon_menu_panel',
 					'priority' => 1005,
 				]
 			);
 
 			// Add options for facebook appid
-			$wp_customize->add_setting('fb_menu_setting', ['sanitize_callback' => 'sanitize_text_field',]);
+			$wp_customize->add_setting( 'fb_menu_setting', [ 'sanitize_callback' => 'sanitize_text_field', ] );
 			$wp_customize->add_control(
 				'fb_menu_control',
 				[
-					'label'       => __('Facebook AppID', 'hd'),
+					'label'       => __( 'Facebook AppID', 'hd' ),
 					'section'     => 'socials_menu_section',
 					'settings'    => 'fb_menu_setting',
 					'type'        => 'text',
-					'description' => __("You can do this at <a href='https://developers.facebook.com/apps/'>developers.facebook.com/apps</a>", 'hd'),
+					'description' => __( "You can do this at <a href='https://developers.facebook.com/apps/'>developers.facebook.com/apps</a>", 'hd' ),
 				]
 			);
 
 			// Add options for facebook page_id
-			$wp_customize->add_setting('fbpage_menu_setting', ['sanitize_callback' => 'sanitize_text_field',]);
+			$wp_customize->add_setting( 'fbpage_menu_setting', [ 'sanitize_callback' => 'sanitize_text_field', ] );
 			$wp_customize->add_control(
 				'fbpage_menu_control',
 				[
-					'label'       => __('Facebook PageID', 'hd'),
+					'label'       => __( 'Facebook PageID', 'hd' ),
 					'section'     => 'socials_menu_section',
 					'settings'    => 'fbpage_menu_setting',
 					'type'        => 'text',
-					'description' => __("How do I find my Facebook Page ID? <a href='https://www.facebook.com/help/1503421039731588'>facebook.com/help/1503421039731588</a>", 'hd'),
+					'description' => __( "How do I find my Facebook Page ID? <a href='https://www.facebook.com/help/1503421039731588'>facebook.com/help/1503421039731588</a>", 'hd' ),
 				]
 			);
 
@@ -266,8 +263,8 @@ if (!class_exists('Customizer')) {
 			$wp_customize->add_setting(
 				'fb_chat_setting',
 				[
-					'default'    =>  false,
-					'capability' => 'edit_theme_options',
+					'default'           => false,
+					'capability'        => 'edit_theme_options',
 					'sanitize_callback' => 'sanitize_checkbox',
 					'transport'         => 'refresh',
 				]
@@ -275,37 +272,37 @@ if (!class_exists('Customizer')) {
 			$wp_customize->add_control(
 				'fb_chat_control',
 				[
-					'type' => 'checkbox',
+					'type'        => 'checkbox',
 					'settings'    => 'fb_chat_setting',
-					'section' => 'socials_menu_section',
-					'label'      => __('Facebook Live Chat', 'hd'),
-					'description' => __('Thêm facebook messenger live chat', 'hd'),
+					'section'     => 'socials_menu_section',
+					'label'       => __( 'Facebook Live Chat', 'hd' ),
+					'description' => __( 'Thêm facebook messenger live chat', 'hd' ),
 				]
 			);
 
 			// Zalo Appid
-			$wp_customize->add_setting('zalo_menu_setting', ['sanitize_callback' => 'sanitize_text_field',]);
+			$wp_customize->add_setting( 'zalo_menu_setting', [ 'sanitize_callback' => 'sanitize_text_field', ] );
 			$wp_customize->add_control(
 				'zalo_menu_control',
 				[
-					'label'       => __('Zalo AppID', 'hd'),
+					'label'       => __( 'Zalo AppID', 'hd' ),
 					'section'     => 'socials_menu_section',
 					'settings'    => 'zalo_menu_setting',
 					'type'        => 'text',
-					'description' => __("You can do this at <a href='https://developers.zalo.me/docs/'>developers.zalo.me/docs/</a>", 'hd'),
+					'description' => __( "You can do this at <a href='https://developers.zalo.me/docs/'>developers.zalo.me/docs/</a>", 'hd' ),
 				]
 			);
 
 			// Zalo oaid
-			$wp_customize->add_setting('zalo_oa_menu_setting', ['sanitize_callback' => 'sanitize_text_field',]);
+			$wp_customize->add_setting( 'zalo_oa_menu_setting', [ 'sanitize_callback' => 'sanitize_text_field', ] );
 			$wp_customize->add_control(
 				'zalo_oa_menu_control',
 				[
-					'label'       => __('Zalo OAID', 'hd'),
+					'label'       => __( 'Zalo OAID', 'hd' ),
 					'section'     => 'socials_menu_section',
 					'settings'    => 'zalo_oa_menu_setting',
 					'type'        => 'text',
-					'description' => __("You can do this at <a href='https://oa.zalo.me/manage/oa?option=create'>oa.zalo.me/manage/oa?option=create</a>", 'hd'),
+					'description' => __( "You can do this at <a href='https://oa.zalo.me/manage/oa?option=create'>oa.zalo.me/manage/oa?option=create</a>", 'hd' ),
 				]
 			);
 
@@ -313,8 +310,8 @@ if (!class_exists('Customizer')) {
 			$wp_customize->add_setting(
 				'zalo_chat_setting',
 				[
-					'default'    =>  false,
-					'capability' => 'edit_theme_options',
+					'default'           => false,
+					'capability'        => 'edit_theme_options',
 					'sanitize_callback' => 'sanitize_checkbox',
 					'transport'         => 'refresh',
 				]
@@ -322,11 +319,11 @@ if (!class_exists('Customizer')) {
 			$wp_customize->add_control(
 				'zalo_chat_control',
 				[
-					'type' => 'checkbox',
+					'type'        => 'checkbox',
 					'settings'    => 'zalo_chat_setting',
-					'section' => 'socials_menu_section',
-					'label'      => __('Zalo Live Chat', 'hd'),
-					'description' => __('Thêm zalo live chat', 'hd'),
+					'section'     => 'socials_menu_section',
+					'label'       => __( 'Zalo Live Chat', 'hd' ),
+					'description' => __( 'Thêm zalo live chat', 'hd' ),
 				]
 			);
 
@@ -336,38 +333,38 @@ if (!class_exists('Customizer')) {
 			$wp_customize->add_section(
 				'hotline_menu_section',
 				[
-					'title'    => __('Hotline', 'hd'),
+					'title'    => __( 'Hotline', 'hd' ),
 					'panel'    => 'addon_menu_panel',
 					'priority' => 1006,
 				]
 			);
 
 			// add control
-			$wp_customize->add_setting('hotline_setting', [
+			$wp_customize->add_setting( 'hotline_setting', [
 				'sanitize_callback' => 'sanitize_text_field',
 				'transport'         => 'refresh'
-			]);
+			] );
 			$wp_customize->add_control(
 				'hotline_control',
 				[
-					'label'       => __('Hotline', 'hd'),
+					'label'       => __( 'Hotline', 'hd' ),
 					'section'     => 'hotline_menu_section',
 					'settings'    => 'hotline_setting',
-					'description' => __('Hotline number, support easier interaction on the phone', 'hd'),
+					'description' => __( 'Hotline number, support easier interaction on the phone', 'hd' ),
 					'type'        => 'text',
 				]
 			);
 
 			// add control
-			$wp_customize->add_setting('hotline_zalo_setting', ['sanitize_callback' => 'sanitize_text_field',]);
+			$wp_customize->add_setting( 'hotline_zalo_setting', [ 'sanitize_callback' => 'sanitize_text_field', ] );
 			$wp_customize->add_control(
 				'hotline_zalo_control',
 				[
-					'label'       => __('Zalo Hotline', 'hd'),
+					'label'       => __( 'Zalo Hotline', 'hd' ),
 					'section'     => 'hotline_menu_section',
 					'settings'    => 'hotline_zalo_setting',
 					'type'        => 'text',
-					'description' => __('Zalo Hotline number, support easier interaction on the zalo', 'hd'),
+					'description' => __( 'Zalo Hotline number, support easier interaction on the zalo', 'hd' ),
 				]
 			);
 
@@ -377,7 +374,7 @@ if (!class_exists('Customizer')) {
 			$wp_customize->add_section(
 				'GPKD_menu_section',
 				[
-					'title'    => __('Giấy phép kinh doanh', 'hd'),
+					'title'    => __( 'Giấy phép kinh doanh', 'hd' ),
 					'panel'    => 'addon_menu_panel',
 					'priority' => 1006,
 				]
@@ -394,10 +391,10 @@ if (!class_exists('Customizer')) {
 			$wp_customize->add_control(
 				'GPKD_control',
 				[
-					'label'       => __('GPKD', 'hd'),
+					'label'       => __( 'GPKD', 'hd' ),
 					'section'     => 'GPKD_menu_section',
 					'settings'    => 'GPKD_setting',
-					'description' => __('Thông tin Giấy phép kinh doanh (nếu có)', 'hd'),
+					'description' => __( 'Thông tin Giấy phép kinh doanh (nếu có)', 'hd' ),
 					'type'        => 'text',
 				]
 			);
@@ -408,20 +405,20 @@ if (!class_exists('Customizer')) {
 			$wp_customize->add_section(
 				'breadcrumb_bg_section',
 				[
-					'title'    => __('Breadcrumb background', 'hd'),
+					'title'    => __( 'Breadcrumb background', 'hd' ),
 					'panel'    => 'addon_menu_panel',
 					'priority' => 1007,
 				]
 			);
 
 			// add control
-			$wp_customize->add_setting('breadcrumb_bg_setting', ['transport' => 'refresh']);
+			$wp_customize->add_setting( 'breadcrumb_bg_setting', [ 'transport' => 'refresh' ] );
 			$wp_customize->add_control(
 				new \WP_Customize_Image_Control(
 					$wp_customize,
 					'breadcrumb_bg_control',
 					[
-						'label'    => __('Breadcrumb background', 'hd'),
+						'label'    => __( 'Breadcrumb background', 'hd' ),
 						'section'  => 'breadcrumb_bg_section',
 						'settings' => 'breadcrumb_bg_setting',
 						'priority' => 9,
@@ -435,20 +432,20 @@ if (!class_exists('Customizer')) {
 			$wp_customize->add_section(
 				'footer_bg_section',
 				[
-					'title'    => __('Footer background', 'hd'),
+					'title'    => __( 'Footer background', 'hd' ),
 					'panel'    => 'addon_menu_panel',
 					'priority' => 1008,
 				]
 			);
 
 			// add control
-			$wp_customize->add_setting('footer_bg_setting', ['transport' => 'refresh']);
+			$wp_customize->add_setting( 'footer_bg_setting', [ 'transport' => 'refresh' ] );
 			$wp_customize->add_control(
 				new \WP_Customize_Image_Control(
 					$wp_customize,
 					'footer_bg_control',
 					[
-						'label'    => __('Footer background', 'hd'),
+						'label'    => __( 'Footer background', 'hd' ),
 						'section'  => 'footer_bg_section',
 						'settings' => 'footer_bg_setting',
 						'priority' => 9,
@@ -462,35 +459,35 @@ if (!class_exists('Customizer')) {
 			$wp_customize->add_section(
 				'footer_layout_section',
 				[
-					'title'    => __('Footer layouts', 'hd'),
+					'title'    => __( 'Footer layouts', 'hd' ),
 					'panel'    => 'addon_menu_panel',
 					'priority' => 1009,
 				]
 			);
 
 			// add control
-			$wp_customize->add_setting('footer_row_setting', ['sanitize_callback' => 'sanitize_text_field',]);
+			$wp_customize->add_setting( 'footer_row_setting', [ 'sanitize_callback' => 'sanitize_text_field', ] );
 			$wp_customize->add_control(
 				'footer_row_control',
 				[
-					'label'       => __('Footer row number', 'hd'),
+					'label'       => __( 'Footer row number', 'hd' ),
 					'section'     => 'footer_layout_section',
 					'settings'    => 'footer_row_setting',
 					'type'        => 'number',
-					'description' => __('Footer rows number', 'hd'),
+					'description' => __( 'Footer rows number', 'hd' ),
 				]
 			);
 
 			// add control
-			$wp_customize->add_setting('footer_col_setting', ['sanitize_callback' => 'sanitize_text_field',]);
+			$wp_customize->add_setting( 'footer_col_setting', [ 'sanitize_callback' => 'sanitize_text_field', ] );
 			$wp_customize->add_control(
 				'footer_col_control',
 				[
-					'label'       => __('Footer columns number', 'hd'),
+					'label'       => __( 'Footer columns number', 'hd' ),
 					'section'     => 'footer_layout_section',
 					'settings'    => 'footer_col_setting',
 					'type'        => 'number',
-					'description' => __('Footer columns number', 'hd'),
+					'description' => __( 'Footer columns number', 'hd' ),
 				]
 			);
 
@@ -500,7 +497,7 @@ if (!class_exists('Customizer')) {
 			$wp_customize->add_section(
 				'block_editor_section',
 				[
-					'title'    => __('Block Editor', 'hd'),
+					'title'    => __( 'Block Editor', 'hd' ),
 					'panel'    => 'addon_menu_panel',
 					'priority' => 1010,
 				]
@@ -510,8 +507,8 @@ if (!class_exists('Customizer')) {
 			$wp_customize->add_setting(
 				'use_widgets_block_editor_setting',
 				[
-					'default'    =>  true,
-					'capability' => 'edit_theme_options',
+					'default'           => false,
+					'capability'        => 'edit_theme_options',
 					'sanitize_callback' => 'sanitize_checkbox',
 					'transport'         => 'refresh',
 				]
@@ -519,11 +516,11 @@ if (!class_exists('Customizer')) {
 			$wp_customize->add_control(
 				'use_widgets_block_editor_control',
 				[
-					'type' => 'checkbox',
+					'type'        => 'checkbox',
 					'settings'    => 'use_widgets_block_editor_setting',
-					'section' => 'block_editor_section',
-					'label'      => __('Widgets kiểu cũ', 'hd'),
-					'description' => __('Disables the block editor from managing widgets', 'hd'),
+					'section'     => 'block_editor_section',
+					'label'       => __( 'Widgets kiểu cũ', 'hd' ),
+					'description' => __( 'Disables the block editor from managing widgets', 'hd' ),
 				]
 			);
 
@@ -531,8 +528,8 @@ if (!class_exists('Customizer')) {
 			$wp_customize->add_setting(
 				'gutenberg_use_widgets_block_editor_setting',
 				[
-					'default'    =>  false,
-					'capability' => 'edit_theme_options',
+					'default'           => false,
+					'capability'        => 'edit_theme_options',
 					'sanitize_callback' => 'sanitize_checkbox',
 					'transport'         => 'refresh',
 				]
@@ -540,11 +537,11 @@ if (!class_exists('Customizer')) {
 			$wp_customize->add_control(
 				'gutenberg_use_widgets_block_editor_control',
 				[
-					'type' => 'checkbox',
+					'type'        => 'checkbox',
 					'settings'    => 'gutenberg_use_widgets_block_editor_setting',
-					'section' => 'block_editor_section',
-					'label'      => __('Tắt Gutenberg Widgets', 'hd'),
-					'description' => __('Disables the block editor from managing widgets in the Gutenberg plugin', 'hd'),
+					'section'     => 'block_editor_section',
+					'label'       => __( 'Tắt Gutenberg Widgets', 'hd' ),
+					'description' => __( 'Disables the block editor from managing widgets in the Gutenberg plugin', 'hd' ),
 				]
 			);
 
@@ -552,8 +549,8 @@ if (!class_exists('Customizer')) {
 			$wp_customize->add_setting(
 				'use_block_editor_for_post_type_setting',
 				[
-					'default'    =>  false,
-					'capability' => 'edit_theme_options',
+					'default'           => false,
+					'capability'        => 'edit_theme_options',
 					'sanitize_callback' => 'sanitize_checkbox',
 					'transport'         => 'refresh',
 				]
@@ -561,11 +558,11 @@ if (!class_exists('Customizer')) {
 			$wp_customize->add_control(
 				'use_block_editor_for_post_type_control',
 				[
-					'type' => 'checkbox',
+					'type'        => 'checkbox',
 					'settings'    => 'use_block_editor_for_post_type_setting',
-					'section' => 'block_editor_section',
-					'label'      => __('Trình soạn thảo cũ', 'hd'),
-					'description' => __('Use Classic Editor - Disable Gutenberg Editor', 'hd'),
+					'section'     => 'block_editor_section',
+					'label'       => __( 'Trình soạn thảo cũ', 'hd' ),
+					'description' => __( 'Use Classic Editor - Disable Gutenberg Editor', 'hd' ),
 				]
 			);
 		}

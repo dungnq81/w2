@@ -40,8 +40,8 @@ mix.setPublicPath('assets')
         'resources/js/plugins/parallax-scroll.js',
     ], 'js')
 
-    .sass('resources/sass/awe.scss', 'css')
+    //.sass('resources/sass/awe.scss', 'css')
     .sass('resources/sass/admin.scss', 'css')
     .sass('resources/sass/editor-style.scss', 'css');
-    //.sass('resources/sass/plugins.scss', 'css')
-    //.sass('resources/sass/app.scss', 'css');
+//.sass('resources/sass/plugins.scss', 'css')
+//.sass('resources/sass/app.scss', 'css');

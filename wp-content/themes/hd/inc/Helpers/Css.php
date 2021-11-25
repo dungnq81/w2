@@ -8,15 +8,14 @@ namespace Webhd\Helpers;
  * @package GeneratePress
  */
 
-if (!class_exists('Css')) {
+if ( ! class_exists( 'Css' ) ) {
 	/**
 	 * Creates minified css via PHP.
 	 *
 	 * @author  Carlos Rios
 	 * Modified by Tom Usborne for GeneratePress
 	 */
-	class Css
-	{
+	class Css {
 		/**
 		 * The css selector that you're currently adding rules to
 		 *
@@ -68,18 +67,20 @@ if (!class_exists('Css')) {
 		 * Sets a selector to the object and changes the current selector to a new one
 		 *
 		 * @access public
+		 *
+		 * @param string $selector - the css identifier of the html that you wish to target
+		 *
+		 * @return $this
 		 * @since  1.0
 		 *
-		 * @param  string $selector - the css identifier of the html that you wish to target
-		 * @return $this
 		 */
-		public function set_selector($selector = '')
-		{
+		public function set_selector( $selector = '' ) {
 			// Render the css in the output string everytime the selector changes
-			if ($this->_selector !== '') {
+			if ( $this->_selector !== '' ) {
 				$this->add_selector_rules_to_output();
 			}
 			$this->_selector = $selector;
+
 			return $this;
 		}
 
@@ -87,81 +88,84 @@ if (!class_exists('Css')) {
 		 * Adds a css property with value to the css output
 		 *
 		 * @access public
+		 *
+		 * @param string $property - the css property
+		 * @param string $value - the value to be placed with the property
+		 * @param string $og_default - check to see if the value matches the default
+		 * @param string $unit - the unit for the value (px)
+		 *
+		 * @return $this
 		 * @since  1.0
 		 *
-		 * @param  string $property - the css property
-		 * @param  string $value - the value to be placed with the property
-		 * @param  string $og_default - check to see if the value matches the default
-		 * @param  string $unit - the unit for the value (px)
-		 * @return $this
 		 */
-		public function add_property($property, $value, $og_default = false, $unit = false)
-		{
+		public function add_property( $property, $value, $og_default = false, $unit = false ) {
 			// Add our unit to our value if it exists
-			if ($unit && '' !== $unit) {
+			if ( $unit && '' !== $unit ) {
 				$value = $value . $unit;
-				if ('' !== $og_default) {
+				if ( '' !== $og_default ) {
 					$og_default = $og_default . $unit;
 				}
 			}
 
 			// If we don't have a value or our value is the same as our og default, bail
-			if (empty($value) || $og_default == $value)
+			if ( empty( $value ) || $og_default == $value ) {
 				return false;
+			}
 
 			$this->_css .= $property . ':' . $value . ';';
+
 			return $this;
 		}
 
 		/**
 		 * Sets a media query in the class
 		 *
-		 * @since  1.1
-		 * @param  string $value
+		 * @param string $value
+		 *
 		 * @return $this
+		 * @since  1.1
 		 */
-		public function start_media_query($value)
-		{
+		public function start_media_query( $value ) {
 			// Add the current rules to the output
 			$this->add_selector_rules_to_output();
 
 			// Add any previous media queries to the output
-			if (!empty($this->_media_query)) {
+			if ( ! empty( $this->_media_query ) ) {
 				$this->add_media_query_rules_to_output();
 			}
 
 			// Set the new media query
 			$this->_media_query = $value;
+
 			return $this;
 		}
 
 		/**
 		 * Stops using a media query.
 		 *
+		 * @return $this
+		 * @since  1.1
 		 * @see    start_media_query()
 		 *
-		 * @since  1.1
-		 * @return $this
 		 */
-		public function stop_media_query()
-		{
-			return $this->start_media_query(null);
+		public function stop_media_query() {
+			return $this->start_media_query( null );
 		}
 
 		/**
 		 * Adds the current media query's rules to the class' output variable
 		 *
-		 * @since  1.1
 		 * @return $this
+		 * @since  1.1
 		 */
-		private function add_media_query_rules_to_output()
-		{
-			if (!empty($this->_media_query_output)) {
-				$this->_output .= sprintf('@media %1$s{%2$s}', $this->_media_query, $this->_media_query_output);
+		private function add_media_query_rules_to_output() {
+			if ( ! empty( $this->_media_query_output ) ) {
+				$this->_output .= sprintf( '@media %1$s{%2$s}', $this->_media_query, $this->_media_query_output );
 
 				// Reset the media query output string
 				$this->_media_query_output = '';
 			}
+
 			return $this;
 		}
 
@@ -169,20 +173,19 @@ if (!class_exists('Css')) {
 		 * Adds the current selector rules to the output variable
 		 *
 		 * @access private
+		 * @return $this
 		 * @since  1.0
 		 *
-		 * @return $this
 		 */
-		private function add_selector_rules_to_output()
-		{
-			if (!empty($this->_css)) {
+		private function add_selector_rules_to_output() {
+			if ( ! empty( $this->_css ) ) {
 				$this->_selector_output = $this->_selector;
-				$selector_output = sprintf('%1$s{%2$s}', $this->_selector_output, $this->_css);
+				$selector_output        = sprintf( '%1$s{%2$s}', $this->_selector_output, $this->_css );
 
 				// Add our CSS to the output
-				if (!empty($this->_media_query)) {
+				if ( ! empty( $this->_media_query ) ) {
 					$this->_media_query_output .= $selector_output;
-					$this->_css = '';
+					$this->_css                = '';
 				} else {
 					$this->_output .= $selector_output;
 				}
@@ -198,12 +201,11 @@ if (!class_exists('Css')) {
 		 * Returns the minified css in the $_output variable
 		 *
 		 * @access public
+		 * @return string
 		 * @since  1.0
 		 *
-		 * @return string
 		 */
-		public function css_output()
-		{
+		public function css_output() {
 			// Add current selector's rules to output
 			$this->add_selector_rules_to_output();
 

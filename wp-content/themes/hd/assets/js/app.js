@@ -27669,7 +27669,8 @@ function onTouchEnd(event) {
   const timeDiff = touchEndTime - data.touchStartTime; // Tap, doubleTap, Click
 
   if (swiper.allowClick) {
-    swiper.updateClickedSlide(e);
+    const pathTree = e.path || e.composedPath && e.composedPath();
+    swiper.updateClickedSlide(pathTree && pathTree[0] || e.target);
     swiper.emit('tap click', e);
 
     if (timeDiff < 300 && touchEndTime - data.lastClickTime < 300) {
@@ -29832,7 +29833,7 @@ __webpack_require__.r(__webpack_exports__);
 function updateClickedSlide(e) {
   const swiper = this;
   const params = swiper.params;
-  const slide = (0,_shared_dom_js__WEBPACK_IMPORTED_MODULE_0__["default"])(e.target).closest(`.${params.slideClass}`)[0];
+  const slide = (0,_shared_dom_js__WEBPACK_IMPORTED_MODULE_0__["default"])(e).closest(`.${params.slideClass}`)[0];
   let slideFound = false;
   let slideIndex;
 
@@ -36861,7 +36862,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_effect_creative_effect_creative_js__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./modules/effect-creative/effect-creative.js */ "./node_modules/swiper/modules/effect-creative/effect-creative.js");
 /* harmony import */ var _modules_effect_cards_effect_cards_js__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./modules/effect-cards/effect-cards.js */ "./node_modules/swiper/modules/effect-cards/effect-cards.js");
 /**
- * Swiper 7.3.0
+ * Swiper 7.3.1
  * Most modern mobile touch slider and framework with hardware accelerated transitions
  * https://swiperjs.com
  *
@@ -36869,7 +36870,7 @@ __webpack_require__.r(__webpack_exports__);
  *
  * Released under the MIT License
  *
- * Released on: November 18, 2021
+ * Released on: November 24, 2021
  */
 
 

@@ -5,7 +5,7 @@
  * @author   WEBHD
  */
 
-if (!defined('ABSPATH')) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
@@ -15,36 +15,34 @@ use Webhd\Helpers\Str;
 
 // -------------------------------------------------------------
 
-if (!function_exists('json_encode_prettify')) {
+if ( ! function_exists( 'json_encode_prettify' ) ) {
 	/**
 	 * @param $data
 	 *
 	 * @return false|string
 	 */
-	function json_encode_prettify($data)
-	{
-		return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+	function json_encode_prettify( $data ) {
+		return json_encode( $data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES );
 	}
 }
 
 // ------------------------------------------------------
 
-if (!function_exists('str_contains')) {
+if ( ! function_exists( 'str_contains' ) ) {
 	/**
 	 * @param string $haystack - The string to search in.
 	 * @param string $needle
 	 *
 	 * @return bool
 	 */
-	function str_contains(string $haystack, string $needle)
-	{
-		return '' === $needle || false !== strpos($haystack, $needle);
+	function str_contains( string $haystack, string $needle ) {
+		return '' === $needle || false !== strpos( $haystack, $needle );
 	}
 }
 
 // ------------------------------------------------------
 
-if (!function_exists('safe_mailto')) {
+if ( ! function_exists( 'safe_mailto' ) ) {
 	/**
 	 * Encoded Mailto Link
 	 *
@@ -56,32 +54,31 @@ if (!function_exists('safe_mailto')) {
 	 *
 	 * @return string
 	 */
-	function safe_mailto(string $email, string $title = '', $attributes = ''): string
-	{
-		if (trim($title) === '') {
+	function safe_mailto( string $email, string $title = '', $attributes = '' ): string {
+		if ( trim( $title ) === '' ) {
 			$title = $email;
 		}
 
-		$x = str_split('<a href="mailto:', 1);
+		$x = str_split( '<a href="mailto:', 1 );
 
-		for ($i = 0, $l = strlen($email); $i < $l; $i++) {
-			$x[] = '|' . ord($email[$i]);
+		for ( $i = 0, $l = strlen( $email ); $i < $l; $i ++ ) {
+			$x[] = '|' . ord( $email[ $i ] );
 		}
 
 		$x[] = '"';
 
-		if ($attributes !== '') {
-			if (is_array($attributes)) {
-				foreach ($attributes as $key => $val) {
+		if ( $attributes !== '' ) {
+			if ( is_array( $attributes ) ) {
+				foreach ( $attributes as $key => $val ) {
 					$x[] = ' ' . $key . '="';
-					for ($i = 0, $l = strlen($val); $i < $l; $i++) {
-						$x[] = '|' . ord($val[$i]);
+					for ( $i = 0, $l = strlen( $val ); $i < $l; $i ++ ) {
+						$x[] = '|' . ord( $val[ $i ] );
 					}
 					$x[] = '"';
 				}
 			} else {
-				for ($i = 0, $l = mb_strlen($attributes); $i < $l; $i++) {
-					$x[] = mb_substr($attributes, $i, 1);
+				for ( $i = 0, $l = mb_strlen( $attributes ); $i < $l; $i ++ ) {
+					$x[] = mb_substr( $attributes, $i, 1 );
 				}
 			}
 		}
@@ -89,23 +86,23 @@ if (!function_exists('safe_mailto')) {
 		$x[] = '>';
 
 		$temp = [];
-		for ($i = 0, $l = strlen($title); $i < $l; $i++) {
-			$ordinal = ord($title[$i]);
+		for ( $i = 0, $l = strlen( $title ); $i < $l; $i ++ ) {
+			$ordinal = ord( $title[ $i ] );
 
-			if ($ordinal < 128) {
+			if ( $ordinal < 128 ) {
 				$x[] = '|' . $ordinal;
 			} else {
-				if (empty($temp)) {
-					$count = ($ordinal < 224) ? 2 : 3;
+				if ( empty( $temp ) ) {
+					$count = ( $ordinal < 224 ) ? 2 : 3;
 				}
 
 				$temp[] = $ordinal;
-				if (count($temp) === $count) // @phpstan-ignore-line
+				if ( count( $temp ) === $count ) // @phpstan-ignore-line
 				{
-					$number = ($count === 3) ? (($temp[0] % 16) * 4096) + (($temp[1] % 64) * 64) + ($temp[2] % 64) : (($temp[0] % 32) * 64) + ($temp[1] % 64);
-					$x[] = '|' . $number;
-					$count = 1;
-					$temp = [];
+					$number = ( $count === 3 ) ? ( ( $temp[0] % 16 ) * 4096 ) + ( ( $temp[1] % 64 ) * 64 ) + ( $temp[2] % 64 ) : ( ( $temp[0] % 32 ) * 64 ) + ( $temp[1] % 64 );
+					$x[]    = '|' . $number;
+					$count  = 1;
+					$temp   = [];
 				}
 			}
 		}
@@ -115,114 +112,114 @@ if (!function_exists('safe_mailto')) {
 		$x[] = 'a';
 		$x[] = '>';
 
-		$x = array_reverse($x);
+		$x = array_reverse( $x );
 
 		// improve obfuscation by eliminating newlines & whitespace
 		$output = '<script type="text/javascript">'
 		          . 'var l=new Array();';
 
-		foreach ($x as $i => $value) {
+		foreach ( $x as $i => $value ) {
 			$output .= 'l[' . $i . "] = '" . $value . "';";
 		}
 
-		return $output . ('for (var i = l.length-1; i >= 0; i=i-1) {'
-		                  . "if (l[i].substring(0, 1) === '|') document.write(\"&#\"+unescape(l[i].substring(1))+\";\");"
-		                  . 'else document.write(unescape(l[i]));'
-		                  . '}'
-		                  . '</script>');
+		return $output . ( 'for (var i = l.length-1; i >= 0; i=i-1) {'
+		                   . "if (l[i].substring(0, 1) === '|') document.write(\"&#\"+unescape(l[i].substring(1))+\";\");"
+		                   . 'else document.write(unescape(l[i]));'
+		                   . '}'
+		                   . '</script>' );
 	}
 }
 
 // ------------------------------------------------------
 
-if (!function_exists('is_php')) {
+if ( ! function_exists( 'is_php' ) ) {
 	/**
 	 * @param string $version
 	 *
 	 * @return  bool
 	 */
-	function is_php(string $version = '5.0.0')
-	{
+	function is_php( string $version = '5.0.0' ) {
 		static $phpVer;
 
-		if (!isset($phpVer[$version])) {
-			$phpVer[$version] = !((version_compare(PHP_VERSION, $version) < 0));
+		if ( ! isset( $phpVer[ $version ] ) ) {
+			$phpVer[ $version ] = ! ( ( version_compare( PHP_VERSION, $version ) < 0 ) );
 		}
 
-		return $phpVer[$version];
+		return $phpVer[ $version ];
 	}
 }
 
 // -------------------------------------------------------------
 
-if (!function_exists('is_empty')) {
+if ( ! function_exists( 'is_empty' ) ) {
 	/**
 	 * @param mixed $value
+	 *
 	 * @return bool
 	 */
-	function is_empty($value)
-	{
-		if (is_string($value)) {
-			return trim($value) === '';
+	function is_empty( $value ) {
+		if ( is_string( $value ) ) {
+			return trim( $value ) === '';
 		}
-		return !is_numeric($value) && !is_bool($value) && empty($value);
+
+		return ! is_numeric( $value ) && ! is_bool( $value ) && empty( $value );
 	}
 }
 
 // -------------------------------------------------------------
 
-if (!function_exists('is_not_empty')) {
+if ( ! function_exists( 'is_not_empty' ) ) {
 	/**
 	 * @param mixed $value
+	 *
 	 * @return boolean
 	 */
-	function is_not_empty($value)
-	{
-		return !is_empty($value);
+	function is_not_empty( $value ) {
+		return ! is_empty( $value );
 	}
 }
 
 // -------------------------------------------------------------
 
-if (!function_exists('millitime')) {
+if ( ! function_exists( 'millitime' ) ) {
 	/**
 	 * @return string
 	 */
-	function millitime()
-	{
+	function millitime() {
 		$microtime = microtime();
-		$comps     = explode(' ', $microtime);
+		$comps     = explode( ' ', $microtime );
 
 		// Note: Using a string here to prevent loss of precision
 		// in case of "overflow" (PHP converts it to a double)
-		return sprintf('%d%03d', $comps[1], $comps[0] * 1000);
+		return sprintf( '%d%03d', $comps[1], $comps[0] * 1000 );
 	}
 }
 
 // -------------------------------------------------------------
 
-if (!function_exists('ip_address')) {
+if ( ! function_exists( 'ip_address' ) ) {
 	/**
 	 * @return string
 	 */
-	function ip_address()
-	{
+	function ip_address() {
 		$local = '127.0.0.1';
 
 		// Get user IP address
-		foreach ([
-			'HTTP_CLIENT_IP',
-			'HTTP_X_FORWARDED_FOR',
-			'HTTP_X_FORWARDED',
-			'HTTP_X_CLUSTER_CLIENT_IP',
-			'HTTP_FORWARDED_FOR',
-			'HTTP_FORWARDED',
-			'REMOTE_ADDR',
-		] as $key) {
-			if (array_key_exists($key, $_SERVER) === true) {
-				foreach (explode(',', $_SERVER[$key]) as $ip) {
-					$ip = trim($ip); // just to be safe
-					$ip = (validate_ip($ip) === false) ? $local : $ip;
+		foreach (
+			[
+				'HTTP_CLIENT_IP',
+				'HTTP_X_FORWARDED_FOR',
+				'HTTP_X_FORWARDED',
+				'HTTP_X_CLUSTER_CLIENT_IP',
+				'HTTP_FORWARDED_FOR',
+				'HTTP_FORWARDED',
+				'REMOTE_ADDR',
+			] as $key
+		) {
+			if ( array_key_exists( $key, $_SERVER ) === true ) {
+				foreach ( explode( ',', $_SERVER[ $key ] ) as $ip ) {
+					$ip = trim( $ip ); // just to be safe
+					$ip = ( validate_ip( $ip ) === false ) ? $local : $ip;
 				}
 			}
 		}
@@ -233,15 +230,14 @@ if (!function_exists('ip_address')) {
 
 // -------------------------------------------------------------
 
-if (!function_exists('validate_ip')) {
+if ( ! function_exists( 'validate_ip' ) ) {
 	/**
 	 * @param $ip
 	 *
 	 * @return bool
 	 */
-	function validate_ip($ip)
-	{
-		if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false) {
+	function validate_ip( $ip ) {
+		if ( filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE ) === false ) {
 			return false;
 		}
 
@@ -251,7 +247,7 @@ if (!function_exists('validate_ip')) {
 
 // -------------------------------------------------------------
 
-if (!function_exists('youtube_iframe')) {
+if ( ! function_exists( 'youtube_iframe' ) ) {
 	/**
 	 * @param $url
 	 * @param int $autoplay
@@ -260,26 +256,25 @@ if (!function_exists('youtube_iframe')) {
 	 *
 	 * @return string|null
 	 */
-	function youtube_iframe($url, $autoplay = 0, $lazyload = true, $control = true)
-	{
-		parse_str(parse_url($url, PHP_URL_QUERY), $vars);
-		if (isset($vars['v'])) {
-			$idurl = $vars['v'];
-			$_size = ' width="640px" height="320px"';
+	function youtube_iframe( $url, $autoplay = 0, $lazyload = true, $control = true ) {
+		parse_str( parse_url( $url, PHP_URL_QUERY ), $vars );
+		if ( isset( $vars['v'] ) ) {
+			$idurl     = $vars['v'];
+			$_size     = ' width="640px" height="320px"';
 			$_autoplay = 'autoplay=' . $autoplay;
-			$_auto = ' allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"';
-			if ($autoplay == 1) {
+			$_auto     = ' allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"';
+			if ( $autoplay == 1 ) {
 				$_auto = ' allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"';
 			}
-			$_src = 'https://www.youtube.com/embed/' . $idurl . '?wmode=transparent&origin=' . home_url() . '&' . $_autoplay;
+			$_src     = 'https://www.youtube.com/embed/' . $idurl . '?wmode=transparent&origin=' . home_url() . '&' . $_autoplay;
 			$_control = '';
-			if ($control == false) {
+			if ( $control == false ) {
 				$_control = '&modestbranding=1&controls=0&rel=0&version=3&loop=1&enablejsapi=1&iv_load_policy=3&playlist=' . $idurl . '&playerapiid=ng_video_iframe_' . $idurl;
 			}
-			$_src .= $_control . '&html5=1';
-			$_src = ' src="' . $_src . '"';
+			$_src  .= $_control . '&html5=1';
+			$_src  = ' src="' . $_src . '"';
 			$_lazy = '';
-			if ($lazyload == true) {
+			if ( $lazyload == true ) {
 				$_lazy = ' loading="lazy"';
 			}
 			$_iframe = '<iframe id="ytb_iframe_' . $idurl . '" title="YouTube Video Player" frameborder="0" allowfullscreen' . $_lazy . $_auto . $_size . $_src . '></iframe>';
@@ -293,16 +288,15 @@ if (!function_exists('youtube_iframe')) {
 
 // -------------------------------------------------------------
 
-if (!function_exists('youtube_image')) {
+if ( ! function_exists( 'youtube_image' ) ) {
 	/**
 	 * @param $url
 	 * @param array $resolution
 	 *
 	 * @return string
 	 */
-	function youtube_image($url, $resolution = [])
-	{
-		if (!is_array($resolution) or empty($resolution)) {
+	function youtube_image( $url, $resolution = [] ) {
+		if ( ! is_array( $resolution ) or empty( $resolution ) ) {
 			$resolution = [
 				'sddefault',
 				'hqdefault',
@@ -313,12 +307,12 @@ if (!function_exists('youtube_image')) {
 		}
 
 		$url_img = Url::pixelImg();
-		parse_str(parse_url($url, PHP_URL_QUERY), $vars);
-		if (isset($vars['v'])) {
+		parse_str( parse_url( $url, PHP_URL_QUERY ), $vars );
+		if ( isset( $vars['v'] ) ) {
 			$id = $vars['v'];
-			for ($x = 0; $x < sizeof($resolution); $x++) {
-				$url_img = 'https://img.youtube.com/vi/' . $id . '/' . $resolution[$x] . '.jpg';
-				if (Url::urlExists($url_img)) {
+			for ( $x = 0; $x < sizeof( $resolution ); $x ++ ) {
+				$url_img = 'https://img.youtube.com/vi/' . $id . '/' . $resolution[ $x ] . '.jpg';
+				if ( Url::urlExists( $url_img ) ) {
 					break;
 				}
 			}
@@ -330,26 +324,26 @@ if (!function_exists('youtube_image')) {
 
 // -------------------------------------------------------------
 
-if (!function_exists('sanitize_url')) {
+if ( ! function_exists( 'sanitize_url' ) ) {
 	/**
 	 * @param mixed $value
+	 *
 	 * @return string
 	 */
-	function sanitize_url($value)
-	{
-		$url = trim(Cast::toString($value));
-		if (!Str::startsWith('http://, https://', $url)) {
-			$url = Str::prefix($url, 'https://');
+	function sanitize_url( $value ) {
+		$url = trim( Cast::toString( $value ) );
+		if ( ! Str::startsWith( 'http://, https://', $url ) ) {
+			$url = Str::prefix( $url, 'https://' );
 		}
-		$url = wp_http_validate_url($url);
+		$url = wp_http_validate_url( $url );
 
-		return esc_url_raw(Cast::toString($url));
+		return esc_url_raw( Cast::toString( $url ) );
 	}
 }
 
 // ------------------------------------------------------
 
-if (!function_exists('sanitize_input')) {
+if ( ! function_exists( 'sanitize_input' ) ) {
 	/**
 	 * https://catswhocode.com/php-sanitize-input/
 	 *
@@ -357,49 +351,49 @@ if (!function_exists('sanitize_input')) {
 	 *
 	 * @return array
 	 */
-	function sanitize_input($key, array $request = [])
-	{
-		if (isset($request[$key])) {
-			return $request[$key];
+	function sanitize_input( $key, array $request = [] ) {
+		if ( isset( $request[ $key ] ) ) {
+			return $request[ $key ];
 		}
-		$variable = filter_input(INPUT_POST, $key);
-		if (is_null($variable) && isset($_POST[$key])) {
-			$variable = $_POST[$key];
+		$variable = filter_input( INPUT_POST, $key );
+		if ( is_null( $variable ) && isset( $_POST[ $key ] ) ) {
+			$variable = $_POST[ $key ];
 		}
+
 		return $variable;
 	}
 }
 
 // ------------------------------------------------------
 
-if (!function_exists('sanitize_int')) {
+if ( ! function_exists( 'sanitize_int' ) ) {
 	/**
 	 * Sanitize integers.
 	 *
-	 * @since 1.0.8
 	 * @param string $input The value to check.
+	 *
+	 * @since 1.0.8
 	 */
-	function sanitize_int($input)
-	{
-		return Cast::toInt($input);
+	function sanitize_int( $input ) {
+		return Cast::toInt( $input );
 	}
 }
 
 // -------------------------------------------------------------
 
-if (!function_exists('sanitize_date')) {
+if ( ! function_exists( 'sanitize_date' ) ) {
 	/**
 	 * If date is invalid then return an empty string.
 	 *
 	 * @param mixed $value
 	 * @param string $fallback
+	 *
 	 * @return string
 	 */
-	function sanitize_date($value, $fallback = '')
-	{
-		$date = strtotime(trim(Cast::toString($value)));
-		if (false !== $date) {
-			return wp_date('Y-m-d H:i:s', $date);
+	function sanitize_date( $value, $fallback = '' ) {
+		$date = strtotime( trim( Cast::toString( $value ) ) );
+		if ( false !== $date ) {
+			return wp_date( 'Y-m-d H:i:s', $date );
 		}
 
 		return $fallback;
@@ -408,54 +402,54 @@ if (!function_exists('sanitize_date')) {
 
 // -------------------------------------------------------------
 
-if (!function_exists('sanitize_bool')) {
+if ( ! function_exists( 'sanitize_bool' ) ) {
 	/**
 	 * @param mixed $value
+	 *
 	 * @return bool
 	 */
-	function sanitize_bool($value)
-	{
-		return Cast::toBool($value);
+	function sanitize_bool( $value ) {
+		return Cast::toBool( $value );
 	}
 }
 
 // ------------------------------------------------------
 
-if (!function_exists('sanitize_checkbox')) {
+if ( ! function_exists( 'sanitize_checkbox' ) ) {
 	/**
 	 * Sanitize checkbox values.
 	 *
-	 * @since 1.0.8
 	 * @param string $checked The value to check.
+	 *
+	 * @since 1.0.8
 	 */
-	function sanitize_checkbox($checked)
-	{
+	function sanitize_checkbox( $checked ) {
 		// phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison -- Intentially loose.
-		return ((isset($checked) && true == $checked) ? true : false);
+		return ( ( isset( $checked ) && true == $checked ) ? true : false );
 	}
 }
 
 // ------------------------------------------------------
 
-if (!function_exists('sanitize_choices')) {
+if ( ! function_exists( 'sanitize_choices' ) ) {
 	/**
 	 * Sanitize choices.
 	 *
-	 * @since 1.3.24
 	 * @param string $input The value to check.
 	 * @param object $setting The setting object.
+	 *
+	 * @since 1.3.24
 	 */
-	function sanitize_choices($input, $setting)
-	{
+	function sanitize_choices( $input, $setting ) {
 		// Ensure input is a slug.
-		$input = sanitize_key($input);
+		$input = sanitize_key( $input );
 
 		// Get list of choices from the control.
 		// associated with the setting.
-		$choices = $setting->manager->get_control($setting->id)->choices;
+		$choices = $setting->manager->get_control( $setting->id )->choices;
 
 		// If the input is a valid key, return it.
 		// otherwise, return the default.
-		return (array_key_exists($input, $choices) ? $input : $setting->default);
+		return ( array_key_exists( $input, $choices ) ? $input : $setting->default );
 	}
 }

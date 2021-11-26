@@ -56,7 +56,7 @@ if ( ! class_exists( 'Shortcode' ) ) {
 					'location'   => 'social-nav',
 					'menu_class' => 'social-menu conn-lnk',
 				],
-				array_change_key_case( (array) $atts, CASE_LOWER )
+				array_change_key_case( $atts, CASE_LOWER )
 			);
 
 			return social_nav( $a['location'], $a['menu_class'] );
@@ -77,7 +77,7 @@ if ( ! class_exists( 'Shortcode' ) ) {
 					'menu_class' => 'mobile-menu',
 					'menu_id'    => 'mobile-menu',
 				],
-				array_change_key_case( (array) $atts, CASE_LOWER )
+				array_change_key_case( $atts, CASE_LOWER )
 			);
 
 			return mobile_nav( $a['location'], $a['menu_class'], $a['menu_id'] );
@@ -97,7 +97,7 @@ if ( ! class_exists( 'Shortcode' ) ) {
 					'location'   => 'policy-nav',
 					'menu_class' => 'terms-menu',
 				],
-				array_change_key_case( (array) $atts, CASE_LOWER )
+				array_change_key_case( $atts, CASE_LOWER )
 			);
 
 			return term_nav( $a['location'], $a['menu_class'] );
@@ -118,7 +118,7 @@ if ( ! class_exists( 'Shortcode' ) ) {
 					'menu_class' => 'desktop-menu',
 					'menu_id'    => 'main-menu',
 				],
-				array_change_key_case( (array) $atts, CASE_LOWER )
+				array_change_key_case( $atts, CASE_LOWER )
 			);
 
 			return main_nav( $a['location'], $a['menu_class'], $a['menu_id'] );
@@ -140,7 +140,7 @@ if ( ! class_exists( 'Shortcode' ) ) {
 					'location' => 'mobile-nav',
 					'depth'    => 4,
 				],
-				array_change_key_case( (array) $atts, CASE_LOWER )
+				array_change_key_case( $atts, CASE_LOWER )
 			);
 
 			return vertical_nav( [
@@ -168,7 +168,7 @@ if ( ! class_exists( 'Shortcode' ) ) {
 					'location' => 'main-nav',
 					'depth'    => 4,
 				],
-				array_change_key_case( (array) $atts, CASE_LOWER )
+				array_change_key_case( $atts, CASE_LOWER )
 			);
 
 			return horizontal_nav( [
@@ -194,7 +194,7 @@ if ( ! class_exists( 'Shortcode' ) ) {
 					'theme' => 'default',
 					'class' => 'site-logo',
 				],
-				array_change_key_case( (array) $atts, CASE_LOWER )
+				array_change_key_case( $atts, CASE_LOWER )
 			);
 
 			return site_logo( $a['theme'], $a['class'] );
@@ -217,7 +217,7 @@ if ( ! class_exists( 'Shortcode' ) ) {
 					'class'      => '',
 					'id'         => esc_attr( uniqid( 'mail-' ) ),
 				],
-				array_change_key_case( (array) $atts, CASE_LOWER )
+				array_change_key_case( $atts, CASE_LOWER )
 			);
 
 			$_attr = [];

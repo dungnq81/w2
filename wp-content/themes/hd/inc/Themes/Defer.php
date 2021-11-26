@@ -21,6 +21,21 @@ if ( ! class_exists( 'Defer' ) ) {
 
 			add_filter( 'script_loader_tag', [ &$this, 'script_loader_tag' ], 11, 3 );
 			add_filter( 'style_loader_tag', [ &$this, 'style_loader_tag' ], 11, 2 );
+
+			add_action( 'wp_default_scripts', [ &$this, 'remove_jquery_migrate' ] );
+		}
+
+		/**
+		 * @param $scripts
+		 */
+		public function remove_jquery_migrate( $scripts ) {
+			if ( ! is_admin() && isset( $scripts->registered['jquery'] ) ) {
+				$script = $scripts->registered['jquery'];
+				if ( $script->deps ) {
+					// Check whether the script has any dependencies
+					$script->deps = array_diff( $script->deps, [ 'jquery-migrate' ] );
+				}
+			}
 		}
 
 		/**
@@ -30,7 +45,7 @@ if ( ! class_exists( 'Defer' ) ) {
 		 *
 		 * @return string
 		 */
-		public function script_loader_tag( string $tag, string $handle, string $src ) {
+		public function script_loader_tag( string $tag, string $handle, string $src ): string {
 			$str_parsed = [];
 			$str_parsed = apply_filters( 'defer_script_loader_tag', $str_parsed );
 
@@ -43,7 +58,7 @@ if ( ! class_exists( 'Defer' ) ) {
 		 *
 		 * @return string
 		 */
-		public function style_loader_tag( string $html, string $handle ) {
+		public function style_loader_tag( string $html, string $handle ): string {
 			// add style handles to the array below
 			$styles = [];
 			$styles = apply_filters( 'defer_style_loader_tag', $styles );

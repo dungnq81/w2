@@ -12,19 +12,6 @@ use Webhd\Ext\Vertical_Menu_Walker;
 
 // ------------------------------------------------------
 
-if ( ! function_exists( 'is_posts_page' ) ) {
-	/**
-	 * Check to see if we're on a posts page
-	 *
-	 * @since 1.3.39
-	 */
-	function is_posts_page() {
-		return ( is_home() || is_archive() || is_tax() ) ? true : false;
-	}
-}
-
-// ------------------------------------------------------
-
 if ( ! function_exists( 'lazy_script_tag' ) ) {
 	/**
 	 * @param array $arr_parsed [ $handle: $value ] -- $value[ 'defer', 'delay' ]
@@ -79,7 +66,7 @@ if ( ! function_exists( 'lazy_style_tag' ) ) {
 if ( ! function_exists( 'get_theme_mod_ssl' ) ) {
 	/**
 	 * @param $mod_name
-	 * @param bool $default
+	 * @param string|bool $default
 	 *
 	 * @return mixed|string|string[]
 	 */
@@ -113,15 +100,17 @@ if ( ! function_exists( 'get_theme_mod_ssl' ) ) {
 if ( ! function_exists( 'query_by_term' ) ) {
 	/**
 	 * @param object $term
+	 * @param string $post_type
 	 * @param int $posts_per_page
 	 * @param int $paged
 	 *
 	 * @return bool|WP_Query
 	 */
-	function query_by_term( $term, $post_type = 'post', $posts_per_page = 0, $paged = 0 ) {
+	function query_by_term( $term, string $post_type = 'post', int $posts_per_page = 0, int $paged = 0 ) {
 		if ( ! $term || ! $post_type ) {
 			return false;
 		}
+
 		$_args = [
 			'ignore_sticky_posts' => true,
 			'no_found_rows'       => true,
@@ -234,7 +223,7 @@ if ( ! function_exists( 'main_nav' ) ) {
 	 *
 	 * @return bool|false|string|void
 	 */
-	function main_nav( $location = 'main-nav', $menu_class = 'desktop-menu', $menu_id = 'main-menu' ) {
+	function main_nav( string $location = 'main-nav', string $menu_class = 'desktop-menu', string $menu_id = 'main-menu' ) {
 		return horizontal_nav( [
 			'menu_id'        => $menu_id,
 			'menu_class'     => $menu_class . ' dropdown menu horizontal horizontal-menu',
@@ -255,7 +244,7 @@ if ( ! function_exists( 'mobile_nav' ) ) {
 	 *
 	 * @return bool|false|string|void
 	 */
-	function mobile_nav( $location = 'mobile-nav', $menu_class = 'mobile-menu', $menu_id = 'mobile-menu' ) {
+	function mobile_nav( string $location = 'mobile-nav', string $menu_class = 'mobile-menu', string $menu_id = 'mobile-menu' ) {
 		return vertical_nav( [
 			'menu_id'        => $menu_id,
 			'menu_class'     => $menu_class . ' vertical menu',
@@ -275,7 +264,7 @@ if ( ! function_exists( 'term_nav' ) ) {
 	 *
 	 * @return bool|false|string|void
 	 */
-	function term_nav( $location = 'policy-nav', $menu_class = 'terms-menu' ) {
+	function term_nav( string $location = 'policy-nav', string $menu_class = 'terms-menu' ) {
 		return wp_nav_menu( [
 			'container'      => false,
 			'menu_class'     => $menu_class . ' menu horizontal horizontal-menu',
@@ -298,7 +287,7 @@ if ( ! function_exists( 'social_nav' ) ) {
 	 *
 	 * @return bool|false|string|void
 	 */
-	function social_nav( $location = 'social-nav', $menu_class = 'social-menu conn-lnk' ) {
+	function social_nav( string $location = 'social-nav', string $menu_class = 'social-menu conn-lnk' ) {
 		return wp_nav_menu( [
 			'container'      => false,
 			'theme_location' => $location,
@@ -319,7 +308,7 @@ if ( ! function_exists( 'pagination_links' ) ) {
 	 *
 	 * @return string|null
 	 */
-	function pagination_links( $echo = true ) {
+	function pagination_links( bool $echo = true ) {
 		global $wp_query;
 		if ( $wp_query->max_num_pages > 1 ) {
 
@@ -409,13 +398,14 @@ if ( ! function_exists( 'site_logo' ) ) {
 
 		if ( 'default' !== $theme ) {
 			$theme_logo = get_theme_mod_ssl( $theme . '_logo' );
-
-			/*
-			* If the alt attribute is not empty, there's no need to explicitly pass it
-			* because wp_get_attachment_image() already adds the alt attribute.
-			*/
-			$logo = wp_get_attachment_image( attachment_url_to_postid( $theme_logo ), 'full', false );
-			$html = '<div class="' . $class . '"><a class="after-overlay" title href="' . Url::home() . '" rel="home">' . $logo . '</a></div>';
+			if ( $theme_logo ) {
+				/*
+				* If the alt attribute is not empty, there's no need to explicitly pass it
+				* because wp_get_attachment_image() already adds the alt attribute.
+				*/
+				$logo = wp_get_attachment_image( attachment_url_to_postid( $theme_logo ), 'full', false );
+				$html = '<div class="' . $class . '"><a class="after-overlay" title href="' . Url::home() . '" rel="home">' . $logo . '</a></div>';
+			}
 		} else if ( function_exists( 'the_custom_logo' ) && has_custom_logo() ) {
 			$logo = get_custom_logo();
 			$html = '<div class="' . $class . '"><a class="after-overlay" title href="' . Url::home() . '" rel="home">' . $logo . '</a></div>';
@@ -457,7 +447,7 @@ if ( ! function_exists( 'post_excerpt' ) ) {
 	 *
 	 * @return string|null
 	 */
-	function post_excerpt( $post = null, $class = 'excerpt' ) {
+	function post_excerpt( $post = null, string $class = 'excerpt' ) {
 		if ( ! Str::stripSpace( $post->post_excerpt ) ) {
 			return null;
 		}
@@ -482,7 +472,7 @@ if ( ! function_exists( 'term_excerpt' ) ) {
 	 *
 	 * @return string|null
 	 */
-	function term_excerpt( $term = 0, $class = 'excerpt' ) {
+	function term_excerpt( $term = 0, string $class = 'excerpt' ) {
 		$description = term_description( $term );
 		if ( ! Str::stripSpace( $description ) ) {
 			return null;
@@ -560,17 +550,17 @@ if ( ! function_exists( 'primary_term' ) ) {
 
 if ( ! function_exists( 'get_primary_term' ) ) {
 	/**
-	 * @param        $post
+	 * @param $post
 	 * @param string $taxonomy
 	 * @param string $wrapper_open
 	 * @param string $wrapper_close
 	 *
-	 * @return string
+	 * @return string|null
 	 */
-	function get_primary_term( $post, $taxonomy = '', $wrapper_open = '<div class="terms">', $wrapper_close = '</div>' ) {
+	function get_primary_term( $post, string $taxonomy = '', string $wrapper_open = '<div class="terms">', string $wrapper_close = '</div>' ) {
 		$term = primary_term( $post, $taxonomy );
 		if ( ! $term ) {
-			return;
+			return null;
 		}
 
 		$link = '<a href="' . esc_url( get_term_link( $term, $taxonomy ) ) . '" title="' . esc_attr( $term->name ) . '">' . $term->name . '</a>';
@@ -820,7 +810,7 @@ if ( ! function_exists( 'humanize_time' ) ) {
 	 * @param string|null $from Unix timestamp from which the difference begins.
 	 * @param string|null $to Optional. Unix timestamp to end the time difference.
 	 *
-	 * @param null|int|object $$post
+	 * @param null|int|object $post
 	 * @param null $_time
 	 *
 	 * @return string Human readable time difference.
@@ -1068,7 +1058,7 @@ if ( ! function_exists( 'comment_enable' ) ) {
 	 * @return bool
 	 */
 	function comment_enable() {
-		return ( comments_open() or (bool) get_comments_number() ) && ! post_password_required();
+		return ( comments_open() || (bool) get_comments_number() ) && ! post_password_required();
 	}
 }
 
@@ -1085,6 +1075,7 @@ if ( ! function_exists( 'menu_fallback' ) ) {
 		if ( $container ) {
 			echo '<div class="' . $container . '">';
 		}
+
 		/* translators: %1$s: link to menus, %2$s: link to customize. */
 		printf(
 			__( 'Please assign a menu to the primary menu location under %1$s or %2$s the design.', 'hd' ),

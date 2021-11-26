@@ -3,7 +3,6 @@
 namespace Webhd\Themes;
 
 use Webhd\Helpers\Arr;
-use Webhd\Helpers\Cast;
 
 /**
  * Admin Class
@@ -28,24 +27,21 @@ if ( ! class_exists( 'Admin' ) ) {
 			add_action( 'admin_menu', [ &$this, 'dashboard_meta_box' ] );
 			add_action( 'admin_enqueue_scripts', [ &$this, 'admin_enqueue_scripts' ], 31 );
 
-			$use_widgets_block_editor           = get_theme_mod_ssl( 'use_widgets_block_editor_setting' );
-			$gutenberg_use_widgets_block_editor = get_theme_mod_ssl( 'gutenberg_use_widgets_block_editor_setting' );
-			$use_block_editor_for_post_type     = get_theme_mod_ssl( 'use_block_editor_for_post_type_setting' );
+			$widgets_block_off           = get_theme_mod_ssl( 'use_widgets_block_editor_setting' );
+			$gutenberg_widgets_block_off = get_theme_mod_ssl( 'gutenberg_use_widgets_block_editor_setting' );
+			$block_off                   = get_theme_mod_ssl( 'use_block_editor_for_post_type_setting' );
 
-			if ( true === Cast::toBool( $use_widgets_block_editor ) ) {
-
+			if ( $widgets_block_off ) {
 				// Disables the block editor from managing widgets.
 				add_filter( 'use_widgets_block_editor', '__return_false' );
 			}
 
-			if ( true === Cast::toBool( $gutenberg_use_widgets_block_editor ) ) {
-
+			if ( $gutenberg_widgets_block_off ) {
 				// Disables the block editor from managing widgets in the Gutenberg plugin.
 				add_filter( 'gutenberg_use_widgets_block_editor', '__return_false' );
 			}
 
-			if ( true === Cast::toBool( $use_block_editor_for_post_type ) ) {
-
+			if ( $block_off ) {
 				// Use Classic Editor - Disable Gutenberg Editor
 				add_filter( 'use_block_editor_for_post_type', '__return_false' );
 			}
@@ -119,7 +115,6 @@ if ( ! class_exists( 'Admin' ) ) {
 		 */
 		public function post_exclude_header( $columns ) {
 			unset( $columns['post_thumb'] );
-
 			return $columns;
 		}
 
@@ -144,8 +139,8 @@ if ( ! class_exists( 'Admin' ) ) {
 					//break;
 
 				case 'term_order':
-					if (function_exists( 'get_field' )) {
-						$term_order = get_field('term_order', get_term($term_id));
+					if ( function_exists( 'get_field' ) ) {
+						$term_order = get_field( 'term_order', get_term( $term_id ) );
 						return $out = $term_order ?: 0;
 					}
 
@@ -169,12 +164,14 @@ if ( ! class_exists( 'Admin' ) ) {
 			$thumb      = [
 				"term_thumb" => sprintf( '<span class="wc-image tips">%1$s</span>', __( "Thumb", 'hd' ) ),
 			];
-			$menu_order = [
-				'term_order' => sprintf( '<span class="term-order tips">%1$s</span>', __( "Order", 'hd' ) ),
-			];
 
 			$columns = Arr::insertAfter( 0, $columns, $thumb );
-			$columns = array_merge( $columns, $menu_order );
+			if (class_exists( '\ACF' )) {
+				$menu_order = [
+					'term_order' => sprintf( '<span class="term-order tips">%1$s</span>', __( "Order", 'hd' ) ),
+				];
+				$columns = array_merge( $columns, $menu_order );
+			}
 
 			return $columns;
 		}
@@ -248,7 +245,6 @@ if ( ! class_exists( 'Admin' ) ) {
 		 */
 		public function term_action_links( $actions, $_object ) {
 			Arr::prepend( $actions, 'Id: ' . $_object->term_id, 'action_id' );
-
 			return $actions;
 		}
 

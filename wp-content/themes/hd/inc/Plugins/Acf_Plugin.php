@@ -14,10 +14,13 @@ if ( ! class_exists( '\ACF' ) ) {
 if ( ! class_exists( 'Acf_Plugin' ) ) {
 	class Acf_Plugin {
 		public function __construct() {
-			$this->_localFieldsGroup();
+			add_filter( 'acf/fields/wysiwyg/toolbars', [ &$this, 'wysiwyg_toolbars' ] );
+
 			$this->_optionsPage();
 
-			add_filter( 'acf/fields/wysiwyg/toolbars', [ &$this, 'wysiwyg_toolbars' ] );
+			$this->_fieldPosts();
+			$this->_fieldTerms();
+			$this->_fieldMenus();
 		}
 
 		/**
@@ -56,41 +59,142 @@ if ( ! class_exists( 'Acf_Plugin' ) ) {
 		/**
 		 * @return bool
 		 */
-		private function _localFieldsGroup() {
+		private function _fieldPosts() {
 			if ( ! function_exists( 'acf_add_local_field_group' ) ) {
 				return false;
 			}
 
 			//--------------------------------------
-			// Các thuộc tính chung của chuyên mục
-			// gồm thứ tự và ảnh đại diện
+			// Thêm danh sách gợi ý cho bài viết
 			//--------------------------------------
 			acf_add_local_field_group( [
-				'key'          => 'group_5fdc116006846',
-				//'title'        => __( 'Attributes', 'hd' ),
-				'fields'       => [
+				'key'                   => 'group_5fd0534041759',
+				'title'                 => __( 'Related Posts', 'hd' ),
+				'fields'                => [
 					[
-						'key'               => 'field_5fdc11a7a7c56',
-						'label'             => __( 'Thumbnail', 'hd' ),
-						'name'              => 'term_thumb',
-						'type'              => 'image',
-						'required'          => 0,
-						'return_format'     => 'id',
-						'preview_size'      => 'thumbnail',
-						'library'           => 'all',
-					],
-					[
-						'key'               => 'field_6194ac46987f7',
-						'label'             => __( 'Menu order', 'hd' ),
-						'name'              => 'term_order',
-						'type'              => 'number',
-						'required'          => 0,
-						'default_value'     => 0,
-						'min'               => '',
-						'max'               => '',
+						'key'           => 'field_5fd07b44abc49',
+						'label'         => __( 'Suggested articles', 'hd' ),
+						'name'          => 'up_seo',
+						'type'          => 'post_object',
+						'required'      => 0,
+						'post_type'     => [
+							0 => 'post',
+							1 => 'page',
+						],
+						'taxonomy'      => '',
+						'allow_null'    => 1,
+						'multiple'      => 1,
+						'return_format' => 'id',
+						'ui'            => 1,
 					],
 				],
-				'location'     => [
+				'location'              => [
+					[
+						[
+							'param'    => 'post_type',
+							'operator' => '==',
+							'value'    => 'post',
+						],
+					],
+				],
+				'menu_order'            => 0,
+				'instruction_placement' => 'field',
+				'active'                => true,
+				'show_in_rest'          => 1,
+			] );
+
+			//--------------------------------------
+			// Thêm bình luận cho bài viết
+			//--------------------------------------
+			acf_add_local_field_group( [
+				'key'                   => 'group_5ff28b5f3f716',
+				'title'                 => __( 'Other Discussions', 'hd' ),
+				'fields'                => [
+					[
+						'key'               => 'field_5ff28d38db57e',
+						'label'             => __('Facebook Comment', 'hd'),
+						'name'              => 'facebook_comment',
+						'type'              => 'true_false',
+						'required'          => 0,
+						'conditional_logic' => 0,
+						'message'           => __('Enable comments on Facebook', 'hd'),
+						'default_value'     => 0,
+						'ui'                => 0,
+					],
+					[
+						'key'               => 'field_608a71db60706',
+						'label'             => __('Zalo Comment', 'hd'),
+						'name'              => 'zalo_comment',
+						'type'              => 'true_false',
+						'required'          => 0,
+						'conditional_logic' => 0,
+						'message'           => __('Enable comments on Zalo', 'hd'),
+						'default_value'     => 0,
+						'ui'                => 0,
+					],
+				],
+				'location'              => [
+//					[
+//						[
+//							'param'    => 'post_type',
+//							'operator' => '==',
+//							'value'    => 'page',
+//						],
+//					],
+					[
+						[
+							'param'    => 'post_type',
+							'operator' => '==',
+							'value'    => 'post',
+						],
+					],
+				],
+				'menu_order'            => 0,
+				'instruction_placement' => 'field',
+				'active'                => true,
+				'show_in_rest'          => 1,
+			] );
+
+			return true;
+		}
+
+		/**
+		 * @return bool
+		 */
+		private function _fieldTerms() {
+			if ( ! function_exists( 'acf_add_local_field_group' ) ) {
+				return false;
+			}
+
+			//--------------------------------------
+			// Thứ tự và ảnh đại diện chuyên mục
+			//--------------------------------------
+			acf_add_local_field_group( [
+				'key'                   => 'group_5fdc116006846',
+				//'title'        => __( 'Attributes', 'hd' ),
+				'fields'                => [
+					[
+						'key'           => 'field_5fdc11a7a7c56',
+						'label'         => __( 'Thumbnail', 'hd' ),
+						'name'          => 'term_thumb',
+						'type'          => 'image',
+						'required'      => 0,
+						'return_format' => 'id',
+						'preview_size'  => 'thumbnail',
+						'library'       => 'all',
+					],
+					[
+						'key'           => 'field_6194ac46987f7',
+						'label'         => __( 'Menu order', 'hd' ),
+						'name'          => 'term_order',
+						'type'          => 'number',
+						'required'      => 0,
+						'default_value' => 0,
+						'min'           => '',
+						'max'           => '',
+					],
+				],
+				'location'              => [
 					[
 						[
 							'param'    => 'taxonomy',
@@ -106,10 +210,10 @@ if ( ! class_exists( 'Acf_Plugin' ) ) {
 						],
 					],
 				],
-				'menu_order'   => 0,
+				'menu_order'            => 0,
 				'instruction_placement' => 'field',
-				'active'       => true,
-				'show_in_rest' => 1,
+				'active'                => true,
+				'show_in_rest'          => 1,
 			] );
 
 			//--------------------------------------
@@ -117,25 +221,25 @@ if ( ! class_exists( 'Acf_Plugin' ) ) {
 			//--------------------------------------
 			acf_add_local_field_group( [
 				'key'                   => 'group_619f4ab590bc9',
-				//'title'                 => 'Kiểu hiển thị chuyên mục',
+				//'title' => __('Kiểu hiển thị', 'hd),
 				'fields'                => [
 					[
-						'key'               => 'field_619f4ad9072ab',
-						'label'             => __( 'Kiểu hiển thị', 'hd' ),
-						'name'              => 'display_type',
-						'type'              => 'select',
-						'required'          => 0,
-						'choices'           => [
-							'items'         => __( 'Bài viết', 'hd' ),
-							'subcategories' => __( 'Chuyên mục con', 'hd' ),
-							'both'          => __( 'Cả hai', 'hd' ),
+						'key'           => 'field_619f4ad9072ab',
+						'label'         => __( 'Display types', 'hd' ),
+						'name'          => 'display_type',
+						'type'          => 'select',
+						'required'      => 0,
+						'choices'       => [
+							'items'         => __( 'Post', 'hd' ),
+							'subcategories' => __( 'Sub-category', 'hd' ),
+							'both'          => __( 'Both', 'hd' ),
 						],
-						'default_value'     => 'items',
-						'allow_null'        => 0,
-						'multiple'          => 0,
-						'ui'                => 0,
-						'return_format'     => 'value',
-						'ajax'              => 0,
+						'default_value' => 'items',
+						'allow_null'    => 0,
+						'multiple'      => 0,
+						'ui'            => 0,
+						'return_format' => 'value',
+						'ajax'          => 0,
 					],
 				],
 				'location'              => [
@@ -147,19 +251,29 @@ if ( ! class_exists( 'Acf_Plugin' ) ) {
 						],
 					],
 				],
-				'menu_order'            => 0,
+				'menu_order'            => 1,
 				'instruction_placement' => 'field',
 				'active'                => true,
 				'show_in_rest'          => 1,
 			] );
 
+			return true;
+		}
+
+		/**
+		 * @return bool
+		 */
+		private function _fieldMenus() {
+			if ( ! function_exists( 'acf_add_local_field_group' ) ) {
+				return false;
+			}
+
 			//--------------------------------------
-			// Thuộc tính menu item
-			// Thêm icon, ảnh, nhãn...
+			// Thêm icon, ảnh, nhãn... cho menus
 			//--------------------------------------
 			acf_add_local_field_group( [
 				'key'                   => 'group_618e3f6a09e18',
-				//'title'                 => __( 'Menu item attributes', 'hd' ),
+				//'title' => __( 'Menu item attributes', 'hd' ),
 				'fields'                => [
 					[
 						'key'               => 'field_618e40398f73e',
@@ -248,7 +362,7 @@ if ( ! class_exists( 'Acf_Plugin' ) ) {
 						],
 					],
 				],
-				'menu_order'            => 0,
+				'menu_order'            => 2,
 				'instruction_placement' => 'field',
 				'active'                => true,
 				'show_in_rest'          => 1,

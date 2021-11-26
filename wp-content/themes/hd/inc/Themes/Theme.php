@@ -2,6 +2,7 @@
 
 namespace Webhd\Themes;
 
+use Webhd\Helpers\Css;
 use Webhd\Helpers\Str;
 
 /**
@@ -40,18 +41,18 @@ if ( ! class_exists( 'Theme' ) ) {
 		 * @return void
 		 */
 		public function init() {
-			( new \Webhd\Themes\Hook );
-			( new \Webhd\Themes\Customizer ); // Customizer additions.
-			( new \Webhd\Themes\Shortcode );
+			( new Hook );
+			( new Customizer ); // Customizer additions.
+			( new Shortcode );
 
 			if ( is_admin() ) {
-				( new \Webhd\Themes\Admin );
+				( new Admin );
 			} else {
-				( new \Webhd\Themes\Defer );
+				( new Defer );
 			}
 
 			if ( is_search() ) {
-				( new \Webhd\Themes\Highlight_Search )::init();
+				( new Highlight_Search )::init();
 			}
 		}
 
@@ -134,13 +135,10 @@ if ( ! class_exists( 'Theme' ) ) {
 				)
 			);
 
-			if ( class_exists( '\Webhd\Themes\Script_Loader' ) ) {
-
-				// Adds `async`, `defer` and attribute support for scripts registered
-				// or enqueued by the theme.
-				$loader = new \Webhd\Themes\Script_Loader;
-				add_filter( 'script_loader_tag', [ &$loader, 'filter_script_loader_tag' ], 10, 3 );
-			}
+			// Adds `async`, `defer` and attribute support for scripts registered
+			// or enqueued by the theme.
+			$loader = new Script_Loader;
+			add_filter( 'script_loader_tag', [ &$loader, 'filter_script_loader_tag' ], 10, 3 );
 		}
 
 		/** ---------------------------------------- */
@@ -288,7 +286,7 @@ if ( ! class_exists( 'Theme' ) ) {
 		 * @return void
 		 */
 		public function enqueue_inline_css() {
-			$css = new \Webhd\Helpers\Css;
+			$css = new Css;
 
 			// footer bg
 			$footer_bg = get_theme_mod_ssl( 'footer_bg_setting' );
@@ -329,6 +327,15 @@ if ( ! class_exists( 'Theme' ) ) {
 		 * @return void
 		 */
 		public function enqueue_scripts() {
+
+			//$widgets_block_editor_off           = get_theme_mod_ssl( 'use_widgets_block_editor_setting' );
+			$gutenberg_widgets_off = get_theme_mod_ssl( 'gutenberg_use_widgets_block_editor_setting' );
+			$gutenberg_off         = get_theme_mod_ssl( 'use_block_editor_for_post_type_setting' );
+			if ( $gutenberg_widgets_off && $gutenberg_off ) {
+				wp_dequeue_style( "wp-block-library-theme" );
+				wp_dequeue_style( "wp-block-library" );
+			}
+
 			// stylesheet.
 			wp_enqueue_style( "plugin-style", get_template_directory_uri() . '/assets/css/plugins.css', [], W_THEME_VERSION );
 			wp_enqueue_style( "app-style", get_template_directory_uri() . '/assets/css/app.css', [ "plugin-style" ], W_THEME_VERSION );
@@ -410,16 +417,19 @@ if ( ! class_exists( 'Theme' ) ) {
 
 		/** ---------------------------------------- */
 
+		/**
+		 * @retun void
+		 */
 		public function login_enqueue_script() {
 			wp_enqueue_style( "login-style", get_template_directory_uri() . "/assets/css/admin.css", [], W_THEME_VERSION );
 			wp_enqueue_script( "login", get_template_directory_uri() . "/assets/js/login.js", [ "jquery" ], W_THEME_VERSION, true );
 
 			// custom script/style
-			//$logo    = null;
+			// $logo    = null;
 			$logo    = get_theme_file_uri( "/assets/img/logo.png" );
 			$logo_bg = get_theme_file_uri( "/assets/img/login-bg.jpg" );
 
-			$css = new \Webhd\Helpers\Css;
+			$css = new Css;
 			if ( $logo_bg ) {
 				$css->set_selector( 'body.login' );
 				$css->add_property( 'background-image', 'url(' . $logo_bg . ')' );
@@ -560,7 +570,7 @@ if ( ! class_exists( 'Theme' ) ) {
 			}
 
 			// Return the specified styles.
-			$css = new \Webhd\Helpers\Css;
+			$css = new Css;
 			$css->set_selector( implode( ',', $elements[ $type ] ) );
 			$css->add_property( 'font-family', implode( ',', $font_family[ $locale ] ) );
 

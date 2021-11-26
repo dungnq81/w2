@@ -18,8 +18,8 @@ RewriteRule . /index.php [L]
 # BEGIN ng
 <IfModule mod_rewrite.c>
     RewriteEngine On
+	
     # Rewrite "www.example.com -> example.com"
-    # Rewrite "http -> https"
     RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
     RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
     RewriteCond %{HTTPS} off

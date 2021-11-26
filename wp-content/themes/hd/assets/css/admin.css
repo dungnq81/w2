@@ -178,21 +178,34 @@ table.wp-list-table .column-term_thumb img {
   height: 0 !important;
 }
 
+#arcontactus-plugin-container .ui.red.message {
+  display: none !important;
+}
+
 .acf-field.tiny-text input {
   width: 80px;
 }
-
-#arcontactus-plugin-container .ui.red.message {
-  display: none !important;
+.acf-field .acf-label label {
+  font-weight: 500;
 }
 
 div[data-notice_id=elementor_dev_promote] {
   display: none !important;
 }
 
-.acf-field select, .acf-field input[type=number] {
+#acf-term-fields .acf-field select, #acf-term-fields .acf-field input[type=number], #edittag .acf-field select, #edittag .acf-field input[type=number] {
   width: auto;
   max-width: 100%;
+}
+
+#acf-term-fields > .acf-field > .acf-label label {
+  font-size: 13px;
+  color: #1d2327;
+}
+
+.form-table > tbody > .acf-field > .acf-label label {
+  font-weight: 600;
+  color: #1d2327;
 }
 
 table.fixed th.column-term_order {
@@ -210,6 +223,11 @@ table.fixed td.column-term_order {
   width: 74px;
   -webkit-hyphens: auto;
           hyphens: auto;
+  text-align: center;
+}
+
+.edit-post-meta-boxes-area #poststuff h2.hndle {
+  color: #1e1e1e;
 }
 
 /*# sourceMappingURL=admin.css.map*/

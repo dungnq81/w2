@@ -276,7 +276,7 @@ if ( ! class_exists( 'Customizer' ) ) {
 					'settings'    => 'fb_chat_setting',
 					'section'     => 'socials_menu_section',
 					'label'       => __( 'Facebook Live Chat', 'hd' ),
-					'description' => __( 'Thêm facebook messenger live chat', 'hd' ),
+					//'description' => __( 'Thêm facebook messenger live chat', 'hd' ),
 				]
 			);
 
@@ -323,7 +323,7 @@ if ( ! class_exists( 'Customizer' ) ) {
 					'settings'    => 'zalo_chat_setting',
 					'section'     => 'socials_menu_section',
 					'label'       => __( 'Zalo Live Chat', 'hd' ),
-					'description' => __( 'Thêm zalo live chat', 'hd' ),
+					//'description' => __( 'Thêm zalo live chat', 'hd' ),
 				]
 			);
 

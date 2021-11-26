@@ -15,9 +15,12 @@ if ( ! function_exists( '__register_widgets' ) ) {
 	 * @return void
 	 */
 	function __register_widgets() {
-		register_widget( new Cf7_Widget );
+		class_exists( '\WPCF7' ) && register_widget( new Cf7_Widget );
 	}
 
 	/** */
-	add_action( 'widgets_init', '__register_widgets', 10 );
+	$widgets_block_editor_off = get_theme_mod_ssl( 'use_widgets_block_editor_setting' );
+	if ($widgets_block_editor_off) {
+		add_action( 'widgets_init', '__register_widgets', 10 );
+	}
 }

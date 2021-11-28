@@ -37,7 +37,7 @@ mix.setPublicPath('assets')
     .js('resources/js/admin.js', 'js')
     .js([
         'resources/js/app.js',
-        'resources/js/plugins/parallax-scroll.js',
+        //'resources/js/plugins/parallax-scroll.js',
     ], 'js')
 
     //.sass('resources/sass/awe.scss', 'css')

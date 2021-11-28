@@ -1,6 +1,8 @@
 <?php
 
-namespace Webhd\Plugins;
+namespace Webhd\Plugins\Elementor;
+
+use Elementor\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit();
@@ -51,7 +53,7 @@ if ( ! class_exists( 'Elementor_Plugin' ) ) {
 		 * @return false|mixed
 		 */
 		public function check_hide_title( $val ) {
-			$current_doc = \Elementor\Plugin::instance()->documents->get( get_the_ID() );
+			$current_doc = Plugin::instance()->documents->get( get_the_ID() );
 			if ( $current_doc && 'yes' === $current_doc->get_settings( 'hide_title' ) ) {
 				$val = false;
 			}
@@ -67,7 +69,7 @@ if ( ! class_exists( 'Elementor_Plugin' ) ) {
 		 * @return boolean
 		 */
 		public function is_elementor_activated( $id ) {
-			return \Elementor\Plugin::$instance->documents->get( $id )->is_built_with_elementor();
+			return Plugin::$instance->documents->get( $id )->is_built_with_elementor();
 		}
 
 		/**

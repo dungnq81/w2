@@ -18,7 +18,6 @@ RewriteRule . /index.php [L]
 # BEGIN ng
 <IfModule mod_rewrite.c>
     RewriteEngine On
-	
     # Rewrite "www.example.com -> example.com"
     RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
     RewriteRule ^(.*)$ https://%1/$1 [R=301,L]

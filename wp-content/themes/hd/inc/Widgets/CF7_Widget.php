@@ -117,7 +117,7 @@ if ( ! class_exists( 'Cf7_Widget' ) ) {
 		 */
 		private function _localFields() {
 			if ( ! class_exists( '\ACF' ) ) {
-				return null;
+				return;
 			}
 
 			acf_add_local_field_group( [
@@ -126,10 +126,9 @@ if ( ! class_exists( 'Cf7_Widget' ) ) {
 				'fields'                => [
 					[
 						'key'               => 'field_6186a924e6986',
-						'label'             => __( 'Tiêu đề mở rộng', 'hd' ),
+						'label'             => __( 'Title extended', 'hd' ),
 						'name'              => 'html_title',
 						'type'              => 'wysiwyg',
-						'instructions'      => '',
 						'required'          => 0,
 						'conditional_logic' => 0,
 						'default_value'     => '',
@@ -140,10 +139,9 @@ if ( ! class_exists( 'Cf7_Widget' ) ) {
 					],
 					[
 						'key'               => 'field_619607d46e816',
-						'label'             => __( 'Mô tả', 'hd' ),
+						'label'             => __( 'Description', 'hd' ),
 						'name'              => 'html_desc',
 						'type'              => 'wysiwyg',
-						'instructions'      => '',
 						'required'          => 0,
 						'conditional_logic' => 0,
 						'default_value'     => '',
@@ -157,7 +155,6 @@ if ( ! class_exists( 'Cf7_Widget' ) ) {
 						'label'             => __( 'Form', 'hd' ),
 						'name'              => 'form',
 						'type'              => 'post_object',
-						'instructions'      => '',
 						'required'          => 0,
 						'conditional_logic' => 0,
 						'post_type'         => [
@@ -174,14 +171,10 @@ if ( ! class_exists( 'Cf7_Widget' ) ) {
 						'label'             => __( 'CSS Class', 'hd' ),
 						'name'              => 'css_class',
 						'type'              => 'text',
-						'instructions'      => '',
 						'required'          => 0,
 						'conditional_logic' => 0,
 						'default_value'     => '',
 						'placeholder'       => '',
-						'prepend'           => '',
-						'append'            => '',
-						'maxlength'         => '',
 					],
 				],
 				'location'              => [
@@ -198,7 +191,6 @@ if ( ! class_exists( 'Cf7_Widget' ) ) {
 				'style'                 => 'default',
 				'label_placement'       => 'top',
 				'instruction_placement' => 'field',
-				'hide_on_screen'        => '',
 				'active'                => true,
 				'description'           => '',
 				'show_in_rest'          => 1,

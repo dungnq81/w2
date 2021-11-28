@@ -100,7 +100,6 @@ function wp_set_password($password, $user_id)
 		], ['ID' => $user_id]);
 
 		clean_user_cache($user_id);
-
 		return $hash;
 	}
 

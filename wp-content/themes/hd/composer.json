@@ -10,7 +10,7 @@
     "autoload": {
         "files": [
             "inc/ajax.php",
-            "inc/custom_post_types.php",
+            "inc/post-types.php",
             "inc/helpers.php",
             "inc/image-sizes.php",
             "inc/menus.php",
@@ -22,16 +22,15 @@
         ],
         "psr-4": {
             "Webhd\\Blocks\\": "inc/Blocks",
+            "Webhd\\Ext\\": "inc/Ext",
             "Webhd\\Helpers\\": "inc/Helpers",
             "Webhd\\Plugins\\": "inc/Plugins",
-            "Webhd\\Registers\\": "inc/Registers",
+            "Webhd\\PostTypes\\": "inc/PostTypes",
             "Webhd\\Themes\\": "inc/Themes",
-            "Webhd\\Ext\\": "inc/Ext",
             "Webhd\\Widgets\\": "inc/Widgets"
         },
         "exclude-from-classmap": [
-            "**/**/Elementor/**",
-            "**/**/Woocommerce/**"
+            "**/**/Elementor/Widgets/**"
         ]
     },
     "require": {

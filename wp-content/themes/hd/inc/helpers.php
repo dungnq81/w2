@@ -256,11 +256,11 @@ if ( ! function_exists( 'youtube_iframe' ) ) {
 	 *
 	 * @return string|null
 	 */
-	function youtube_iframe( $url, $autoplay = 0, $lazyload = true, $control = true ) {
+	function youtube_iframe( $url, int $autoplay = 0, bool $lazyload = true, bool $control = true ) {
 		parse_str( parse_url( $url, PHP_URL_QUERY ), $vars );
 		if ( isset( $vars['v'] ) ) {
 			$idurl     = $vars['v'];
-			$_size     = ' width="640px" height="320px"';
+			$_size     = ' width="800px" height="450px"';
 			$_autoplay = 'autoplay=' . $autoplay;
 			$_auto     = ' allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"';
 			if ( $autoplay == 1 ) {
@@ -277,7 +277,7 @@ if ( ! function_exists( 'youtube_iframe' ) ) {
 			if ( $lazyload == true ) {
 				$_lazy = ' loading="lazy"';
 			}
-			$_iframe = '<iframe id="ytb_iframe_' . $idurl . '" title="YouTube Video Player" frameborder="0" allowfullscreen' . $_lazy . $_auto . $_size . $_src . '></iframe>';
+			$_iframe = '<iframe id="ytb_iframe_' . $idurl . '" title="YouTube Video Player" allowfullscreen' . $_lazy . $_auto . $_size . $_src . ' style="border:0"></iframe>';
 
 			return $_iframe;
 		}
@@ -295,7 +295,7 @@ if ( ! function_exists( 'youtube_image' ) ) {
 	 *
 	 * @return string
 	 */
-	function youtube_image( $url, $resolution = [] ) {
+	function youtube_image( $url, array $resolution = [] ) {
 		if ( ! is_array( $resolution ) or empty( $resolution ) ) {
 			$resolution = [
 				'sddefault',
@@ -347,7 +347,8 @@ if ( ! function_exists( 'sanitize_input' ) ) {
 	/**
 	 * https://catswhocode.com/php-sanitize-input/
 	 *
-	 * @param $input
+	 * @param $key
+	 * @param array $request
 	 *
 	 * @return array
 	 */

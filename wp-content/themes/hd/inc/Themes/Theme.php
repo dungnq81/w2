@@ -97,11 +97,11 @@ if ( ! class_exists( 'Theme' ) ) {
 			add_theme_support( 'wp-block-styles' );
 			add_theme_support( 'editor-styles' );
 
-			// This theme styles the visual editor to resemble the theme style.
-			add_editor_style( get_template_directory_uri() . "/assets/css/editor-style.css" );
-
 			// Remove Template Editor support until WP 5.9 since more Theme Blocks are going to be introduced.
 			remove_theme_support( 'block-templates' );
+
+			// This theme styles the visual editor to resemble the theme style.
+			add_editor_style( get_template_directory_uri() . "/assets/css/editor-style.css" );
 
 			if ( apply_filters( 'fullwidth_oembed', true ) ) {
 
@@ -147,6 +147,7 @@ if ( ! class_exists( 'Theme' ) ) {
 		 * Launching operation cleanup.
 		 */
 		protected function _cleanup() {
+
 			// Xóa widget mặc định "Welcome to WordPress".
 			remove_action( 'welcome_panel', 'wp_welcome_panel' );
 
@@ -171,6 +172,19 @@ if ( ! class_exists( 'Theme' ) ) {
 			remove_action( 'wp_head', 'rest_output_link_wp_head' );
 			remove_action( 'wp_head', 'wp_oembed_add_discovery_links' );
 			remove_action( 'template_redirect', 'rest_output_link_header', 11, 0 );
+
+			// all actions related to emojis
+			remove_action( 'wp_print_styles', 'print_emoji_styles' );
+			remove_action( 'admin_print_styles', 'print_emoji_styles' );
+			remove_action( 'admin_print_scripts', 'print_emoji_detection_script' );
+
+			// Emoji detection script.
+			remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
+
+			// staticize_emoji
+			remove_filter( 'wp_mail', 'wp_staticize_emoji_for_email' );
+			remove_filter( 'the_content_feed', 'wp_staticize_emoji' );
+			remove_filter( 'comment_text_rss', 'wp_staticize_emoji' );
 		}
 
 		/** ---------------------------------------- */
@@ -327,14 +341,6 @@ if ( ! class_exists( 'Theme' ) ) {
 		 * @return void
 		 */
 		public function enqueue_scripts() {
-
-			//$widgets_block_editor_off           = get_theme_mod_ssl( 'use_widgets_block_editor_setting' );
-			$gutenberg_widgets_off = get_theme_mod_ssl( 'gutenberg_use_widgets_block_editor_setting' );
-			$gutenberg_off         = get_theme_mod_ssl( 'use_block_editor_for_post_type_setting' );
-			if ( $gutenberg_widgets_off && $gutenberg_off ) {
-				wp_dequeue_style( "wp-block-library-theme" );
-				wp_dequeue_style( "wp-block-library" );
-			}
 
 			// stylesheet.
 			wp_enqueue_style( "plugin-style", get_template_directory_uri() . '/assets/css/plugins.css', [], W_THEME_VERSION );

@@ -2,9 +2,9 @@
 
 use Webhd\Plugins\Acf_Plugin;
 use Webhd\Plugins\Cf7_Plugin;
-use Webhd\Plugins\Elementor_Plugin;
+use Webhd\Plugins\Elementor\Elementor_Plugin;
 use Webhd\Plugins\RankMath_Plugin;
-use Webhd\Plugins\Woocommerce_Plugin;
+use Webhd\Plugins\Woocommerce\Woocommerce_Plugin;
 use Webhd\Plugins\Wpdiscuz_Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {

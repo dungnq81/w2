@@ -36,7 +36,8 @@ const WP_AUTO_UPDATE_CORE = false;
 const DB_NAME     = 'w2';
 const DB_USER     = 'root';
 const DB_PASSWORD = 'root';
-const DB_HOST     = 'localhost';
+const DB_HOST     = '127.0.0.1';
+//const DB_HOST     = 'localhost';
 const DB_CHARSET  = 'utf8mb4';
 const DB_COLLATE  = '';
 

@@ -101,7 +101,7 @@ if ( ! class_exists( 'Hook' ) ) {
 					esc_attr__( 'Scroll back to top', 'hd' ),
 					absint( apply_filters( 'back_to_top_scroll_speed', 400 ) ),
 					absint( apply_filters( 'back_to_top_start_scroll', 300 ) ),
-					\Webhd\Themes\SVG_Icons::get_svg( 'ui', 'arrow_right', 24 )
+					SVG_Icons::get_svg( 'ui', 'arrow_right', 24 )
 				)
 			);
 		}
@@ -127,10 +127,24 @@ if ( ! class_exists( 'Hook' ) ) {
 		// ------------------------------------------------------
 
 		public function doFilters() {
+
 			// Adding Shortcode in WordPress Using Custom HTML Widget
 			add_filter( 'widget_text', 'do_shortcode' );
 			add_filter( 'widget_text', 'shortcode_unautop' );
 
+			// Disable XML-RPC authentication
+            // Filter whether XML-RPC methods requiring authentication, such as for publishing purposes, are enabled.
+			add_filter( 'xmlrpc_enabled', '__return_false' );
+			add_filter( 'pre_update_option_enable_xmlrpc', '__return_false' );
+			add_filter( 'pre_option_enable_xmlrpc', '__return_zero' );
+			add_filter( 'pings_open', '__return_false', 9999 );
+
+			add_filter( 'wp_headers', function ( $headers ) {
+				unset( $headers['X-Pingback'], $headers['x-pingback'] );
+				return $headers;
+			} );
+
+			//...
 			if ( ! WP_DEBUG ) {
 
 				// Remove WP version from RSS.
@@ -177,7 +191,6 @@ if ( ! class_exists( 'Hook' ) ) {
 			// normalize upload filename
 			add_filter( 'sanitize_file_name', function ( string $filename ) {
 				$filename = remove_accents( $filename );
-
 				return $filename;
 			}, 10, 1 );
 

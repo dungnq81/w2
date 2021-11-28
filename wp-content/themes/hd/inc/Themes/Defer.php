@@ -23,7 +23,23 @@ if ( ! class_exists( 'Defer' ) ) {
 			add_filter( 'style_loader_tag', [ &$this, 'style_loader_tag' ], 11, 2 );
 
 			add_action( 'wp_default_scripts', [ &$this, 'remove_jquery_migrate' ] );
+			add_action( 'wp_enqueue_scripts', [ &$this, 'clear_scripts' ], 9999 );
 		}
+
+		/** ---------------------------------------- */
+
+		public function clear_scripts() {
+
+			//$widgets_block_editor_off           = get_theme_mod_ssl( 'use_widgets_block_editor_setting' );
+			$gutenberg_widgets_off = get_theme_mod_ssl( 'gutenberg_use_widgets_block_editor_setting' );
+			$gutenberg_off         = get_theme_mod_ssl( 'use_block_editor_for_post_type_setting' );
+			if ( $gutenberg_widgets_off && $gutenberg_off ) {
+				wp_dequeue_style( 'wp-block-library' );
+				wp_dequeue_style( 'wp-block-library-theme' );
+			}
+		}
+
+		/** ---------------------------------------- */
 
 		/**
 		 * @param $scripts
@@ -37,6 +53,8 @@ if ( ! class_exists( 'Defer' ) ) {
 				}
 			}
 		}
+
+		/** ---------------------------------------- */
 
 		/**
 		 * @param string $tag
@@ -52,6 +70,8 @@ if ( ! class_exists( 'Defer' ) ) {
 			return lazy_script_tag( $str_parsed, $tag, $handle, $src );
 		}
 
+		/** ---------------------------------------- */
+
 		/**
 		 * @param string $html
 		 * @param string $handle
@@ -65,6 +85,8 @@ if ( ! class_exists( 'Defer' ) ) {
 
 			return lazy_style_tag( $styles, $html, $handle );
 		}
+
+		/** ---------------------------------------- */
 
 		/**
 		 * @return void

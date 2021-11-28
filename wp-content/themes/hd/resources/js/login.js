@@ -4,7 +4,7 @@ const $ = jQuery;
 'use strict';
 $(function () {
 
-    var login = $("#login");
+    const login = $("#login");
     //login.find('.forgetmenot').remove();
     login.find('#backtoblog').remove();
     login.find('#nav').remove();

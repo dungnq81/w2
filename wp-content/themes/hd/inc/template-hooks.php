@@ -11,11 +11,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use Webhd\Helpers\Cast;
 use Webhd\Helpers\Str;
+use Webhd\Themes\SVG_Icons;
 
-// ------------------------------------------------------
+// -------------------------------------------------------------
+// wp_head
+// -------------------------------------------------------------
 
 // wp_head
+add_action( 'wp_head', '__critical_css', 1 );
 add_action( 'wp_head', '__extra_header', 10 );
+
+function __critical_css() {
+	?>
+    <style id="critical-inline-css">/** */</style>
+	<?php
+}
+
 function __extra_header() {
 	//echo "<meta name=\"theme-color\" content=\"#00B38F\" />";
 	//echo '<link rel="preconnect" href="https://fonts.gstatic.com">';
@@ -29,7 +40,9 @@ function __extra_header() {
 	echo "\n";
 }
 
-// ------------------------------------------------------
+// -------------------------------------------------------------
+// wp_footer
+// -------------------------------------------------------------
 
 // wp_footer
 add_action( 'wp_footer', '__extra_footer', 99 );
@@ -37,10 +50,13 @@ function __extra_footer() {
 	//...
 }
 
-// ------------------------------------------------------
+// -------------------------------------------------------------
+// off_canvas
+// -------------------------------------------------------------
 
 add_action( 'off_canvas', '__off_canvas_button', 10 );
 function __off_canvas_button() {
+
 	// mobile navigation
 	$position = get_theme_mod_ssl( 'offcanvas_menu_setting' );
 	if ( 'right' == $position ) {
@@ -54,7 +70,9 @@ function __off_canvas_button() {
 	}
 }
 
-// ------------------------------------------------------
+// -------------------------------------------------------------
+// before_header
+// -------------------------------------------------------------
 
 // before_header actions
 add_action( 'before_header', '__before_header_extra', 14 );
@@ -71,7 +89,9 @@ function __before_header_extra() {
 	<?php
 }
 
-// ------------------------------------------------------
+// -------------------------------------------------------------
+// header
+// -------------------------------------------------------------
 
 // header
 add_action( 'header', '__topheader', 10 );
@@ -109,7 +129,9 @@ function __header() {
 	<?php
 }
 
-// ------------------------------------------------------
+// -------------------------------------------------------------
+// footer
+// -------------------------------------------------------------
 
 // footer
 add_action( 'footer', '__footer_widgets', 10 );
@@ -186,7 +208,9 @@ function __footer_credit() { ?>
 	<?php
 }
 
-// ------------------------------------------------------
+// -------------------------------------------------------------
+// before_footer
+// -------------------------------------------------------------
 
 // before footer
 add_action( 'before_footer', '__before_footer_extra', 31 );
@@ -196,7 +220,9 @@ function __before_footer_extra() {
 	}
 }
 
-// ------------------------------------------------------
+// -------------------------------------------------------------
+// before_content
+// -------------------------------------------------------------
 
 // before content
 add_action( 'before_content', '__before_content_extra', 10 );
@@ -221,7 +247,7 @@ add_filter( 'walker_nav_menu_start_el', function ( $item_output, $item, $depth, 
 
 	// Change SVG icon inside social links menu if there is supported URL.
 	if ( 'social-nav' === $args->theme_location && class_exists( '\Webhd\Themes\SVG_Icons' ) ) {
-		$svg = \Webhd\Themes\SVG_Icons::get_social_link_svg( $item->url, 24 );
+		$svg = SVG_Icons::get_social_link_svg( $item->url, 24 );
 		if ( ! empty( $svg ) ) {
 			$item_output = str_replace( $args->link_before, $svg, $item_output );
 		}
@@ -266,7 +292,7 @@ add_filter( 'defer_script_loader_tag', function ( $arr ) {
 		'comment-reply'    => 'delay',
 		'wp-embed'         => 'delay',
 		'admin-bar'        => 'delay',
-		//'fixedtoc-js'      => 'delay',
+		'fixedtoc-js'      => 'delay',
 		'backtop'          => 'delay',
 		'shares'           => 'delay',
 	];
@@ -279,8 +305,7 @@ add_filter( 'defer_script_loader_tag', function ( $arr ) {
 add_filter( 'defer_style_loader_tag', function ( $arr ) {
 	$arr = [
 		'dashicons',
-		//'fixedtoc-style',
-		//'tablepress-default',
+		'fixedtoc-style',
 		'contact-form-7',
 		'rank-math',
 	];

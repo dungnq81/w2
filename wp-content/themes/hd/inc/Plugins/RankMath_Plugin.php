@@ -33,7 +33,7 @@ if ( ! class_exists( 'RankMath_Plugin' ) ) {
 				'delimiter'   => '',
 				'wrap_before' => '<ol id="crumbs" class="breadcrumbs" aria-label="breadcrumbs">',
 				'wrap_after'  => '</ol>',
-				'before'      => '<li><span>',
+				'before'      => '<li><span property="itemListElement" typeof="ListItem">',
 				'after'       => '</span></li>',
 			];
 

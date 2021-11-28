@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="456d6c79-251b-455c-a264-5ce1d281bea0" name="src/w2" url="http://103.57.221.117">
+        <fileTransfer rootFolder="/domains/demo.hdweb24h.com/public_html/src/w2" host="103.57.221.117" port="21">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

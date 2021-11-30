@@ -9,6 +9,7 @@ if ( ! class_exists( 'Cf7_Widget' ) ) {
 	class Cf7_Widget extends Widget {
 		public function __construct() {
 			parent::__construct();
+
 			$this->_localFields();
 		}
 

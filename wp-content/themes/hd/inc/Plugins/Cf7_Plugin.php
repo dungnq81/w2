@@ -15,33 +15,24 @@ if ( ! class_exists( 'Cf7_Plugin' ) ) {
 	class Cf7_Plugin {
 		public function __construct() {
 
-			// Deregister Contact Form 7 styles
-			// Deregister Contact Form 7 JavaScript files on all pages without a form
-			//add_filter( 'wpcf7_load_js', '__return_false' );
-			//add_filter( 'wpcf7_load_css', '__return_false' );
-
 			// remove <p> and <br> contact form 7 plugin
 			add_filter( 'wpcf7_autop_or_not', '__return_false' );
 
 			// Lọc số điện thoại ở Việt Nam
-			add_filter( 'wpcf7_is_tel', [ &$this, 'filter_vietnamese_is_tel' ], 10, 2 );
+			//add_filter( 'wpcf7_is_tel', [ &$this, 'filter_vietnamese_is_tel' ], 10, 2 );
 
 			// dynamic taxonomy select
 			add_filter( 'wpcf7_form_tag', [ &$this, 'dynamic_select_term' ], 10, 1 );
 		}
 
 		/**
-		 * Kiểm tra số điện thoại có 10 số của Việt Nam
+		 * @param $result
+		 * @param $tel
 		 *
-		 * @param string $result
-		 * @param string $tel
-		 *
-		 * @return string
+		 * @return false|int
 		 */
 		public function filter_vietnamese_is_tel( $result, $tel ) {
-			$result = preg_match( '/^(0|\+84)(\s|\.)?((3[2-9])|(5[689])|(7[06-9])|(8[1-689])|(9[0-46-9]))(\d)(\s|\.)?(\d{3})(\s|\.)?(\d{3})$/', $tel );
-
-			return $result;
+			return preg_match( '/^(0|\+84)(\s|\.)?((3[2-9])|(5[689])|(7[06-9])|(8[1-689])|(9[0-46-9]))(\d)(\s|\.)?(\d{3})(\s|\.)?(\d{3})$/', $tel );
 		}
 
 		/**

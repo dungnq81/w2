@@ -2,6 +2,10 @@
 
 namespace Webhd\Themes;
 
+use WP_Customize_Color_Control;
+use WP_Customize_Image_Control;
+use WP_Customize_Manager;
+
 /**
  * Customize Class
  * @author   WEBHD
@@ -14,6 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'Customizer' ) ) {
 	class Customizer {
 		public function __construct() {
+
 			// Setup the Theme Customizer settings and controls.
 			add_action( 'customize_register', [ &$this, 'register' ], 30 );
 		}
@@ -24,25 +29,26 @@ if ( ! class_exists( 'Customizer' ) ) {
 		 * @param WP_Customize_Manager $wp_customize Theme Customizer object.
 		 */
 		public function register( $wp_customize ) {
+
 			// light logo
-			$wp_customize->add_setting( 'light_logo' );
-			$wp_customize->add_control(
-				new \WP_Customize_Image_Control(
-					$wp_customize,
-					'light_logo',
-					[
-						'label'    => __( 'Light logo', 'hd' ),
-						'section'  => 'title_tagline',
-						'settings' => 'light_logo',
-						'priority' => 8,
-					]
-				)
-			);
+//			$wp_customize->add_setting( 'light_logo' );
+//			$wp_customize->add_control(
+//				new WP_Customize_Image_Control(
+//					$wp_customize,
+//					'light_logo',
+//					[
+//						'label'    => __( 'Light logo', 'hd' ),
+//						'section'  => 'title_tagline',
+//						'settings' => 'light_logo',
+//						'priority' => 8,
+//					]
+//				)
+//			);
 
 			// logo mobile
 			$wp_customize->add_setting( 'mobile_logo' );
 			$wp_customize->add_control(
-				new \WP_Customize_Image_Control(
+				new WP_Customize_Image_Control(
 					$wp_customize,
 					'mobile_logo',
 					[
@@ -147,82 +153,6 @@ if ( ! class_exists( 'Customizer' ) ) {
 
 			// -------------------------------------------------------------
 
-			// Create service section
-			$wp_customize->add_section(
-				'service_menu_section',
-				[
-					'title'    => __( 'Service image', 'hd' ),
-					'panel'    => 'addon_menu_panel',
-					'priority' => 1001,
-				]
-			);
-
-			// add service control
-			$wp_customize->add_setting(
-				'service_menu_setting',
-				[
-					'default'           => 'default',
-					'sanitize_callback' => 'sanitize_text_field',
-					'transport'         => 'refresh',
-				]
-			);
-			$wp_customize->add_control(
-				'service_menu_control',
-				[
-					'label'    => __( 'Image ratio', 'hd' ),
-					'type'     => 'radio',
-					'section'  => 'service_menu_section',
-					'settings' => 'service_menu_setting',
-					'choices'  => [
-						'1v1'     => __( '1:1', 'hd' ),
-						'3v2'     => __( '3:2', 'hd' ),
-						'4v3'     => __( '4:3', 'hd' ),
-						'16v9'    => __( '16:9', 'hd' ),
-						'default' => __( 'Ratio default (3:2)', 'hd' ),
-					],
-				]
-			);
-
-			// -------------------------------------------------------------
-
-			// Create video section
-			// $wp_customize->add_section(
-			// 	'video_menu_section',
-			// 	[
-			// 		'title'    => __('Video image', 'hd'),
-			// 		'panel'    => 'addon_menu_panel',
-			// 		'priority' => 1002,
-			// 	]
-			// );
-
-			// add news control
-			// $wp_customize->add_setting(
-			// 	'video_menu_setting',
-			// 	[
-			// 		'default'           => 'default',
-			// 		'sanitize_callback' => 'sanitize_text_field',
-			// 		'transport'         => 'refresh',
-			// 	]
-			// );
-			// $wp_customize->add_control(
-			// 	'video_menu_control',
-			// 	[
-			// 		'label'    => __('Image ratio', 'hd'),
-			// 		'type'     => 'radio',
-			// 		'section'  => 'video_menu_section',
-			// 		'settings' => 'video_menu_setting',
-			// 		'choices'  => [
-			// 			'1v1'     => __('1:1', 'hd'),
-			// 			'3v2'     => __('3:2', 'hd'),
-			// 			'4v3'     => __('4:3', 'hd'),
-			// 			'16v9'    => __('16:9', 'hd'),
-			// 			'default' => __('Ratio default (5:3)', 'hd'),
-			// 		],
-			// 	]
-			// );
-
-			// -------------------------------------------------------------
-
 			// Create custom field for social settings layout
 			$wp_customize->add_section(
 				'socials_menu_section',
@@ -272,10 +202,10 @@ if ( ! class_exists( 'Customizer' ) ) {
 			$wp_customize->add_control(
 				'fb_chat_control',
 				[
-					'type'        => 'checkbox',
-					'settings'    => 'fb_chat_setting',
-					'section'     => 'socials_menu_section',
-					'label'       => __( 'Facebook Live Chat', 'hd' ),
+					'type'     => 'checkbox',
+					'settings' => 'fb_chat_setting',
+					'section'  => 'socials_menu_section',
+					'label'    => __( 'Facebook Live Chat', 'hd' ),
 					//'description' => __( 'Thêm facebook messenger live chat', 'hd' ),
 				]
 			);
@@ -319,10 +249,10 @@ if ( ! class_exists( 'Customizer' ) ) {
 			$wp_customize->add_control(
 				'zalo_chat_control',
 				[
-					'type'        => 'checkbox',
-					'settings'    => 'zalo_chat_setting',
-					'section'     => 'socials_menu_section',
-					'label'       => __( 'Zalo Live Chat', 'hd' ),
+					'type'     => 'checkbox',
+					'settings' => 'zalo_chat_setting',
+					'section'  => 'socials_menu_section',
+					'label'    => __( 'Zalo Live Chat', 'hd' ),
 					//'description' => __( 'Thêm zalo live chat', 'hd' ),
 				]
 			);
@@ -370,37 +300,6 @@ if ( ! class_exists( 'Customizer' ) ) {
 
 			// -------------------------------------------------------------
 
-			// Create GPKD section
-			$wp_customize->add_section(
-				'GPKD_menu_section',
-				[
-					'title'    => __( 'Giấy phép kinh doanh', 'hd' ),
-					'panel'    => 'addon_menu_panel',
-					'priority' => 1006,
-				]
-			);
-
-			// add control
-			$wp_customize->add_setting(
-				'GPKD_setting',
-				[
-					'sanitize_callback' => 'sanitize_text_field',
-					'transport'         => 'refresh'
-				]
-			);
-			$wp_customize->add_control(
-				'GPKD_control',
-				[
-					'label'       => __( 'GPKD', 'hd' ),
-					'section'     => 'GPKD_menu_section',
-					'settings'    => 'GPKD_setting',
-					'description' => __( 'Thông tin Giấy phép kinh doanh (nếu có)', 'hd' ),
-					'type'        => 'text',
-				]
-			);
-
-			// -------------------------------------------------------------
-
 			// Create breadcrumbs background section
 			$wp_customize->add_section(
 				'breadcrumb_bg_section',
@@ -414,7 +313,7 @@ if ( ! class_exists( 'Customizer' ) ) {
 			// add control
 			$wp_customize->add_setting( 'breadcrumb_bg_setting', [ 'transport' => 'refresh' ] );
 			$wp_customize->add_control(
-				new \WP_Customize_Image_Control(
+				new WP_Customize_Image_Control(
 					$wp_customize,
 					'breadcrumb_bg_control',
 					[
@@ -441,7 +340,7 @@ if ( ! class_exists( 'Customizer' ) ) {
 			// add control
 			$wp_customize->add_setting( 'footer_bg_setting', [ 'transport' => 'refresh' ] );
 			$wp_customize->add_control(
-				new \WP_Customize_Image_Control(
+				new WP_Customize_Image_Control(
 					$wp_customize,
 					'footer_bg_control',
 					[
@@ -564,6 +463,59 @@ if ( ! class_exists( 'Customizer' ) ) {
 					'label'       => __( 'Trình soạn thảo cũ', 'hd' ),
 					'description' => __( 'Use Classic Editor - Disable Gutenberg Editor', 'hd' ),
 				]
+			);
+
+			// -------------------------------------------------------------
+
+			// Other
+			$wp_customize->add_section(
+				'other_section',
+				[
+					'title'    => __( 'Other', 'hd' ),
+					'panel'    => 'addon_menu_panel',
+					'priority' => 1011,
+				]
+			);
+
+			// add control
+			// GPKD
+			$wp_customize->add_setting(
+				'GPKD_setting',
+				[
+					'sanitize_callback' => 'sanitize_text_field',
+					'transport'         => 'refresh'
+				]
+			);
+			$wp_customize->add_control(
+				'GPKD_control',
+				[
+					'label'       => __( 'GPKD', 'hd' ),
+					'section'     => 'other_section',
+					'settings'    => 'GPKD_setting',
+					'description' => __( 'Thông tin Giấy phép kinh doanh (nếu có)', 'hd' ),
+					'type'        => 'text',
+				]
+			);
+
+			// add control
+			// meta theme-color
+			$wp_customize->add_setting(
+				'theme_color_setting',
+				[
+					'default'           => '',
+					'sanitize_callback' => 'sanitize_hex_color',
+					'capability'        => 'edit_theme_options',
+				]
+			);
+			$wp_customize->add_control(
+				new WP_Customize_Color_Control( $wp_customize,
+					'theme_color_control',
+					[
+						'label'    => __( 'Theme Color', 'hd' ),
+						'section'  => 'other_section',
+						'settings' => 'theme_color_setting',
+					]
+				)
 			);
 		}
 	}

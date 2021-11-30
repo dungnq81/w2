@@ -92,7 +92,7 @@ if ( ! class_exists( 'Banner_PostType' ) ) {
 			];
 			$rewrite = [
 				'slug'         => 'banners',
-				'with_front'   => true,
+				'with_front'   => false,
 				'hierarchical' => false,
 			];
 			$args    = [

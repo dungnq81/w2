@@ -5,9 +5,7 @@
  * @author   WEBHD
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
-}
+defined( 'ABSPATH' ) || exit; // Exit if accessed directly.
 
 use Webhd\Helpers\Url;
 use Webhd\Helpers\Cast;
@@ -35,7 +33,7 @@ if ( ! function_exists( 'str_contains' ) ) {
 	 *
 	 * @return bool
 	 */
-	function str_contains( string $haystack, string $needle ) {
+	function str_contains( string $haystack, string $needle ): bool {
 		return '' === $needle || false !== strpos( $haystack, $needle );
 	}
 }
@@ -157,7 +155,7 @@ if ( ! function_exists( 'is_empty' ) ) {
 	 *
 	 * @return bool
 	 */
-	function is_empty( $value ) {
+	function is_empty( $value ): bool {
 		if ( is_string( $value ) ) {
 			return trim( $value ) === '';
 		}
@@ -174,7 +172,7 @@ if ( ! function_exists( 'is_not_empty' ) ) {
 	 *
 	 * @return boolean
 	 */
-	function is_not_empty( $value ) {
+	function is_not_empty( $value ): bool {
 		return ! is_empty( $value );
 	}
 }
@@ -236,7 +234,7 @@ if ( ! function_exists( 'validate_ip' ) ) {
 	 *
 	 * @return bool
 	 */
-	function validate_ip( $ip ) {
+	function validate_ip( $ip ): bool {
 		if ( filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE ) === false ) {
 			return false;
 		}

@@ -2,6 +2,8 @@
 
 namespace Webhd\Plugins;
 
+use Webhd\Helpers\Cast;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit();
 }
@@ -14,14 +16,55 @@ if ( ! class_exists( '\ACF' ) ) {
 if ( ! class_exists( 'Acf_Plugin' ) ) {
 	class Acf_Plugin {
 		public function __construct() {
-			add_filter( 'acf/fields/wysiwyg/toolbars', [ &$this, 'wysiwyg_toolbars' ] );
 
 			$this->_optionsPage();
 
 			$this->_fieldPosts();
 			$this->_fieldTerms();
 			$this->_fieldMenus();
+
+			add_filter( 'acf/fields/wysiwyg/toolbars', [ &$this, 'wysiwyg_toolbars' ] );
+			add_filter( 'wp_nav_menu_objects', [ &$this, 'wp_nav_menu_objects' ], 11, 1 );
 		}
+
+		// -------------------------------------------------------------
+
+		/**
+		 * @param $items
+		 *
+		 * @return mixed
+		 */
+		public function wp_nav_menu_objects( $items ) {
+			foreach ( $items as &$item ) {
+
+				$title = $item->title;
+				$fields = Cast::toObject( get_fields( $item ) );
+
+				if ( $fields->icon_svg ) {
+					$item->classes[] = 'icon-menu';
+					$title = $fields->icon_svg . '<span>' . $item->title . '</span>';
+				}
+				else if ( $fields->icon_image ) {
+					$item->classes[] = 'img-menu';
+					$title = '<img width="24px" height="24px" alt src="' . attachment_image_src( $fields->icon_image ) . '" loading="lazy" />' . '<span>' . $item->title . '</span>';
+				}
+
+				if ( $fields->label_text ) {
+					$_str = '';
+					if ($fields->label_color) $_str .= 'color:' . $fields->label_color . ';';
+					if ($fields->label_background) $_str .= 'background-color:' . $fields->label_background . ';';
+
+					$_style = $_str ? ' style="' . $_str . '"' : '';
+					$title .= '<sup' . $_style . '>' . $fields->label_text . '</sup>';
+				}
+
+				$item->title = $title;
+			}
+
+			return $items;
+		}
+
+		// -------------------------------------------------------------
 
 		/**
 		 * @param $toolbars
@@ -50,19 +93,20 @@ if ( ! class_exists( 'Acf_Plugin' ) ) {
 			return $toolbars;
 		}
 
+		// -------------------------------------------------------------
+
 		/**
 		 * @return void
 		 */
 		private function _optionsPage() {
 		}
 
+		// -------------------------------------------------------------
+
 		/**
-		 * @return bool
+		 * @return void
 		 */
 		private function _fieldPosts() {
-			if ( ! function_exists( 'acf_add_local_field_group' ) ) {
-				return false;
-			}
 
 			//--------------------------------------
 			// Thêm danh sách gợi ý cho bài viết
@@ -154,17 +198,14 @@ if ( ! class_exists( 'Acf_Plugin' ) ) {
 				'active'                => true,
 				'show_in_rest'          => 1,
 			] );
-
-			return true;
 		}
 
+		// -------------------------------------------------------------
+
 		/**
-		 * @return bool
+		 * @return void
 		 */
 		private function _fieldTerms() {
-			if ( ! function_exists( 'acf_add_local_field_group' ) ) {
-				return false;
-			}
 
 			//--------------------------------------
 			// Thứ tự và ảnh đại diện chuyên mục
@@ -256,17 +297,14 @@ if ( ! class_exists( 'Acf_Plugin' ) ) {
 				'active'                => true,
 				'show_in_rest'          => 1,
 			] );
-
-			return true;
 		}
 
+		// -------------------------------------------------------------
+
 		/**
-		 * @return bool
+		 * @return void
 		 */
 		private function _fieldMenus() {
-			if ( ! function_exists( 'acf_add_local_field_group' ) ) {
-				return false;
-			}
 
 			//--------------------------------------
 			// Thêm icon, ảnh, nhãn... cho menus
@@ -295,7 +333,7 @@ if ( ! class_exists( 'Acf_Plugin' ) ) {
 					],
 					[
 						'key'               => 'field_618e3f855921f',
-						'label'             => __( 'Icon SVG', 'hd' ),
+						'label'             => __( 'SVG, Web Component, Icon Font', 'hd' ),
 						'name'              => 'icon_svg',
 						'type'              => 'textarea',
 						'required'          => 0,
@@ -367,8 +405,6 @@ if ( ! class_exists( 'Acf_Plugin' ) ) {
 				'active'                => true,
 				'show_in_rest'          => 1,
 			] );
-
-			return true;
 		}
 	}
 }

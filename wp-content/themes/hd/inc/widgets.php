@@ -2,9 +2,7 @@
 
 use Webhd\Widgets\Cf7_Widget;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
-}
+defined( 'ABSPATH' ) || exit; // Exit if accessed directly.
 
 if ( ! function_exists( '__register_widgets' ) ) {
 	/**

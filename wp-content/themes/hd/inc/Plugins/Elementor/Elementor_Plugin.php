@@ -16,6 +16,7 @@ if ( ! class_exists( '\Elementor\Plugin' ) ) {
 if ( ! class_exists( 'Elementor_Plugin' ) ) {
 	class Elementor_Plugin {
 		public function __construct() {
+
 			// load google fonts later
 			add_filter( 'elementor/frontend/print_google_fonts', '__return_false' );
 			add_action( 'elementor/theme/register_locations', [ &$this, 'register_locations' ] );

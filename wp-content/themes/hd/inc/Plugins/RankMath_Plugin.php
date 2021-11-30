@@ -19,6 +19,7 @@ if ( ! class_exists( 'RankMath_Plugin' ) ) {
 		}
 
 		public function after_setup_theme() {
+
 			// Rank Math Breadcrumb.
 			add_theme_support( 'rank-math-breadcrumbs' );
 		}

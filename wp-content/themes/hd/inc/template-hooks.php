@@ -5,9 +5,7 @@
  * @author   WEBHD
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
-}
+defined( 'ABSPATH' ) || exit; // Exit if accessed directly.
 
 use Webhd\Helpers\Cast;
 use Webhd\Helpers\Str;
@@ -23,21 +21,23 @@ add_action( 'wp_head', '__extra_header', 10 );
 
 function __critical_css() {
 	?>
-    <style id="critical-inline-css">/** */</style>
+    <style id="critical-inline-css"></style>
 	<?php
 }
 
 function __extra_header() {
-	//echo "<meta name=\"theme-color\" content=\"#00B38F\" />";
 	//echo '<link rel="preconnect" href="https://fonts.gstatic.com">';
 	//echo "<link rel=\"manifest\" href=\"/manifest.json\">";
-	//echo "\n";
+
+	$theme_color = get_theme_mod_ssl( 'theme_color_setting' );
+	if ( $theme_color ) {
+		echo '<meta name="theme-color" content="' . $theme_color . '" />';
+	}
 
 	$fb_appid = get_theme_mod_ssl( 'fb_menu_setting' );
 	if ( $fb_appid ) {
 		echo '<meta property="fb:app_id" content="' . $fb_appid . '" />';
 	}
-	echo "\n";
 }
 
 // -------------------------------------------------------------

@@ -16,7 +16,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'Admin' ) ) {
 	class Admin {
 		public function __construct() {
-			/*remove admin wp version*/
+
+			/** remove admin wp version */
 			if ( ! WP_DEBUG ) {
 				add_filter( 'update_footer', '__return_empty_string', 11 );
 			}
@@ -179,8 +180,8 @@ if ( ! class_exists( 'Admin' ) ) {
 		/** ---------------------------------------- */
 
 		/**
-		 * @param $name
-		 * @param $id
+		 * @param $column_name
+		 * @param $post_id
 		 */
 		public function post_column( $column_name, $post_id ) {
 			switch ( $column_name ) {

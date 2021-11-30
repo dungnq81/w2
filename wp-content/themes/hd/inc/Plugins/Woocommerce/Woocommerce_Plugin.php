@@ -14,11 +14,12 @@ if ( ! class_exists( '\WooCommerce' ) ) {
 if ( ! class_exists( 'Woocommerce_Plugin' ) ) {
 	class Woocommerce_Plugin {
 		public function __construct() {
+
 			add_action( 'after_setup_theme', [ &$this, 'woocommerce_setup' ], 31 );
 			add_action( 'woocommerce_share', [ &$this, 'woocommerce_share' ], 10 );
 			add_action( 'wp_enqueue_scripts', [ &$this, 'enqueue_scripts' ], 100 );
 
-			add_filter( 'woocommerce_breadcrumb_defaults', [ &$this, 'wc_breadcrumb_defaults' ], 11, 1 );
+			add_filter( 'woocommerce_breadcrumb_defaults', [ &$this, 'woocommerce_breadcrumb_defaults' ], 11, 1 );
 
 			// Show only lowest prices in WooCommerce variable products
 			add_filter( 'woocommerce_variable_sale_price_html', [ &$this, 'variation_price_format' ], 10, 2 );
@@ -77,7 +78,7 @@ if ( ! class_exists( 'Woocommerce_Plugin' ) ) {
 		 *
 		 * @return array
 		 */
-		public function wc_breadcrumb_defaults( $defaults ) {
+		public function woocommerce_breadcrumb_defaults( $defaults ) {
 			$defaults = [
 				'delimiter'   => '',
 				'wrap_before' => '<ol id="crumbs" class="breadcrumbs" aria-label="breadcrumbs">',

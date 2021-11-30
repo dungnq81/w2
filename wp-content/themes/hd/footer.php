@@ -6,17 +6,15 @@
  * @package hd
  */
 
-if (!defined('ABSPATH')) {
-	exit; // Exit if accessed directly.
-}
+defined( 'ABSPATH' ) || exit; // Exit if accessed directly.
 
-if (!function_exists('elementor_theme_do_location') || !elementor_theme_do_location('footer')) :
+if ( ! function_exists( 'elementor_theme_do_location' ) || ! elementor_theme_do_location( 'footer' ) ) :
 
-?>
-	<div class="site-footer">
-		<?php do_action('before_footer'); ?>
-		<?php do_action('footer'); ?>
-	</div>
+	?>
+    <div class="site-footer">
+		<?php do_action( 'before_footer' ); ?>
+		<?php do_action( 'footer' ); ?>
+    </div>
 <?php endif;
 wp_footer();
 ?>

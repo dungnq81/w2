@@ -10,11 +10,11 @@
     "autoload": {
         "files": [
             "inc/ajax.php",
-            "inc/post-types.php",
             "inc/helpers.php",
             "inc/image-sizes.php",
             "inc/menus.php",
             "inc/plugins.php",
+            "inc/post-types.php",
             "inc/sidebars.php",
             "inc/template-functions.php",
             "inc/template-hooks.php",

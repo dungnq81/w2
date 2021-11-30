@@ -8,7 +8,7 @@
 
 use Webhd\Themes\Theme;
 
-const INC = __DIR__ . '/inc';
+//const INC = __DIR__ . '/inc';
 
 // This theme requires WordPress 5.3 or later.
 if ( version_compare( $GLOBALS['wp_version'], '5.3', '<' ) ) {

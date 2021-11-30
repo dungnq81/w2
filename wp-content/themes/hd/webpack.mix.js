@@ -42,6 +42,6 @@ mix.setPublicPath('assets')
 
     //.sass('resources/sass/awe.scss', 'css')
     .sass('resources/sass/admin.scss', 'css')
-    .sass('resources/sass/editor-style.scss', 'css');
-//.sass('resources/sass/plugins.scss', 'css')
-//.sass('resources/sass/app.scss', 'css');
+    .sass('resources/sass/editor-style.scss', 'css')
+    .sass('resources/sass/plugins.scss', 'css')
+    .sass('resources/sass/app.scss', 'css');

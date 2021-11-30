@@ -7,7 +7,8 @@ use Webhd\Helpers\Str;
 
 /**
  * Global Theme Class
- * @author   WEBHD
+ *
+ * @author WEBHD
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -17,17 +18,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'Theme' ) ) {
 	class Theme {
 		public function __construct() {
-			$this->_cleanup();
-
 			add_action( 'after_setup_theme', [ &$this, 'after_setup_theme' ] );
 
 			add_action( 'wp_enqueue_scripts', [ &$this, 'enqueue_scripts' ], 10 );
 			add_action( 'wp_enqueue_scripts', [ &$this, 'non_latin_languages' ], 28 );
 			add_action( 'wp_enqueue_scripts', [ &$this, 'enqueue_inline_css' ], 30 ); // After WooCommerce.
-
-			add_filter( 'body_class', [ &$this, 'body_classes' ], 10, 1 );
-			add_filter( 'post_class', [ &$this, 'post_classes' ], 10, 1 );
-			add_filter( 'nav_menu_css_class', [ &$this, 'nav_menu_css_class' ], 10, 2 );
 
 			add_action( 'login_enqueue_scripts', [ &$this, 'login_enqueue_script' ], 30 );
 			add_action( 'enqueue_block_editor_assets', [ &$this, 'block_editor_assets' ] );
@@ -144,158 +139,6 @@ if ( ! class_exists( 'Theme' ) ) {
 		/** ---------------------------------------- */
 
 		/**
-		 * Launching operation cleanup.
-		 */
-		protected function _cleanup() {
-
-			// Xóa widget mặc định "Welcome to WordPress".
-			remove_action( 'welcome_panel', 'wp_welcome_panel' );
-
-			// wp_head
-			remove_action( 'wp_head', 'rsd_link' ); // Remove the EditURI/RSD link
-			remove_action( 'wp_head', 'wlwmanifest_link' ); // Remove Windows Live Writer Manifest link
-			remove_action( 'wp_head', 'wp_shortlink_wp_head' ); // Remove the shortlink
-			remove_action( 'wp_head', 'wp_generator' ); // remove WordPress Generator
-			remove_action( 'wp_head', 'feed_links_extra', 3 ); //remove comments feed.
-			remove_action( 'wp_head', 'adjacent_posts_rel_link' ); // Remove relational links for the posts adjacent to the current post.
-			remove_action( 'wp_head', 'adjacent_posts_rel_link_wp_head' ); // Remove prev and next links
-			remove_action( 'wp_head', 'parent_post_rel_link' );
-			remove_action( 'wp_head', 'start_post_rel_link' );
-			remove_action( 'wp_head', 'index_rel_link' );
-			remove_action( 'wp_head', 'feed_links', 2 );
-
-			/**
-			 * Remove wp-json header from WordPress
-			 * Note that the REST API functionality will still be working as it used to;
-			 * this only removes the header code that is being inserted.
-			 */
-			remove_action( 'wp_head', 'rest_output_link_wp_head' );
-			remove_action( 'wp_head', 'wp_oembed_add_discovery_links' );
-			remove_action( 'template_redirect', 'rest_output_link_header', 11, 0 );
-
-			// all actions related to emojis
-			remove_action( 'wp_print_styles', 'print_emoji_styles' );
-			remove_action( 'admin_print_styles', 'print_emoji_styles' );
-			remove_action( 'admin_print_scripts', 'print_emoji_detection_script' );
-
-			// Emoji detection script.
-			remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
-
-			// staticize_emoji
-			remove_filter( 'wp_mail', 'wp_staticize_emoji_for_email' );
-			remove_filter( 'the_content_feed', 'wp_staticize_emoji' );
-			remove_filter( 'comment_text_rss', 'wp_staticize_emoji' );
-		}
-
-		/** ---------------------------------------- */
-
-		/**
-		 * Add Foundation 'is-active' class for the current menu item.
-		 *
-		 * @param $classes
-		 * @param $item
-		 *
-		 * @return array
-		 */
-		public function nav_menu_css_class( $classes, $item ) {
-			if ( ! is_array( $classes ) ) {
-				$classes = [];
-			}
-
-			// remove menu-item-type-, menu-item-object- classes
-			foreach ( $classes as $class ) {
-				if (
-					false !== strpos( $class, 'menu-item-type-' )
-					|| false !== strpos( $class, 'menu-item-object-' )
-				) {
-					$classes = array_diff( $classes, [ $class ] );
-				}
-			}
-			if (
-				1 == $item->current
-				|| true == $item->current_item_ancestor
-				|| true == $item->current_item_parent
-			) {
-				$classes[] = 'is-active';
-				$classes[] = 'active';
-			}
-
-			return $classes;
-		}
-
-		/** ---------------------------------------- */
-
-		/**
-		 * Adds custom classes to the array of post classes.
-		 *
-		 * @param array $classes Classes for the post element.
-		 *
-		 * @return array
-		 */
-		public function post_classes( $classes ) {
-			// remove_sticky_class
-			if ( in_array( 'sticky', $classes ) ) {
-				$classes   = array_diff( $classes, [ "sticky" ] );
-				$classes[] = 'wp-sticky';
-			}
-
-			// remove tag-, category- classes
-			foreach ( $classes as $class ) {
-				if (
-					str_contains( $class, 'tag-' )
-					|| str_contains( $class, 'category-' )
-					|| str_contains( $class, 'video_cat-' )
-					|| str_contains( $class, 'project_cat-' )
-					|| str_contains( $class, 'product_cat-' )
-					|| str_contains( $class, 'gallery_cat-' )
-					|| str_contains( $class, 'service_cat-' )
-					|| str_contains( $class, 'video_tag-' )
-					|| str_contains( $class, 'project_tag-' )
-					|| str_contains( $class, 'product_tag-' )
-					|| str_contains( $class, 'gallery_tag-' )
-					|| str_contains( $class, 'service_tag-' )
-				) {
-					$classes = array_diff( $classes, [ $class ] );
-				}
-			}
-
-			return $classes;
-		}
-
-		/** ---------------------------------------- */
-
-		/**
-		 * Adds custom classes to the array of body classes.
-		 *
-		 * @param array $classes Classes for the body element.
-		 *
-		 * @return array
-		 */
-		public function body_classes( $classes ) {
-			// Check whether we're in the customizer preview.
-			if ( is_customize_preview() ) {
-				$classes[] = 'customizer-preview';
-			}
-
-			foreach ( $classes as $class ) {
-				if (
-					str_contains( $class, 'page-template-templates' )
-					|| str_contains( $class, 'page-template-templatespage-homepage-php' )
-					|| str_contains( $class, 'wp-custom-logo' )
-				) {
-					$classes = array_diff( $classes, [ $class ] );
-				}
-			}
-
-			// dark mode func
-			//$classes[] = 'light-mode';
-
-			return $classes;
-		}
-
-		/** ---------------------------------------- */
-
-		/**
 		 * Add CSS for third-party plugins.
 		 * @return void
 		 */
@@ -325,6 +168,7 @@ if ( ! class_exists( 'Theme' ) ) {
 
 		/**
 		 * Enqueue non-latin language styles
+		 *
 		 * @return void
 		 */
 		public function non_latin_languages() {
@@ -337,7 +181,8 @@ if ( ! class_exists( 'Theme' ) ) {
 		/** ---------------------------------------- */
 
 		/**
-		 * Enqueue scripts and styles.
+		 * Enqueue scripts and styles
+		 *
 		 * @return void
 		 */
 		public function enqueue_scripts() {
@@ -361,16 +206,6 @@ if ( ! class_exists( 'Theme' ) ) {
 			];
 
 			wp_localize_script( 'jquery-core', 'HD', $l10n );
-
-			/*extra scripts*/
-			wp_enqueue_script( "backtop", get_template_directory_uri() . "/assets/js/plugins/backtop.min.js", [], false, true );
-			wp_enqueue_script( "shares", get_template_directory_uri() . "/assets/js/plugins/shares.min.js", [ "jquery" ], false, true );
-
-			//wp_enqueue_style("awe-font", get_template_directory_uri() . '/assets/css/awe.css', [], '6.0.0');
-
-			//wp_register_script("fontawesome-kit", "https://kit.fontawesome.com/870d5b0bdf.js", [], false, true);
-			//wp_script_add_data("fontawesome-kit", "defer", true);
-			//wp_enqueue_script('fontawesome-kit');
 
 			/*comments*/
 			if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
@@ -431,7 +266,6 @@ if ( ! class_exists( 'Theme' ) ) {
 			wp_enqueue_script( "login", get_template_directory_uri() . "/assets/js/login.js", [ "jquery" ], W_THEME_VERSION, true );
 
 			// custom script/style
-			// $logo    = null;
 			$logo    = get_theme_file_uri( "/assets/img/logo.png" );
 			$logo_bg = get_theme_file_uri( "/assets/img/login-bg.jpg" );
 
@@ -461,6 +295,7 @@ if ( ! class_exists( 'Theme' ) ) {
 		 * @return string
 		 */
 		private function _get_non_latin_css( string $type = 'front-end' ) {
+
 			// Fetch site locale.
 			$locale = get_bloginfo( 'language' );
 

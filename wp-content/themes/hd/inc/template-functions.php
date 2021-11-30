@@ -651,7 +651,7 @@ if ( ! function_exists( 'post_image_src' ) ) {
 	 *
 	 * @return string|null
 	 */
-	function post_image_src( $post_id, string $size = 'thumbnail' ) {
+	function post_image_src( $post_id, string $size = 'thumbnail' ): ?string {
 		$thumbnail = wp_get_attachment_image_src( get_post_thumbnail_id( $post_id ), $size );
 		if ( $thumbnail ) {
 			return $thumbnail[0];
@@ -670,7 +670,7 @@ if ( ! function_exists( 'attachment_image_src' ) ) {
 	 *
 	 * @return string|null
 	 */
-	function attachment_image_src( $attachment_id, string $size = 'thumbnail' ) {
+	function attachment_image_src( $attachment_id, string $size = 'thumbnail' ): ?string {
 		$image = wp_get_attachment_image_src( $attachment_id, $size );
 		if ( $image ) {
 			//[$src, $width, $height] = $image;
@@ -688,7 +688,7 @@ if ( ! function_exists( 'get_lang' ) ) {
 	 * Get lang code
 	 * @return string
 	 */
-	function get_lang() {
+	function get_lang(): string {
 		return strtolower( substr( get_locale(), 0, 2 ) );
 	}
 }
@@ -697,9 +697,9 @@ if ( ! function_exists( 'get_lang' ) ) {
 
 if ( ! function_exists( 'get_f_locale' ) ) {
 	/**
-	 * @return mixed|string
+	 * @return string
 	 */
-	function get_f_locale() {
+	function get_f_locale(): string {
 		$arr     = locale_array();
 		$arr_key = array_keys( $arr );
 		$locale  = get_locale();
@@ -718,7 +718,7 @@ if ( ! function_exists( 'locale_array' ) ) {
 	/**
 	 * @return array
 	 */
-	function locale_array() {
+	function locale_array(): array {
 		return [
 			'af' => 'af_ZA',
 			'ar' => 'ar_AR',
@@ -762,7 +762,7 @@ if ( ! function_exists( 'placeholder_src' ) ) {
 	 *
 	 * @return string
 	 */
-	function placeholder_src( bool $img_wrap = true, bool $thumb = true ) {
+	function placeholder_src( bool $img_wrap = true, bool $thumb = true ): string {
 		$src = W_THEME_URL . '/assets/img/placeholder.png';
 		if ( $thumb == true ) {
 			$src = W_THEME_URL . '/assets/img/placeholder-320x320.png';
@@ -811,7 +811,7 @@ if ( ! function_exists( 'humanize_time' ) ) {
 	 * @param string|null $to Optional. Unix timestamp to end the time difference.
 	 *
 	 * @param null|int|object $post
-	 * @param null $_time
+	 * @param mixed $_time
 	 *
 	 * @return string Human readable time difference.
 	 */
